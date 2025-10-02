@@ -8,7 +8,9 @@
       <button type="submit">Iniciar Sesión</button>
     </form>
 
-    <p class="forgot-password">¿Olvidaste tu contraseña?</p>
+    <p class="forgot-password">
+      <router-link to="/auth/forgot-password">¿Olvidaste tu contraseña?</router-link>
+    </p>
     <p class="register">
       <router-link to="/auth/signup">¿No tenés una cuenta? Registrate</router-link>
     </p>
