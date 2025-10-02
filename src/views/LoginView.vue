@@ -4,15 +4,15 @@
       <div class="icon-box">
         <!-- TODO: poner icono -->
       </div>
-      
+
       <h1>Iniciar sesión</h1>
-      
+
       <form>
         <input type="email" placeholder="Correo electrónico" required />
         <input type="password" placeholder="Contraseña" required />
         <button type="submit">Iniciar Sesión</button>
       </form>
-      
+
       <p class="forgot-password">¿Olvidaste tu contraseña?</p>
       <p class="register">¿No tenés una cuenta? Registrate</p>
     </div>
@@ -25,7 +25,7 @@
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background-color: #ECE7DF;
+  background-color: #ece7df;
 }
 
 .login-card {
@@ -41,7 +41,7 @@
   align-items: center;
   width: 100px;
   height: 100px;
-  background-color: #714E4A;
+  background-color: #714e4a;
   border-radius: 24px;
   margin-bottom: 32px;
 }
@@ -50,7 +50,7 @@ h1 {
   font-weight: 700;
   font-size: 22px;
   text-align: center;
-  color: #000000D9;
+  color: #000000d9;
   margin: 0 0 24px 0;
 }
 
@@ -69,13 +69,13 @@ input {
   padding: 12px 16px;
   border: 1px solid #ddd;
   border-radius: 12px;
-  background-color: #EFEFE9;
+  background-color: #efefe9;
   font-size: 1rem;
 }
 
 input:focus {
   border: 1px solid #223030;
-  box-shadow: 0px 0px 0px 3px #2230304D;
+  box-shadow: 0px 0px 0px 3px #2230304d;
   outline: none;
 }
 
@@ -98,14 +98,14 @@ button:hover {
 
 .forgot-password {
   font-size: 0.875rem;
-  color: #000000A6;
+  color: #000000a6;
   margin: 0 0 16px 0;
   text-align: center;
 }
 
 .register {
   font-size: 0.875rem;
-  color: #000000A6;
+  color: #000000a6;
   margin: 0;
   text-align: center;
 }
