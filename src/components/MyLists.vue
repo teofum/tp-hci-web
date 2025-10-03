@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import listEntry from '../components/listEntry.vue'
+import addListButton from '../components/button.vue'
 </script>
 
 <template>
@@ -12,7 +13,7 @@ import listEntry from '../components/listEntry.vue'
                 <listEntry />
             </li>
         </div>
-        <!--nueva lista button-->
+        <addListButton />
     </div>
   </div>
 </template>
