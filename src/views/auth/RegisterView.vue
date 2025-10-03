@@ -3,10 +3,11 @@
     <h1>Creá tu cuenta</h1>
 
     <form>
+      <input type="text" placeholder="Nombre" required />
+      <input type="text" placeholder="Apellido" required />
       <input type="email" placeholder="Correo electrónico" required />
       <input type="password" placeholder="Contraseña" required />
       <input type="password" placeholder="Repetir contraseña" required />
-      <input type="text" placeholder="Nombre" required />
       <button type="submit">Crear cuenta</button>
     </form>
 
