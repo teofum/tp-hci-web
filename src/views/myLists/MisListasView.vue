@@ -1,27 +1,52 @@
 <script setup lang="ts">
-import listEntry from '@/components/listEntry.vue'
-import addListButton from '@/components/button.vue'
+import listEntry from '@/components/misListas/listEntry.vue'
+import addListButton from '@/components/misListas/nuevaListaButton.vue'
 </script>
 
 <template>
-  <div class="body">
-    <div class="main_container">
-        <h1>Mis listas</h1>
-        <div class="listas">
+  <div class="ml_body">
+    <div class="ml_main_container">
+      
+      <h1>Mis listas</h1>
+      
+      <div class="ml_listas_container">
             <!--todo esto seguro esta mal-->
-            <li>
+            <ul class="ml_listas">
+              <li>
                 <listEntry />
-            </li>
-        </div>
-        <addListButton />
+              </li>
+            </ul>
+      </div>
+      
+      <addListButton />
+
     </div>
   </div>
 </template>
 
+<!-- ejemplo vue for -- 
+<script setup>
+import { ref } from 'vue'
+
+const list = ref([1, 2, 3])
+</script>
+
+<template>
+  <button @click="list.push(list.length + 1)">Push Number</button>
+  <button @click="list.pop()">Pop Number</button>
+  
+  <ul v-if=" list.length">
+    <li v-for="item of list">{{ item }}</li>
+  </ul>
+  <p v-else-if="list.length">List is not empty, but hidden.</p>
+  <p v-else>List is empty.</p>
+</template>
+-->
+
 <style>
 
-
-.body {
+.ml_body {
+  /* todo colores en variables */ 
   color: black;
 
   display: flex;
@@ -31,24 +56,14 @@ import addListButton from '@/components/button.vue'
   background-color: #ece7df;
 }
 
-/*
-button {
-  width: 358px;
-  height: 40px;
-  padding: 0 16px;
-  background-color: #223030;
-  color: white;
-  border: none;
-  border-radius: 20px;
-  font-size: 1rem;
-  font-weight: 500;
-  cursor: pointer;
-}
+.ml_main_container{
+  width: 60%;
 
-button:hover {
-  opacity: 0.9;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: baseline;
 }
-*/
 
 p {
   font-size: 0.875rem;
@@ -64,4 +79,22 @@ a {
 a:hover {
   text-decoration: underline;
 }
+
+.ml_listas_container{
+  width: 100%;
+
+  display: flex;
+  justify-content: center;
+  align-items: baseline;
+}
+
+.ml_listas {
+  width: 100%;
+
+  list-style-type: none;
+  padding: 0; 
+  margin: 0;
+}
+
+
 </style>
