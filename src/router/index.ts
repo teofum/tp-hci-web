@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
-import TestView from '../views/MisListasView.vue'
+import MisListasLayout from '../layouts/MisListasLayout.vue'
 import AuthLayout from '../layouts/AuthLayout.vue'
 
 const router = createRouter({
@@ -42,8 +42,7 @@ const router = createRouter({
     },
     {
       path: '/misListas',
-      name: 'misListas',
-      component: TestView,
+      component: MisListasLayout,
     },
   ],
 })
