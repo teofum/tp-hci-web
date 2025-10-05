@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import listEntry from '@/components/misListas/listEntry.vue'
-import addListButton from '@/components/misListas/nuevaListaButton.vue'
+import NuevaListaBoton from '@/components/misListas/nuevaListaButton.vue'
 </script>
 
 <template>
-  <div class="ml_body">
-    <div class="ml_main_container">
+  <div class="ml-body">
+    <div class="ml-main-container">
       
-      <h1>Mis listas</h1>
+      <h1 class="ml-titulo">Mis listas</h1>
       
       <div class="ml_listas_container">
             <!--todo esto seguro esta mal-->
@@ -18,7 +18,7 @@ import addListButton from '@/components/misListas/nuevaListaButton.vue'
             </ul>
       </div>
       
-      <addListButton />
+      <NuevaListaBoton />
 
     </div>
   </div>
@@ -44,8 +44,7 @@ const list = ref([1, 2, 3])
 -->
 
 <style>
-
-.ml_body {
+.ml-body {
   /* todo colores en variables */ 
   color: black;
 
@@ -56,28 +55,13 @@ const list = ref([1, 2, 3])
   background-color: #ece7df;
 }
 
-.ml_main_container{
+.ml-main-container{
   width: 60%;
 
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: baseline;
-}
-
-p {
-  font-size: 0.875rem;
-  color: #000000a6;
-  margin: 0;
-  text-align: center;
-}
-
-a {
-  color: #000000a6;
-  text-decoration: none;
-}
-a:hover {
-  text-decoration: underline;
 }
 
 .ml_listas_container{
@@ -95,6 +79,24 @@ a:hover {
   padding: 0; 
   margin: 0;
 }
+.ml-titulo{
+  font-size: 2rem;
+  font-weight: 700;
+  color: #000;
+}
 
+p {
+  font-size: 0.875rem;
+  color: #000000a6;
+  margin: 0;
+  text-align: center;
+}
 
+a {
+  color: #000000a6;
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
 </style>
