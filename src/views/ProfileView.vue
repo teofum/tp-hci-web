@@ -48,6 +48,20 @@ const handleUpdate = async () => {
     loading.value = false;
   }
 };
+
+const handleLogout = async () => {
+  const token = localStorage.getItem('token');
+  if (!token) return;
+
+  try {
+    await auth.logout(token);
+  } catch {
+    // I guess error handling is not needed here
+  } finally {
+    localStorage.removeItem('token');
+    router.push('/auth/signin');
+  }
+};
 </script>
 
 <template>
@@ -74,6 +88,10 @@ const handleUpdate = async () => {
         <VAlert v-if="success" type="success" class="mt-2">{{ success }}</VAlert>
         <VAlert v-if="error" type="error" class="mt-2">{{ error }}</VAlert>
       </form>
+
+      <VBtn variant="text" block @click="handleLogout" class="mt-4">
+        Cerrar sesión
+      </VBtn>
     </div>
   </div>
 </template>
@@ -92,7 +110,6 @@ const handleUpdate = async () => {
 
 h1 {
   font-weight: 700;
-  font-size: 22px;
   text-align: center;
   color: #000000d9;
   margin: 0 0 24px 0;
