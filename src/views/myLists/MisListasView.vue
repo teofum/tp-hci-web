@@ -2,22 +2,42 @@
 import { ref, onMounted } from 'vue'
 import listEntry from '@/components/misListas/listEntry.vue'
 import NuevaListaBoton from '@/components/misListas/buttonNewListPopup.vue'
-import { getLists, type ShoppingListDto } from '@/services/lists.service'
 
-const lists = ref<ShoppingListDto[]>([])
+
+const BASE_URL = 'http://localhost:8080'            
+const token = localStorage.getItem('token') || ''   
+
+async function fetchJSON(input: RequestInfo, init?: RequestInit) {
+  const res = await fetch(input, {
+    ...init,
+    headers: {
+      'Content-Type': 'application/json',
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      ...(init?.headers || {})
+    }
+  })
+  if (!res.ok) throw new Error(`HTTP ${res.status}`)
+  return res.json()
+}
+
+const lists = ref<any[]>([])
 const loading = ref(false)
 const error = ref<string | null>(null)
 
-onMounted(async () => {
+async function loadLists() {
+  loading.value = true
+  error.value = null
   try {
-    loading.value = true
-    lists.value = await getLists({ page: 1, per_page: 20, order: "ASC" })
-  } catch (e: any) {
-    error.value = e?.message ?? 'Error loading lists'
+    const json = await fetchJSON(`${BASE_URL}/api/shopping-lists?page=1&per_page=20&order=ASC`)
+    lists.value = Array.isArray(json) ? json : (json.data ?? [])
+  } catch (e:any) {
+    error.value = e?.message ?? 'Failed to load lists'
   } finally {
     loading.value = false
   }
-})
+}
+
+onMounted(loadLists)
 </script>
 
 <template>
@@ -27,20 +47,15 @@ onMounted(async () => {
 
       <div class="ml_listas_container">
         <ul class="ml_listas">
-          <li v-if="loading">
-            <p>Cargando…</p>
-          </li>
-          <li v-else-if="error">
-            <p>{{ error }}</p>
-          </li>
-          <li v-else-if="!lists.length">
-            <p>No tenés listas aún.</p>
-          </li>
-          <li v-else v-for="l in lists" :key="l.id">
+          <li v-if="loading"><p>Cargando…</p></li>
+          <li v-else-if="error"><p>{{ error }}</p></li>
+          <li v-else-if="!lists.length"><p>Sin listas todavía.</p></li>
+
+          <li v-for="l in lists" :key="l.id">
             <listEntry
               :name="l.name"
-              :count="l.itemCount ?? 0"
-              :image-url="l.imageUrl || undefined"
+              :items-count="l.itemsCount ?? l.items_count ?? (l.items?.length ?? 0)"
+              :image="l.imageUrl ?? l.image_url ?? null"
             />
           </li>
         </ul>
