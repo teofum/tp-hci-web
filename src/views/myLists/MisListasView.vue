@@ -1,69 +1,52 @@
 <script setup lang="ts">
+import { ref, onMounted } from 'vue'
 import listEntry from '@/components/misListas/listEntry.vue'
 import NuevaListaBoton from '@/components/misListas/buttonNewListPopup.vue'
+import { getLists, type ShoppingListDto } from '@/services/lists.service'
+
+const lists = ref<ShoppingListDto[]>([])
+const loading = ref(false)
+const error = ref<string | null>(null)
+
+onMounted(async () => {
+  try {
+    loading.value = true
+    lists.value = await getLists({ page: 1, per_page: 20, order: "ASC" })
+  } catch (e: any) {
+    error.value = e?.message ?? 'Error loading lists'
+  } finally {
+    loading.value = false
+  }
+})
 </script>
 
 <template>
   <div class="ml-body">
     <div class="ml-main-container">
-      
       <h1 class="ml-titulo">Mis listas</h1>
-      
-      <div class="ml_listas_container">
-            <ul class="ml_listas">
-              <li>
-                <listEntry />
-              </li>
-              <li>
-                <listEntry />
-              </li>
-              <li>
-                <listEntry />
-              </li>
-              <li>
-                <listEntry />
-              </li>
-              <li>
-                <listEntry />
-              </li>
-              <li>
-                <listEntry />
-              </li>
-              <li>
-                <listEntry />
-              </li>
-              <li>
-                <listEntry />
-              </li>
-              <li>
-                <listEntry />
-              </li>
-              <li>
-                <listEntry />
-              </li>
-              <li>
-                <listEntry />
-              </li>
-              <li>
-                <listEntry />
-              </li>
-              <li>
-                <listEntry />
-              </li>
-              <li>
-                <listEntry />
-              </li>
-              <li>
-                <listEntry />
-              </li>
-              <li>
-                <listEntry />
-              </li>
-            </ul>
-      </div>
-      
-      <NuevaListaBoton>+ Nueva Lista</NuevaListaBoton>
 
+      <div class="ml_listas_container">
+        <ul class="ml_listas">
+          <li v-if="loading">
+            <p>Cargando…</p>
+          </li>
+          <li v-else-if="error">
+            <p>{{ error }}</p>
+          </li>
+          <li v-else-if="!lists.length">
+            <p>No tenés listas aún.</p>
+          </li>
+          <li v-else v-for="l in lists" :key="l.id">
+            <listEntry
+              :name="l.name"
+              :count="l.itemCount ?? 0"
+              :image-url="l.imageUrl || undefined"
+            />
+          </li>
+        </ul>
+      </div>
+
+      <NuevaListaBoton>+ Nueva Lista</NuevaListaBoton>
     </div>
   </div>
 </template>
