@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import listEntry from '@/components/misListas/listEntry.vue'
-import NuevaListaBoton from '@/components/misListas/nuevaListaButton.vue'
+import NuevaListaBoton from '@/components/misListas/buttonNewListPopup.vue'
 </script>
 
 <template>
@@ -10,15 +10,59 @@ import NuevaListaBoton from '@/components/misListas/nuevaListaButton.vue'
       <h1 class="ml-titulo">Mis listas</h1>
       
       <div class="ml_listas_container">
-            <!--todo esto seguro esta mal-->
             <ul class="ml_listas">
+              <li>
+                <listEntry />
+              </li>
+              <li>
+                <listEntry />
+              </li>
+              <li>
+                <listEntry />
+              </li>
+              <li>
+                <listEntry />
+              </li>
+              <li>
+                <listEntry />
+              </li>
+              <li>
+                <listEntry />
+              </li>
+              <li>
+                <listEntry />
+              </li>
+              <li>
+                <listEntry />
+              </li>
+              <li>
+                <listEntry />
+              </li>
+              <li>
+                <listEntry />
+              </li>
+              <li>
+                <listEntry />
+              </li>
+              <li>
+                <listEntry />
+              </li>
+              <li>
+                <listEntry />
+              </li>
+              <li>
+                <listEntry />
+              </li>
+              <li>
+                <listEntry />
+              </li>
               <li>
                 <listEntry />
               </li>
             </ul>
       </div>
       
-      <NuevaListaBoton />
+      <NuevaListaBoton>+ Nueva Lista</NuevaListaBoton>
 
     </div>
   </div>
@@ -56,12 +100,14 @@ const list = ref([1, 2, 3])
 }
 
 .ml-main-container{
-  width: 60%;
+  width: 50%;
 
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: baseline;
+
+  margin: 160px 0;
 }
 
 .ml_listas_container{

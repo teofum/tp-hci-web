@@ -13,7 +13,7 @@ function TogglePopup() {
 <template>
     <!--todo, poner un icono (+)-->
     <button class="nl-button" @click="() => TogglePopup()">
-      + Nueva lista
+      <slot></slot>
     </button>
     <NewListPopup v-if="newListPopupTrigger" 
           :TogglePopup="() => TogglePopup()"/>
