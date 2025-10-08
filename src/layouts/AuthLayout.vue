@@ -73,7 +73,6 @@
 }
 
 .auth-card .v-btn {
-  width: 358px;
   height: 40px;
   border-radius: 20px;
   text-transform: none;
