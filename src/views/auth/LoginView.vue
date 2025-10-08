@@ -1,11 +1,23 @@
+<script setup lang="ts">
+import { VTextField, VBtn } from 'vuetify/components';
+</script>
+
 <template>
   <div>
     <h1>Iniciar sesión</h1>
 
     <form>
-      <input type="email" placeholder="Correo electrónico" required />
-      <input type="password" placeholder="Contraseña" required />
-      <button type="submit">Iniciar Sesión</button>
+      <VTextField
+        placeholder="Correo electrónico"
+        type="email"
+        required
+      />
+      <VTextField
+        placeholder="Contraseña"
+        type="password"
+        required
+      />
+      <VBtn type="submit" block>Iniciar Sesión</VBtn>
     </form>
 
     <p class="forgot-password">

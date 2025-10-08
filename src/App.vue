@@ -1,9 +1,15 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { useRoute } from 'vue-router';
+import { computed } from 'vue';
+
+const route = useRoute();
+const isAuthRoute = computed(() => route.path.startsWith('/auth'));
+</script>
 
 <template>
   <v-app>
     <v-layout>
-      <v-app-bar class="bg-red">
+      <v-app-bar v-if="!isAuthRoute" class="bg-red">
         <template v-slot:prepend>
           <img
             alt="Vue logo"

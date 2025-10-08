@@ -54,37 +54,30 @@
   margin-bottom: 1.5rem;
 }
 
-.auth-card input {
+/* Vuetify overrides - solo tamaños específicos */
+.auth-card .v-field {
   width: 358px;
   height: 50px;
+  border-radius: 12px !important;
+}
+
+.auth-card .v-field__input {
   padding: 12px 16px;
-  border: 1px solid #ddd;
-  border-radius: 12px;
-  background-color: #efefe9;
-  font-size: 1rem;
+  min-height: 50px;
+  align-items: center;
 }
 
-.auth-card input:focus {
-  border: 1px solid #223030;
-  box-shadow: 0px 0px 0px 3px #2230304d;
-  outline: none;
+.auth-card .v-field--focused {
+  border: 1px solid #223030 !important;
+  box-shadow: 0px 0px 0px 3px #2230304d !important;
 }
 
-.auth-card button {
+.auth-card .v-btn {
   width: 358px;
   height: 40px;
-  padding: 0 16px;
-  background-color: #223030;
-  color: white;
-  border: none;
   border-radius: 20px;
-  font-size: 1rem;
-  font-weight: 500;
-  cursor: pointer;
-}
-
-.auth-card button:hover {
-  opacity: 0.9;
+  text-transform: none;
+  letter-spacing: normal;
 }
 
 .auth-card p {
@@ -106,4 +99,6 @@
 .auth-card a:hover {
   text-decoration: underline;
 }
+
+
 </style>

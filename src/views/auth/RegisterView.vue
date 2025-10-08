@@ -1,14 +1,18 @@
+<script setup lang="ts">
+import { VTextField, VBtn } from 'vuetify/components';
+</script>
+
 <template>
   <div>
     <h1>Creá tu cuenta</h1>
 
     <form>
-      <input type="text" placeholder="Nombre" required />
-      <input type="text" placeholder="Apellido" required />
-      <input type="email" placeholder="Correo electrónico" required />
-      <input type="password" placeholder="Contraseña" required />
-      <input type="password" placeholder="Repetir contraseña" required />
-      <button type="submit">Crear cuenta</button>
+      <VTextField placeholder="Nombre" type="text" required />
+      <VTextField placeholder="Apellido" type="text" required />
+      <VTextField placeholder="Correo electrónico" type="email" required />
+      <VTextField placeholder="Contraseña" type="password" required />
+      <VTextField placeholder="Repetir contraseña" type="password" required />
+      <VBtn type="submit" block>Crear cuenta</VBtn>
     </form>
 
     <p class="register">
