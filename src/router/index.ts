@@ -11,6 +11,11 @@ const router = createRouter({
       component: HomeView,
     },
     {
+      path: '/profile',
+      name: 'profile',
+      component: () => import('../views/ProfileView.vue'),
+    },
+    {
       path: '/about',
       name: 'about',
       // route level code-splitting
@@ -45,6 +50,19 @@ const router = createRouter({
       ],
     },
   ],
+});
+
+router.beforeEach((to, _from, next) => {
+  const token = localStorage.getItem('token');
+  const isAuthRoute = to.path.startsWith('/auth');
+
+  if (isAuthRoute && token) {
+    next('/');
+  } else if (!isAuthRoute && !token) {
+    next('/auth/signin');
+  } else {
+    next();
+  }
 });
 
 export default router;
