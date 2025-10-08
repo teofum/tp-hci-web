@@ -1,11 +1,11 @@
-import './assets/main.css'
+import { createApp } from 'vue';
 
-import { createApp } from 'vue'
-import App from './App.vue'
-import router from './router'
+import 'vuetify/styles';
+import { createVuetify } from 'vuetify';
 
-const app = createApp(App)
+import App from './App.vue';
+import router from './router';
 
-app.use(router)
+const vuetify = createVuetify();
 
-app.mount('#app')
+createApp(App).use(vuetify).use(router).mount('#app');
