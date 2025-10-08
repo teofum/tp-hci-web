@@ -16,7 +16,9 @@ import { VTextField, VBtn } from 'vuetify/components';
     </form>
 
     <p class="register">
-      <router-link to="/auth/signin">¿Ya tenés una cuenta? Iniciar sesión</router-link>
+      <router-link to="/auth/signin"
+        >¿Ya tenés una cuenta? Iniciar sesión</router-link
+      >
     </p>
   </div>
 </template>

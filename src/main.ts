@@ -13,9 +13,9 @@ const vuetify = createVuetify({
         colors: {
           primary: '#223030',
           surface: '#efefe9',
-        }
-      }
-    }
+        },
+      },
+    },
   },
   defaults: {
     VTextField: {
@@ -26,8 +26,8 @@ const vuetify = createVuetify({
     VBtn: {
       color: 'primary',
       elevation: 0,
-    }
-  }
+    },
+  },
 });
 
 createApp(App).use(vuetify).use(router).mount('#app');

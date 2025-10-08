@@ -12,7 +12,9 @@ import { VTextField, VBtn } from 'vuetify/components';
     </form>
 
     <p class="register">
-      <router-link to="/auth/signin">¿Recordás tu contraseña? Volvé al inicio</router-link>
+      <router-link to="/auth/signin"
+        >¿Recordás tu contraseña? Volvé al inicio</router-link
+      >
     </p>
   </div>
 </template>

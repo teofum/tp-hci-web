@@ -99,6 +99,4 @@
 .auth-card a:hover {
   text-decoration: underline;
 }
-
-
 </style>
