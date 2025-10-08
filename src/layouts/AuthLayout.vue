@@ -78,10 +78,10 @@
   border-radius: 20px;
   text-transform: none;
   letter-spacing: normal;
+  font-size: 1rem;
 }
 
 .auth-card p {
-  font-size: 0.875rem;
   color: #000000a6;
   margin: 0;
   text-align: center;
