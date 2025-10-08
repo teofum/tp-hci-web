@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import HomeView from '../views/HomeView.vue';
 import AuthLayout from '../layouts/AuthLayout.vue';
+import ProfileLayout from '../layouts/ProfileLayout.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -12,8 +13,19 @@ const router = createRouter({
     },
     {
       path: '/profile',
-      name: 'profile',
-      component: () => import('../views/ProfileView.vue'),
+      component: ProfileLayout,
+      children: [
+        {
+          path: '',
+          name: 'profile',
+          component: () => import('../views/profile/ProfileView.vue'),
+        },
+        {
+          path: 'change-password',
+          name: 'change-password',
+          component: () => import('../views/profile/ChangePasswordView.vue'),
+        },
+      ],
     },
     {
       path: '/about',

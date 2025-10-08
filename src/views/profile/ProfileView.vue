@@ -65,8 +65,7 @@ const handleLogout = async () => {
 </script>
 
 <template>
-  <div v-if="!loadingProfile" class="profile-bg">
-    <div class="profile-card">
+  <div v-if="!loadingProfile">
       <h1>Mi Perfil</h1>
 
       <form @submit.prevent="handleUpdate">
@@ -89,35 +88,17 @@ const handleLogout = async () => {
         <VAlert v-if="error" type="error" class="mt-2">{{ error }}</VAlert>
       </form>
 
-      <VBtn variant="text" block @click="handleLogout" class="mt-4">
+      <VBtn
+        variant="text"
+        block
+        @click="router.push('/profile/change-password')"
+        class="mt-4"
+      >
+        Cambiar contraseña
+      </VBtn>
+
+      <VBtn variant="text" block @click="handleLogout" class="mt-2">
         Cerrar sesión
       </VBtn>
-    </div>
   </div>
 </template>
-
-<style scoped>
-.profile-bg {
-  display: flex;
-  justify-content: center;
-  padding: 4rem 2rem;
-}
-
-.profile-card {
-  width: 100%;
-  max-width: 420px;
-}
-
-h1 {
-  font-weight: 700;
-  text-align: center;
-  color: #000000d9;
-  margin: 0 0 24px 0;
-}
-
-form {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-</style>
