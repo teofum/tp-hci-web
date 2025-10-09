@@ -15,7 +15,12 @@ const vuetify = createVuetify({
       customTheme: {
         colors: {
           primary: '#223030',
+          secondary: '#714e4a',
           surface: '#efefe9',
+          'surface-variant': '#d8d3cd',
+          background: '#ece7df',
+          error: '#ef3f3f',
+          success: '#479451',
         },
       },
     },
@@ -28,11 +33,15 @@ const vuetify = createVuetify({
     VBtn: {
       color: 'primary',
       elevation: 0,
-      class: 'text-none',
+      class: 'text-none px-4',
+      style: { letterSpacing: 0 },
     },
     VAlert: {
       variant: 'tonal',
       rounded: 'lg',
+    },
+    VCard: {
+      rounded: 'xl',
     },
   },
 });

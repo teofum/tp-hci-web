@@ -10,7 +10,7 @@ const isAuthRoute = computed(() => route.path.startsWith('/auth'));
 
 <template>
   <v-app>
-    <v-layout>
+    <v-layout class="bg-surface">
       <v-app-bar
         v-if="!isAuthRoute"
         elevation="0"
