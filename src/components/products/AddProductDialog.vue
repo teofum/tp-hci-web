@@ -17,7 +17,7 @@ async function addProduct() {
   store.addProduct(
     productName.value,
     productEmoji.value,
-    productCategory.value ?? 0,
+    productCategory.value ?? null,
   );
 }
 </script>
@@ -73,7 +73,7 @@ async function addProduct() {
           <v-btn
             variant="flat"
             text="Agregar"
-            :disabled="!productCategory || !productName"
+            :disabled="!productName"
             @click="
               addProduct();
               isActive.value = false;

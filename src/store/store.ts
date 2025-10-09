@@ -14,7 +14,11 @@ export const useStore = defineStore('main', () => {
     categories.value = await categoriesApi.get();
   }
 
-  async function addProduct(name: string, emoji: string, categoryId: number) {
+  async function addProduct(
+    name: string,
+    emoji: string,
+    categoryId: number | null,
+  ) {
     products.value = [
       ...products.value,
       await productsApi.create(name, emoji, categoryId),

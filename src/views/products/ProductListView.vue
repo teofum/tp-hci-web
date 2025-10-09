@@ -23,7 +23,7 @@ const { products } = storeToRefs(store);
         :key="product.id"
         :name="product.name"
         :emoji="product.emoji"
-        :detail="product.category.name"
+        :detail="product.category?.name ?? 'Sin categoría'"
       >
         <v-menu>
           <template v-slot:activator="{ props: activatorProps }">

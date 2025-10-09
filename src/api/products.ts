@@ -13,12 +13,12 @@ export const products = {
     });
   },
 
-  async create(name: string, emoji: string, categoryId: number) {
+  async create(name: string, emoji: string, categoryId: number | null) {
     const res = await API.post('products')
       .withAuth()
       .withBody({
         name,
-        category: { id: categoryId },
+        category: categoryId !== null ? { id: categoryId } : undefined,
         metadata: { emoji },
       })
       .send();

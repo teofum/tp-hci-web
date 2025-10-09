@@ -28,7 +28,7 @@ export const productSchema = z
     }),
     createdAt: dateSchema,
     updatedAt: dateSchema,
-    category: categorySchema,
+    category: categorySchema.nullable(),
   })
   .transform(({ metadata, ...res }) => ({
     ...metadata,
