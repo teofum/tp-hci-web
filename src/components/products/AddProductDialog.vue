@@ -45,7 +45,11 @@ async function commit() {
     </template>
 
     <template v-slot:default="{ isActive }">
-      <v-card variant="outlined" class="bg-surface" title="Agregar producto">
+      <v-card
+        variant="outlined"
+        class="bg-surface"
+        :title="`${isEditing ? 'Modificar' : 'Agregar'} producto`"
+      >
         <v-card-item>
           <div class="d-flex flex-column align-center py-2 ga-4">
             <EmojiPickerButton v-model="productEmoji" />
