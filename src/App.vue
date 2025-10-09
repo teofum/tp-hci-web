@@ -2,21 +2,21 @@
 import { useRoute, useRouter } from 'vue-router';
 import { computed } from 'vue';
 import { VBtn } from 'vuetify/components';
+import { useStore } from './store/store';
+import { onMounted } from 'vue';
 
 const route = useRoute();
 const router = useRouter();
 const isAuthRoute = computed(() => route.path.startsWith('/auth'));
+
+const store = useStore();
+onMounted(() => store.init());
 </script>
 
 <template>
-  <v-app>
-    <v-layout class="bg-surface">
-      <v-app-bar
-        v-if="!isAuthRoute"
-        elevation="0"
-        color="#EFEFE9"
-        style="border-bottom: 2px solid #00000061"
-      >
+  <v-app class="bg-surface">
+    <v-container>
+      <v-app-bar v-if="!isAuthRoute" style="border-bottom: 1px solid #00000061">
         <template v-slot:prepend>
           <img
             alt="Vue logo"
@@ -37,6 +37,6 @@ const isAuthRoute = computed(() => route.path.startsWith('/auth'));
       <v-main>
         <RouterView />
       </v-main>
-    </v-layout>
+    </v-container>
   </v-app>
 </template>
