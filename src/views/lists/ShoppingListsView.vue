@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import ListEntry from '@/components/lists/ListEntry.vue';
-import NewListButton from '@/components/lists/NewListButton.vue';
+import NewListButton from '@/components/lists/AddListButton.vue';
 import { lists as listsApi } from '@/api/lists';
 
 type ShoppingListItem = {
@@ -40,9 +40,10 @@ onMounted(loadLists);
 
 <template>
   <div class="ml-body">
-    <div class="ml-main-container">
-      <h1 class="ml-titulo">Mis listas</h1>
-
+    <v-container max-width="800" class="container">
+      <div class="d-flex flex-row justify-space-between align-center w-100">
+        <h1 class="text-high-emphasis">Mis Listas</h1>
+      </div>
       <div class="ml_listas_container">
         <ul class="ml_listas">
           <li v-if="loading"><p>Cargando…</p></li>
@@ -61,8 +62,8 @@ onMounted(loadLists);
       </div>
 
       <NewListButton>+ Nueva Lista</NewListButton>
+    </v-container>
     </div>
-  </div>
 </template>
 
 <!-- ejemplo vue for -- 

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import NewListPopup from './NewListPopup.vue';
+import NewListPopup from './AddListPopup.vue';
 
 const newListPopupTrigger = ref(false)
 
