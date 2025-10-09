@@ -43,6 +43,9 @@ const vuetify = createVuetify({
     VCard: {
       rounded: 'xl',
     },
+    VSelect: {
+      hideDetails: true,
+    },
   },
 });
 
