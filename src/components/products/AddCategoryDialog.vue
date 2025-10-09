@@ -3,26 +3,32 @@ import { ref } from 'vue';
 
 import EmojiPickerButton from '@/components/EmojiPickerButton.vue';
 import { useStore } from '@/store/store';
+import type { Category } from '@/schemas/product.schema';
 
 const store = useStore();
 
-const categoryName = ref('');
-const categoryEmoji = ref('📦');
+const { category } = defineProps<{
+  category?: Category;
+}>();
 
-async function addCategory() {
-  store.addCategory(categoryName.value, categoryEmoji.value);
+const categoryName = ref(category?.name ?? '');
+const categoryEmoji = ref(category?.emoji ?? '📦');
+
+const isEditing = category !== undefined;
+
+async function commit() {
+  if (isEditing) {
+    store.modifyCategory(category.id, categoryName.value, categoryEmoji.value);
+  } else {
+    store.addCategory(categoryName.value, categoryEmoji.value);
+  }
 }
 </script>
 
 <template>
   <v-dialog max-width="600">
     <template v-slot:activator="{ props: activatorProps }">
-      <v-btn
-        v-bind="activatorProps"
-        text="Agregar categoría"
-        prepend-icon="mdi-plus"
-        variant="flat"
-      />
+      <slot name="activator" :props="activatorProps" />
     </template>
 
     <template v-slot:default="{ isActive }">
@@ -45,10 +51,10 @@ async function addCategory() {
           <v-btn text="Cancelar" @click="isActive.value = false" />
           <v-btn
             variant="flat"
-            text="Agregar"
+            :text="isEditing ? 'Guardar cambios' : 'Agregar'"
             @click="
               async () => {
-                await addCategory();
+                await commit();
                 isActive.value = false;
               }
             "

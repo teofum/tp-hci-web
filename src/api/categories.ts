@@ -25,6 +25,18 @@ export const categories = {
     return categorySchema.parse(res);
   },
 
+  async modify(id: number, name: string, emoji: string) {
+    const res = await API.put(`categories/${id}`)
+      .withAuth()
+      .withBody({
+        name,
+        metadata: { emoji },
+      })
+      .send();
+
+    return categorySchema.parse(res);
+  },
+
   async delete(id: number) {
     await API.delete(`categories/${id}`).withAuth().send();
   },

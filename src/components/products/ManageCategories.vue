@@ -40,11 +40,15 @@ const { categories } = storeToRefs(store);
                 </template>
 
                 <v-list>
-                  <v-list-item
-                    prepend-icon="mdi-pencil-outline"
-                    title="Modificar"
-                    @click="console.log('clicky')"
-                  />
+                  <AddCategoryDialog :category="category">
+                    <template v-slot:activator="{ props: activatorProps }">
+                      <v-list-item
+                        v-bind="activatorProps"
+                        prepend-icon="mdi-pencil-outline"
+                        title="Modificar"
+                      />
+                    </template>
+                  </AddCategoryDialog>
                   <v-list-item
                     class="text-red"
                     prepend-icon="mdi-delete-outline"
@@ -60,7 +64,16 @@ const { categories } = storeToRefs(store);
 
         <v-card-actions>
           <v-spacer />
-          <AddCategoryDialog />
+          <AddCategoryDialog>
+            <template v-slot:activator="{ props: activatorProps }">
+              <v-btn
+                v-bind="activatorProps"
+                text="Agregar categoría"
+                prepend-icon="mdi-plus"
+                variant="flat"
+              />
+            </template>
+          </AddCategoryDialog>
           <v-btn variant="flat" text="Listo" @click="isActive.value = false" />
         </v-card-actions>
       </v-card>

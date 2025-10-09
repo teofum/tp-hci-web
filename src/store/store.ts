@@ -45,6 +45,17 @@ export const useStore = defineStore('main', () => {
     ];
   }
 
+  async function modifyCategory(id: number, name: string, emoji: string) {
+    const newCategory = await categoriesApi.modify(id, name, emoji);
+    categories.value = [
+      ...categories.value.filter((category) => category.id !== id),
+      newCategory,
+    ];
+
+    // Refetch products as cached category data will be out of date
+    products.value = await productsApi.get();
+  }
+
   async function deleteProduct(id: number) {
     await productsApi.delete(id);
     products.value = products.value.filter((product) => product.id !== id);
@@ -55,6 +66,9 @@ export const useStore = defineStore('main', () => {
     categories.value = categories.value.filter(
       (category) => category.id !== id,
     );
+
+    // Refetch products as cached category data will be out of date
+    products.value = await productsApi.get();
   }
 
   return {
@@ -64,6 +78,7 @@ export const useStore = defineStore('main', () => {
     addProduct,
     addCategory,
     modifyProduct,
+    modifyCategory,
     deleteProduct,
     deleteCategory,
   };
