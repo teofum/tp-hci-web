@@ -33,5 +33,20 @@ export const useStore = defineStore('main', () => {
     products.value = products.value.filter((product) => product.id !== id);
   }
 
-  return { products, categories, init, addProduct, addCategory, deleteProduct };
+  async function deleteCategory(id: number) {
+    await categoriesApi.delete(id);
+    categories.value = categories.value.filter(
+      (category) => category.id !== id,
+    );
+  }
+
+  return {
+    products,
+    categories,
+    init,
+    addProduct,
+    addCategory,
+    deleteProduct,
+    deleteCategory,
+  };
 });

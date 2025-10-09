@@ -30,6 +30,29 @@ const { categories } = storeToRefs(store);
               :emoji="category.emoji"
               :detail="`N items`"
             >
+              <v-menu>
+                <template v-slot:activator="{ props: activatorProps }">
+                  <v-btn
+                    v-bind="activatorProps"
+                    variant="text"
+                    icon="mdi-dots-vertical"
+                  />
+                </template>
+
+                <v-list>
+                  <v-list-item
+                    prepend-icon="mdi-pencil-outline"
+                    title="Modificar"
+                    @click="console.log('clicky')"
+                  />
+                  <v-list-item
+                    class="text-red"
+                    prepend-icon="mdi-delete-outline"
+                    title="Eliminar"
+                    @click="store.deleteCategory(category.id)"
+                  />
+                </v-list>
+              </v-menu>
             </ListItem>
           </ul>
           <div v-else>No hay categorías</div>

@@ -24,4 +24,8 @@ export const categories = {
 
     return categorySchema.parse(res);
   },
+
+  async delete(id: number) {
+    await API.delete(`categories/${id}`).withAuth().send();
+  },
 };
