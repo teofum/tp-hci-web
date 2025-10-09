@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import AuthLayout from '../layouts/AuthLayout.vue';
+import ProfileLayout from '../layouts/ProfileLayout.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -8,6 +9,27 @@ const router = createRouter({
       path: '/',
       name: 'home',
       component: () => import('../views/lists/ShoppingListsView.vue'),
+    },
+    {
+      path: '/profile',
+      component: ProfileLayout,
+      children: [
+        {
+          path: '',
+          name: 'profile',
+          component: () => import('../views/profile/ProfileView.vue'),
+        },
+        {
+          path: 'change-password',
+          name: 'change-password',
+          component: () => import('../views/profile/ChangePasswordView.vue'),
+        },
+      ],
+    },
+    {
+      path: '/list',
+      name: 'list-preview',
+      component: () => import('../views/list/ListDetailView.vue'),
     },
     {
       path: '/auth',
@@ -28,6 +50,16 @@ const router = createRouter({
           name: 'forgot-password',
           component: () => import('../views/auth/ForgotPasswordView.vue'),
         },
+        {
+          path: 'verify',
+          name: 'verify',
+          component: () => import('../views/auth/VerifyAccountView.vue'),
+        },
+        {
+          path: 'reset-password',
+          name: 'reset-password',
+          component: () => import('../views/auth/ResetPasswordView.vue'),
+        },
       ],
     },
     {
@@ -36,6 +68,19 @@ const router = createRouter({
       component: () => import('../views/list/ListDetailView.vue'),
     },
   ],
+});
+
+router.beforeEach((to, _from, next) => {
+  const token = localStorage.getItem('token');
+  const isAuthRoute = to.path.startsWith('/auth');
+
+  if (isAuthRoute && token) {
+    next('/');
+  } else if (!isAuthRoute && !token) {
+    next('/auth/signin');
+  } else {
+    next();
+  }
 });
 
 export default router;

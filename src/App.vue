@@ -1,7 +1,47 @@
 <script setup lang="ts">
-import { RouterView } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router';
+import { computed } from 'vue';
+import { VBtn } from 'vuetify/components';
+
+const route = useRoute();
+const router = useRouter();
+const isAuthRoute = computed(() => route.path.startsWith('/auth'));
 </script>
 
 <template>
-  <RouterView />
+  <v-app>
+    <v-layout>
+      <v-app-bar
+        v-if="!isAuthRoute"
+        elevation="0"
+        color="#EFEFE9"
+        style="border-bottom: 2px solid #00000061"
+      >
+        <template v-slot:prepend>
+          <img
+            alt="Vue logo"
+            class="logo"
+            src="@/assets/logo.svg"
+            width="40"
+            height="40"
+          />
+        </template>
+
+        <v-app-bar-title>asdfasdf</v-app-bar-title>
+
+        <template v-slot:append>
+          <VBtn
+            color="#223030"
+            @click="router.push('/profile')"
+          >
+            Mi Perfil
+          </VBtn>
+        </template>
+      </v-app-bar>
+
+      <v-main>
+        <RouterView />
+      </v-main>
+    </v-layout>
+  </v-app>
 </template>
