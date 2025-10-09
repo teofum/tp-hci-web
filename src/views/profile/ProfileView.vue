@@ -15,8 +15,7 @@ const loadingProfile = ref(true);
 
 onMounted(async () => {
   try {
-    // TODO typecheck
-    const data = (await auth.getCurrentUser()) as Record<string, string>;
+    const data = await auth.getCurrentUser();
     name.value = data.name;
     surname.value = data.surname;
     email.value = data.email;

@@ -1,8 +1,12 @@
+import { loginResultSchema, userSchema } from '@/schemas/user.schema';
 import { API } from './api';
 
 export const auth = {
   async login(email: string, password: string) {
-    return await API.post('users/login').withBody({ email, password }).send();
+    const res = await API.post('users/login')
+      .withBody({ email, password })
+      .send();
+    return loginResultSchema.parse(res);
   },
 
   async register(
@@ -11,9 +15,10 @@ export const auth = {
     email: string,
     password: string,
   ) {
-    return await API.post('users/register')
+    const res = await API.post('users/register')
       .withBody({ name, surname, email, password, metadata: {} })
       .send();
+    return userSchema.parse(res);
   },
 
   async sendVerification(email: string) {
@@ -21,7 +26,10 @@ export const auth = {
   },
 
   async verifyAccount(code: string) {
-    return await API.post('users/verify-account').withBody({ code }).send();
+    const res = await API.post('users/verify-account')
+      .withBody({ code })
+      .send();
+    return userSchema.parse(res);
   },
 
   async forgotPassword(email: string) {
@@ -40,14 +48,16 @@ export const auth = {
   },
 
   async getCurrentUser() {
-    return await API.get('users/profile').withAuth().send();
+    const res = await API.get('users/profile').withAuth().send();
+    return userSchema.parse(res);
   },
 
   async updateProfile(name: string, surname: string) {
-    return await API.put('users/profile')
+    const res = await API.put('users/profile')
       .withAuth()
       .withBody({ name, surname, metadata: {} })
       .send();
+    return userSchema.parse(res);
   },
 
   async logout() {
