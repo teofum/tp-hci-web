@@ -11,6 +11,8 @@
   display: flex;
   justify-content: center;
   padding: 4rem 2rem;
+  min-height: calc(100vh - 64px);
+  background-color: #EFEFE9;
 }
 
 .profile-card {

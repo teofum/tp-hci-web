@@ -16,7 +16,7 @@
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background-color: #ece7df;
+  background-color: #EFEFE9;
 }
 
 .auth-card {
