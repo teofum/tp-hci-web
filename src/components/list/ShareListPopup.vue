@@ -48,10 +48,10 @@
   </div>
 </template>
 
-<script>
-export default {
-  props: ['TogglePopup']
-}
+<script setup lang="ts">
+defineProps<{
+  TogglePopup: () => void;
+}>();
 </script>
 
 <style>

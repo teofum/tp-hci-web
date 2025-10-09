@@ -1,7 +1,7 @@
 <template>
     <div class="popup">
         <div class="popup-inner">
-            <h1>item setings todo hello :D!!</h1>
+            <h1>list setttings todo :D!!</h1>
             <button class="popup-close" @click="TogglePopup()">
                 Clse popp
             </button>
@@ -9,10 +9,10 @@
     </div>
 </template>
 
-<script>
-export default{
-    props: ['TogglePopup']
-}
+<script setup lang="ts">
+defineProps<{
+  TogglePopup: () => void;
+}>();
 </script>
 
 <style>

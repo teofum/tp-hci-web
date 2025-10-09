@@ -1,16 +1,16 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
 import { ref } from 'vue'
-import itemEntry from '@/components/lista/itemEntry.vue'
-import NuevaListaBoton from '@/components/lista/buttonNewItemPopup.vue'
-import shareListPopup from '@/components/lista/shareListPopup.vue'
+import ItemEntry from '@/components/list/ItemEntry.vue'
+import NewItemButton from '@/components/list/NewItemButton.vue'
+import ShareListPopup from '@/components/list/ShareListPopup.vue'
 
 const groupByCategory = ref(false)
 
 const router = useRouter()
 
 function goBack() {
-  router.push('/MisListas')
+  router.push('/')
 }
 
 const sharePopupTrigger = ref(false)
@@ -23,8 +23,8 @@ function TogglePopup() {
 
 <template>
   <div class="l-body">
+    <button class="l-back-button" @click="goBack">← Mis Listas</button>
     <div class="l-main-container">
-      <button class="l-back-button" @click="goBack"><- Mis Listas</button>
       <div class="div-title-share">
         <h1 class="l-titulo">Nombre de la lista</h1>
         <button class="l-share-button" @click="TogglePopup">
@@ -49,14 +49,14 @@ function TogglePopup() {
             <li>
                 <ul class="l_items">
                     <li>
-                        <itemEntry /> 
+                        <ItemEntry /> 
                     </li>
                 </ul>
             </li>
         </ul>
       </div>
-      <NuevaListaBoton> + Nuevo Item </NuevaListaBoton>
-      <shareListPopup  v-if="sharePopupTrigger" :TogglePopup="() => TogglePopup()" />
+      <NewItemButton> + Nuevo Item </NewItemButton>
+      <ShareListPopup  v-if="sharePopupTrigger" :TogglePopup="() => TogglePopup()" />
     </div>
   </div>
 </template>
@@ -89,7 +89,23 @@ const list = ref([1, 2, 3])
   justify-content: center;
   align-items: flex-start;
   min-height: 100vh;
-  background-color: #ece7df;
+  background-color: #EFEFE9;
+
+  .l-back-button {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background: none;
+    border: none;
+    color: black;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: opacity 0.3s ease;
+  
+    &:hover {
+      opacity: 0.6;
+    }
+  }
 
   .l-main-container {
     width: 50%;
@@ -100,20 +116,6 @@ const list = ref([1, 2, 3])
     align-items: center;
 
     margin-top: 20px;
-
-    .l-back-button {
-      background: none;
-      border: none;
-      color: black;
-      font-size: 1rem;
-      cursor: pointer;
-      transition: opacity 0.3s ease;
-      align-self: flex-start;
-    
-      &:hover {
-        opacity: 0.6;
-      }
-    }
 
     .div-title-share {
       width: 100%;
@@ -170,7 +172,7 @@ const list = ref([1, 2, 3])
         border: none;
         border-radius: 9999px;
         cursor: pointer;
-        background: #dcd5cd; /* pill beige claro */
+        background: #D8D3CD;
         box-shadow: inset 0 0 0 1px rgba(0,0,0,0.08);
         transition: opacity 0.2s ease;
       

@@ -1,6 +1,6 @@
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue'
-import listSettingsPopup from '@/components/misListas/listSettingsPopup.vue'
+import listSettingsPopup from './ListSettingsPopup.vue'
 
 const props = defineProps({
   name: { type: String, default: 'nombre' },
@@ -14,8 +14,9 @@ function TogglePopup() { listSettingsPopupTrigger.value = !listSettingsPopupTrig
 
 <template>
   <div class="le-body">
+    <!-- fallback keeps your current placeholder -->
     <img class="le-image"
-         :src="image || 'data:image/png;base64,iVBORw0K...SuQmCC'"  <!-- fallback keeps your current placeholder -->
+         :src="image || 'data:image/png;base64,iVBORw0K...SuQmCC'"
          alt="list" />
     <div class="le-data">
       <h2>{{ name }}</h2>

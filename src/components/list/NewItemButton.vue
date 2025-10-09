@@ -1,11 +1,11 @@
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue';
-import NewListPopup from '@/components/misListas/nuevaLIstaPopup.vue';
+import NewItemPopup from '@/components/list/NewItemPopup.vue';
 
-const newListPopupTrigger = ref(false)
+const newListPopupTrigger = ref(false);
 
 function TogglePopup() {
-  newListPopupTrigger.value = !newListPopupTrigger.value
+  newListPopupTrigger.value = !newListPopupTrigger.value;
 }
 
 </script>
@@ -15,7 +15,7 @@ function TogglePopup() {
     <button class="nl-button" @click="() => TogglePopup()">
       <slot></slot>
     </button>
-    <NewListPopup v-if="newListPopupTrigger" 
+    <NewItemPopup v-if="newListPopupTrigger" 
           :TogglePopup="() => TogglePopup()"/>
 </template>
 

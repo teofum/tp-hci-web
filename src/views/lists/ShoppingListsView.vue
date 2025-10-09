@@ -1,43 +1,41 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import listEntry from '@/components/misListas/listEntry.vue'
-import NuevaListaBoton from '@/components/misListas/buttonNewListPopup.vue'
+import { ref, onMounted } from 'vue';
+import ListEntry from '@/components/lists/ListEntry.vue';
+import NewListButton from '@/components/lists/NewListButton.vue';
+import { lists as listsApi } from '@/api/lists';
 
+type ShoppingListItem = {
+  id: number;
+  name: string;
+};
 
-const BASE_URL = 'http://localhost:8080'            
-const token = localStorage.getItem('token') || ''   
+type ShoppingList = {
+  id: number;
+  name: string;
+  itemsCount?: number;
+  items_count?: number;
+  items?: ShoppingListItem[];
+  imageUrl?: string;
+  image_url?: string;
+};
 
-async function fetchJSON(input: RequestInfo, init?: RequestInit) {
-  const res = await fetch(input, {
-    ...init,
-    headers: {
-      'Content-Type': 'application/json',
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
-      ...(init?.headers || {})
-    }
-  })
-  if (!res.ok) throw new Error(`HTTP ${res.status}`)
-  return res.json()
-}
-
-const lists = ref<any[]>([])
-const loading = ref(false)
-const error = ref<string | null>(null)
+const lists = ref<ShoppingList[]>([]);
+const loading = ref(false);
+const error = ref<string | null>(null);
 
 async function loadLists() {
-  loading.value = true
-  error.value = null
+  loading.value = true;
+  error.value = null;
   try {
-    const json = await fetchJSON(`${BASE_URL}/api/shopping-lists?page=1&per_page=20&order=ASC`)
-    lists.value = Array.isArray(json) ? json : (json.data ?? [])
-  } catch (e:any) {
-    error.value = e?.message ?? 'Failed to load lists'
+    lists.value = await listsApi.getLists({ page: 1, per_page: 20, order: 'ASC' });
+  } catch (e) {
+    error.value = e instanceof Error ? e.message : 'Error al cargar las listas';
   } finally {
-    loading.value = false
+    loading.value = false;
   }
 }
 
-onMounted(loadLists)
+onMounted(loadLists);
 </script>
 
 <template>
@@ -52,16 +50,17 @@ onMounted(loadLists)
           <li v-else-if="!lists.length"><p>Sin listas todavía.</p></li>
 
           <li v-for="l in lists" :key="l.id">
-            <listEntry
+            <ListEntry
+              :id="l.id"
               :name="l.name"
               :items-count="l.itemsCount ?? l.items_count ?? (l.items?.length ?? 0)"
-              :image="l.imageUrl ?? l.image_url ?? null"
+              :image="l.imageUrl ?? l.image_url ?? ''"
             />
           </li>
         </ul>
       </div>
 
-      <NuevaListaBoton>+ Nueva Lista</NuevaListaBoton>
+      <NewListButton>+ Nueva Lista</NewListButton>
     </div>
   </div>
 </template>
@@ -85,48 +84,40 @@ const list = ref([1, 2, 3])
 </template>
 -->
 
-<style>
+<style scoped>
 .ml-body {
-  /* todo colores en variables */ 
   color: black;
-
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   min-height: 100vh;
-  background-color: #ece7df;
+  background-color: #EFEFE9;
+  padding: 40px 20px;
 }
 
 .ml-main-container{
-  width: 50%;
-
+  width: 100%;
+  max-width: 800px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: baseline;
-
-  margin: 160px 0;
 }
 
-.ml_listas_container{
-  width: 100%;
-
-  display: flex;
-  justify-content: center;
-  align-items: baseline;
-}
-
-.ml_listas {
-  width: 100%;
-
-  list-style-type: none;
-  padding: 0; 
-  margin: 0;
-}
 .ml-titulo{
   font-size: 2rem;
   font-weight: 700;
   color: #000;
+  margin-bottom: 20px;
+}
+
+.ml_listas_container{
+  width: 100%;
+}
+
+.ml_listas {
+  width: 100%;
+  list-style-type: none;
+  padding: 0; 
+  margin: 0;
 }
 
 p {
