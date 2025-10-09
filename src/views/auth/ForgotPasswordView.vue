@@ -18,7 +18,10 @@ const handleForgotPassword = async () => {
     await auth.forgotPassword(email.value);
     success.value = 'Te enviamos un código a tu email';
     setTimeout(() => {
-      router.push({ path: '/auth/reset-password', state: { email: email.value } });
+      router.push({
+        path: '/auth/reset-password',
+        state: { email: email.value },
+      });
     }, 3000);
   } catch {
     error.value = 'Error al enviar el código';
@@ -29,26 +32,31 @@ const handleForgotPassword = async () => {
 </script>
 
 <template>
-  <div>
-    <h1>Recuperá tu contraseña</h1>
+  <div class="w-100 d-flex flex-column align-center">
+    <h1 class="mb-4">Recuperá tu contraseña</h1>
 
-    <form @submit.prevent="handleForgotPassword">
+    <VAlert v-if="success" type="success" class="mb-8">{{ success }}</VAlert>
+    <VAlert v-if="error" type="error" class="mb-8">{{ error }}</VAlert>
+
+    <form
+      @submit.prevent="handleForgotPassword"
+      class="d-flex flex-column ga-6 mb-6 w-100 align-center"
+    >
       <VTextField
         v-model="email"
         placeholder="Correo electrónico"
         type="email"
         required
+        class="w-100"
       />
 
-      <VBtn type="submit" block :loading="loading">Enviar código</VBtn>
-      <VAlert v-if="success" type="success" class="mt-2">{{ success }}</VAlert>
-      <VAlert v-if="error" type="error" class="mt-2">{{ error }}</VAlert>
+      <VBtn type="submit" :loading="loading" min-width="16rem">
+        Enviar código
+      </VBtn>
     </form>
 
-    <p class="register">
-      <router-link to="/auth/signin"
-        >¿Recordás tu contraseña? Volvé al inicio</router-link
-      >
-    </p>
+    <VBtn variant="text" to="/auth/signin">
+      ¿Recordás tu contraseña? Volvé al inicio
+    </VBtn>
   </div>
 </template>

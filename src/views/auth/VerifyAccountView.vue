@@ -44,28 +44,29 @@ const handleResend = async () => {
 </script>
 
 <template>
-  <div>
-    <h1>Verificá tu cuenta</h1>
+  <div class="w-100 d-flex flex-column align-center">
+    <h1 class="mb-4">Verificá tu cuenta</h1>
 
-    <form @submit.prevent="handleVerify">
+    <VAlert v-if="error" type="error" class="mb-8">{{ error }}</VAlert>
+
+    <form
+      @submit.prevent="handleVerify"
+      class="d-flex flex-column ga-6 mb-6 w-100 align-center"
+    >
       <VTextField
         v-model="code"
         placeholder="Código de verificación"
         type="text"
         required
+        class="w-100"
       />
 
-      <VBtn type="submit" block :loading="loading">Verificar</VBtn>
-      <VAlert v-if="error" type="error" class="mt-2">{{ error }}</VAlert>
+      <VBtn type="submit" :loading="loading" min-width="16rem">Verificar</VBtn>
     </form>
 
-    <p class="register">
-      <a href="#" @click.prevent="handleResend"
-        >¿No recibiste el código? Reenviar</a
-      >
-    </p>
-    <p class="register">
-      <router-link to="/auth/signin">Volver al inicio de sesión</router-link>
-    </p>
+    <VBtn variant="text" @click.prevent="handleResend">
+      ¿No recibiste el código? Reenviar
+    </VBtn>
+    <VBtn variant="text" to="/auth/signin">Volver al inicio de sesión</VBtn>
   </div>
 </template>

@@ -26,36 +26,42 @@ const handleLogin = async () => {
 </script>
 
 <template>
-  <div>
-    <h1>Iniciar sesión</h1>
+  <div class="w-100 d-flex flex-column align-center">
+    <h1 class="mb-4">Iniciar sesión</h1>
 
-    <form @submit.prevent="handleLogin">
+    <VAlert v-if="error" type="error" class="mb-8 w-100">
+      {{ error }}
+    </VAlert>
+
+    <form
+      @submit.prevent="handleLogin"
+      class="d-flex flex-column ga-6 mb-6 w-100 align-center"
+    >
       <VTextField
         v-model="email"
-        placeholder="Correo electrónico"
+        label="Correo electrónico"
         type="email"
         required
+        class="w-100"
       />
       <VTextField
         v-model="password"
-        placeholder="Contraseña"
+        label="Contraseña"
         type="password"
         required
+        class="w-100"
       />
 
-      <VBtn type="submit" block :loading="loading">Iniciar Sesión</VBtn>
-      <VAlert v-if="error" type="error" class="mt-2">{{ error }}</VAlert>
+      <VBtn type="submit" :loading="loading" min-width="16rem">
+        Iniciar Sesión
+      </VBtn>
     </form>
 
-    <p class="forgot-password">
-      <router-link to="/auth/forgot-password"
-        >¿Olvidaste tu contraseña?</router-link
-      >
-    </p>
-    <p class="register">
-      <router-link to="/auth/signup"
-        >¿No tenés una cuenta? Registrate</router-link
-      >
-    </p>
+    <VBtn to="/auth/forgot-password" variant="text">
+      ¿Olvidaste tu contraseña?
+    </VBtn>
+    <VBtn to="/auth/signup" variant="text">
+      ¿No tenés una cuenta? Registrate
+    </VBtn>
   </div>
 </template>

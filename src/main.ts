@@ -4,8 +4,10 @@ import '@mdi/font/css/materialdesignicons.css';
 import { createVuetify } from 'vuetify';
 import App from './App.vue';
 import router from './router';
+import { md3 } from 'vuetify/blueprints';
 
 const vuetify = createVuetify({
+  blueprint: md3,
   theme: {
     defaultTheme: 'customTheme',
     themes: {
@@ -19,13 +21,17 @@ const vuetify = createVuetify({
   },
   defaults: {
     VTextField: {
-      variant: 'solo',
-      bgColor: 'surface',
       hideDetails: true,
+      rounded: 'lg',
     },
     VBtn: {
       color: 'primary',
       elevation: 0,
+      class: 'text-none',
+    },
+    VAlert: {
+      variant: 'tonal',
+      rounded: 'lg',
     },
   },
 });

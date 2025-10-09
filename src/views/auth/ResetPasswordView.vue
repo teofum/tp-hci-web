@@ -38,35 +38,42 @@ const handleResetPassword = async () => {
 </script>
 
 <template>
-  <div>
-    <h1>Resetear contraseña</h1>
+  <div class="w-100 d-flex flex-column align-center">
+    <h1 class="mb-4">Resetear contraseña</h1>
 
-    <form @submit.prevent="handleResetPassword">
+    <VAlert v-if="error" type="error" class="mb-8">{{ error }}</VAlert>
+
+    <form
+      @submit.prevent="handleResetPassword"
+      class="d-flex flex-column ga-6 mb-6 w-100 align-center"
+    >
       <VTextField
         v-model="code"
         placeholder="Código de verificación"
         type="text"
         required
+        class="w-100"
       />
       <VTextField
         v-model="password"
         placeholder="Nueva contraseña"
         type="password"
         required
+        class="w-100"
       />
       <VTextField
         v-model="confirmPassword"
         placeholder="Confirmar contraseña"
         type="password"
         required
+        class="w-100"
       />
 
-      <VBtn type="submit" block :loading="loading">Resetear contraseña</VBtn>
-      <VAlert v-if="error" type="error" class="mt-2">{{ error }}</VAlert>
+      <VBtn type="submit" :loading="loading" min-width="16rem">
+        Resetear contraseña
+      </VBtn>
     </form>
 
-    <p class="register">
-      <router-link to="/auth/signin">Volver al inicio de sesión</router-link>
-    </p>
+    <VBtn variant="text" to="/auth/signin">Volver al inicio de sesión</VBtn>
   </div>
 </template>

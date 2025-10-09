@@ -18,7 +18,7 @@ const handleRegister = async () => {
     error.value = 'Las contraseñas no coinciden';
     return;
   }
-  
+
   try {
     loading.value = true;
     error.value = '';
@@ -33,24 +33,58 @@ const handleRegister = async () => {
 </script>
 
 <template>
-  <div>
-    <h1>Creá tu cuenta</h1>
+  <div class="w-100 d-flex flex-column align-center">
+    <h1 class="mb-4">Creá tu cuenta</h1>
 
-    <form @submit.prevent="handleRegister">
-      <VTextField v-model="name" placeholder="Nombre" type="text" required />
-      <VTextField v-model="surname" placeholder="Apellido" type="text" required />
-      <VTextField v-model="email" placeholder="Correo electrónico" type="email" required />
-      <VTextField v-model="password" placeholder="Contraseña" type="password" required />
-      <VTextField v-model="confirmPassword" placeholder="Repetir contraseña" type="password" required />
-      
-      <VBtn type="submit" block :loading="loading">Crear cuenta</VBtn>
-      <VAlert v-if="error" type="error" class="mt-2">{{ error }}</VAlert>
+    <VAlert v-if="error" type="error" class="mb-8">{{ error }}</VAlert>
+
+    <form
+      @submit.prevent="handleRegister"
+      class="d-flex flex-column ga-6 mb-6 w-100 align-center"
+    >
+      <VTextField
+        v-model="name"
+        placeholder="Nombre"
+        type="text"
+        required
+        class="w-100"
+      />
+      <VTextField
+        v-model="surname"
+        placeholder="Apellido"
+        type="text"
+        required
+        class="w-100"
+      />
+      <VTextField
+        v-model="email"
+        placeholder="Correo electrónico"
+        type="email"
+        required
+        class="w-100"
+      />
+      <VTextField
+        v-model="password"
+        placeholder="Contraseña"
+        type="password"
+        required
+        class="w-100"
+      />
+      <VTextField
+        v-model="confirmPassword"
+        placeholder="Repetir contraseña"
+        type="password"
+        required
+        class="w-100"
+      />
+
+      <VBtn type="submit" :loading="loading" min-width="16rem">
+        Crear cuenta
+      </VBtn>
     </form>
 
-    <p class="register">
-      <router-link to="/auth/signin"
-        >¿Ya tenés una cuenta? Iniciar sesión</router-link
-      >
-    </p>
+    <VBtn variant="text" to="/auth/signin">
+      ¿Ya tenés una cuenta? Iniciar sesión
+    </VBtn>
   </div>
 </template>
