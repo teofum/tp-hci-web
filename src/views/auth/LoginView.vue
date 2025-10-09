@@ -14,8 +14,8 @@ const handleLogin = async () => {
   try {
     loading.value = true;
     error.value = '';
-    const data = await auth.login(email.value, password.value);
-    localStorage.setItem('token', data.token);
+    const { token } = await auth.login(email.value, password.value);
+    localStorage.setItem('token', token);
     router.push('/');
   } catch {
     error.value = 'Email o contraseña incorrectos';

@@ -5,6 +5,7 @@ import { createVuetify } from 'vuetify';
 import App from './App.vue';
 import router from './router';
 import { md3 } from 'vuetify/blueprints';
+import { createPinia } from 'pinia';
 
 const vuetify = createVuetify({
   blueprint: md3,
@@ -14,7 +15,12 @@ const vuetify = createVuetify({
       customTheme: {
         colors: {
           primary: '#223030',
+          secondary: '#714e4a',
           surface: '#efefe9',
+          'surface-variant': '#d8d3cd',
+          background: '#ece7df',
+          error: '#ef3f3f',
+          success: '#479451',
         },
       },
     },
@@ -27,13 +33,25 @@ const vuetify = createVuetify({
     VBtn: {
       color: 'primary',
       elevation: 0,
-      class: 'text-none',
+      class: 'text-none px-4',
+      style: { letterSpacing: 0 },
     },
     VAlert: {
       variant: 'tonal',
       rounded: 'lg',
     },
+    VCard: {
+      rounded: 'xl',
+    },
+    VSelect: {
+      hideDetails: true,
+    },
+    VList: {
+      rounded: 'lg',
+    },
   },
 });
 
-createApp(App).use(vuetify).use(router).mount('#app');
+const pinia = createPinia();
+
+createApp(App).use(vuetify).use(pinia).use(router).mount('#app');
