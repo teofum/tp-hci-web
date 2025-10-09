@@ -25,9 +25,32 @@ const { products } = storeToRefs(store);
         :emoji="product.emoji"
         :detail="product.category.name"
       >
+        <v-menu>
+          <template v-slot:activator="{ props: activatorProps }">
+            <v-btn
+              v-bind="activatorProps"
+              variant="text"
+              icon="mdi-dots-vertical"
+            />
+          </template>
+
+          <v-list>
+            <v-list-item
+              prepend-icon="mdi-pencil-outline"
+              title="Modificar"
+              @click="console.log('clicky')"
+            />
+            <v-list-item
+              class="text-red"
+              prepend-icon="mdi-delete-outline"
+              title="Eliminar"
+              @click="store.deleteProduct(product.id)"
+            />
+          </v-list>
+        </v-menu>
       </ListItem>
     </ul>
-    <div v-else>no products</div>
+    <div v-else>No hay productos</div>
 
     <AddProductDialog />
   </v-container>

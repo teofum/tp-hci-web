@@ -25,4 +25,8 @@ export const products = {
 
     return productSchema.parse(res);
   },
+
+  async delete(id: number) {
+    await API.delete(`products/${id}`).withAuth().send();
+  },
 };

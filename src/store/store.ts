@@ -28,5 +28,10 @@ export const useStore = defineStore('main', () => {
     ];
   }
 
-  return { products, categories, init, addProduct, addCategory };
+  async function deleteProduct(id: number) {
+    await productsApi.delete(id);
+    products.value = products.value.filter((product) => product.id !== id);
+  }
+
+  return { products, categories, init, addProduct, addCategory, deleteProduct };
 });

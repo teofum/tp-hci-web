@@ -18,6 +18,10 @@ export class API {
     return new API(url, 'PUT');
   }
 
+  public static delete(url: string) {
+    return new API(url, 'DELETE');
+  }
+
   private constructor(url: string, method: RequestInit['method']) {
     this.url = new URL(url, BASE_URL);
     this.init = { method, headers: DEFAULT_HEADERS };
