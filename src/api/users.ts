@@ -1,4 +1,4 @@
-import { API } from './fetch';
+import { API } from './api';
 
 export const auth = {
   async login(email: string, password: string) {
