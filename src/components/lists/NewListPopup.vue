@@ -1,3 +1,12 @@
+
+<script setup lang="ts">
+defineProps<{
+  TogglePopup: () => void;
+}>();
+
+//import { VBtn } from 'vuetify/components';
+</script>
+
 <template>
   <div class="popup">
     <div class="popup-inner">
@@ -14,12 +23,6 @@
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-defineProps<{
-  TogglePopup: () => void;
-}>();
-</script>
 
 <style>
 .popup{

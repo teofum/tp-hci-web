@@ -84,6 +84,7 @@ const list = ref([1, 2, 3])
 .l-body {
   /* todo colores en variables */ 
   color: black;
+  position: relative;
 
   display: flex;
   justify-content: center;
@@ -93,8 +94,8 @@ const list = ref([1, 2, 3])
 
   .l-back-button {
     position: absolute;
-    top: 20px;
-    left: 20px;
+    top: 30px;
+    left: 10%;
     background: none;
     border: none;
     color: black;
@@ -115,7 +116,7 @@ const list = ref([1, 2, 3])
     justify-content: center;
     align-items: center;
 
-    margin-top: 20px;
+    margin-top: 60px;
 
     .div-title-share {
       width: 100%;
