@@ -32,6 +32,19 @@ export const useStore = defineStore('main', () => {
     ];
   }
 
+  async function modifyProduct(
+    id: number,
+    name: string,
+    emoji: string,
+    categoryId: number | null,
+  ) {
+    const newProduct = await productsApi.modify(id, name, emoji, categoryId);
+    products.value = [
+      ...products.value.filter((product) => product.id !== id),
+      newProduct,
+    ];
+  }
+
   async function deleteProduct(id: number) {
     await productsApi.delete(id);
     products.value = products.value.filter((product) => product.id !== id);
@@ -50,6 +63,7 @@ export const useStore = defineStore('main', () => {
     init,
     addProduct,
     addCategory,
+    modifyProduct,
     deleteProduct,
     deleteCategory,
   };

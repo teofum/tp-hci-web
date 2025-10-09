@@ -5,35 +5,43 @@ import { storeToRefs } from 'pinia';
 import AddCategoryDialog from './AddCategoryDialog.vue';
 import EmojiPickerButton from '@/components/EmojiPickerButton.vue';
 import { useStore } from '@/store/store';
+import type { Product } from '@/schemas/product.schema';
 
 const store = useStore();
 const { categories } = storeToRefs(store);
 
-const productName = ref('');
-const productEmoji = ref('📦');
-const productCategory = ref<number>();
+const { product } = defineProps<{
+  product?: Product;
+}>();
 
-async function addProduct() {
-  store.addProduct(
-    productName.value,
-    productEmoji.value,
-    productCategory.value ?? null,
-  );
+const productName = ref(product?.name ?? '');
+const productEmoji = ref(product?.emoji ?? '📦');
+const productCategory = ref(product?.category?.id);
+
+const isEditing = product !== undefined;
+
+async function commit() {
+  if (isEditing) {
+    store.modifyProduct(
+      product.id,
+      productName.value,
+      productEmoji.value,
+      productCategory.value ?? null,
+    );
+  } else {
+    store.addProduct(
+      productName.value,
+      productEmoji.value,
+      productCategory.value ?? null,
+    );
+  }
 }
 </script>
 
 <template>
   <v-dialog max-width="600">
     <template v-slot:activator="{ props: activatorProps }">
-      <v-fab
-        v-bind="activatorProps"
-        app
-        location="bottom end"
-        size="x-large"
-        text="Agregar producto"
-        prepend-icon="mdi-plus"
-        variant="flat"
-      />
+      <slot name="activator" :props="activatorProps" />
     </template>
 
     <template v-slot:default="{ isActive }">
@@ -72,10 +80,10 @@ async function addProduct() {
           <v-btn text="Cancelar" @click="isActive.value = false" />
           <v-btn
             variant="flat"
-            text="Agregar"
+            :text="isEditing ? 'Guardar cambios' : 'Agregar'"
             :disabled="!productName"
             @click="
-              addProduct();
+              commit();
               isActive.value = false;
             "
           />

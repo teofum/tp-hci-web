@@ -1,6 +1,7 @@
 import { productSchema } from '@/schemas/product.schema';
 import { API } from './api';
 import { fetchAll } from './fetchAll';
+import z from 'zod';
 
 export const products = {
   async get() {
@@ -24,6 +25,24 @@ export const products = {
       .send();
 
     return productSchema.parse(res);
+  },
+
+  async modify(
+    id: number,
+    name: string,
+    emoji: string,
+    categoryId: number | null,
+  ) {
+    const res = await API.put(`products/${id}`)
+      .withAuth()
+      .withBody({
+        name,
+        category: categoryId !== null ? { id: categoryId } : undefined,
+        metadata: { emoji },
+      })
+      .send();
+
+    return z.object({ product: productSchema }).parse(res).product;
   },
 
   async delete(id: number) {
