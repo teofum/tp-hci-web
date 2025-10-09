@@ -27,15 +27,10 @@ const isAuthRoute = computed(() => route.path.startsWith('/auth'));
           />
         </template>
 
-        <v-app-bar-title>asdfasdf</v-app-bar-title>
+        <v-app-bar-title>Shopping list app</v-app-bar-title>
 
         <template v-slot:append>
-          <VBtn
-            color="#223030"
-            @click="router.push('/profile')"
-          >
-            Mi Perfil
-          </VBtn>
+          <VBtn @click="router.push('/profile')"> Mi Perfil </VBtn>
         </template>
       </v-app-bar>
 

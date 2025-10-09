@@ -1,14 +1,8 @@
-const API_URL = 'http://localhost:8080/api';
+import { API } from './fetch';
 
 export const auth = {
   async login(email: string, password: string) {
-    const response = await fetch(`${API_URL}/users/login`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password }),
-    });
-    if (!response.ok) throw new Error(`Error: ${response.status}`);
-    return response.json();
+    return await API.post('users/login').withBody({ email, password }).send();
   },
 
   async register(
@@ -16,104 +10,47 @@ export const auth = {
     surname: string,
     email: string,
     password: string,
-    metadata = {},
   ) {
-    const response = await fetch(`${API_URL}/users/register`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, surname, email, password, metadata }),
-    });
-    if (!response.ok) throw new Error(`Error: ${response.status}`);
-    return response.json();
+    return await API.post('users/register')
+      .withBody({ name, surname, email, password, metadata: {} })
+      .send();
   },
 
   async sendVerification(email: string) {
-    const response = await fetch(
-      `${API_URL}/users/send-verification?email=${encodeURIComponent(email)}`,
-      {
-        method: 'POST',
-      },
-    );
-    if (!response.ok) throw new Error(`Error: ${response.status}`);
+    await API.post('users/send-verification').withParams({ email }).send();
   },
 
   async verifyAccount(code: string) {
-    const response = await fetch(`${API_URL}/users/verify-account`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ code }),
-    });
-    if (!response.ok) throw new Error(`Error: ${response.status}`);
-    return response.json();
+    return await API.post('users/verify-account').withBody({ code }).send();
   },
 
   async forgotPassword(email: string) {
-    const response = await fetch(
-      `${API_URL}/users/forgot-password?email=${encodeURIComponent(email)}`,
-      {
-        method: 'POST',
-      },
-    );
-    if (!response.ok) throw new Error(`Error: ${response.status}`);
+    await API.post('users/forgot-password').withParams({ email }).send();
   },
 
   async resetPassword(code: string, password: string) {
-    const response = await fetch(`${API_URL}/users/reset-password`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ code, password }),
-    });
-    if (!response.ok) throw new Error(`Error: ${response.status}`);
+    await API.post('users/reset-password').withBody({ code, password }).send();
   },
 
-  async changePassword(
-    token: string,
-    currentPassword: string,
-    newPassword: string,
-  ) {
-    const response = await fetch(`${API_URL}/users/change-password`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({ currentPassword, newPassword }),
-    });
-    if (!response.ok) throw new Error(`Error: ${response.status}`);
+  async changePassword(currentPassword: string, newPassword: string) {
+    await API.post('users/change-password')
+      .withAuth()
+      .withBody({ currentPassword, newPassword })
+      .send();
   },
 
-  async getCurrentUser(token: string) {
-    const response = await fetch(`${API_URL}/users/profile`, {
-      method: 'GET',
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    if (!response.ok) throw new Error(`Error: ${response.status}`);
-    return response.json();
+  async getCurrentUser() {
+    return await API.get('users/profile').withAuth().send();
   },
 
-  async updateProfile(
-    token: string,
-    name: string,
-    surname: string,
-    metadata = {},
-  ) {
-    const response = await fetch(`${API_URL}/users/profile`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({ name, surname, metadata }),
-    });
-    if (!response.ok) throw new Error(`Error: ${response.status}`);
-    return response.json();
+  async updateProfile(name: string, surname: string) {
+    return await API.put('users/profile')
+      .withAuth()
+      .withBody({ name, surname, metadata: {} })
+      .send();
   },
 
-  async logout(token: string) {
-    const response = await fetch(`${API_URL}/users/logout`, {
-      method: 'POST',
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    if (!response.ok) throw new Error(`Error: ${response.status}`);
+  async logout() {
+    await API.post('users/logout').withAuth().send();
   },
 };

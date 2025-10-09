@@ -5,6 +5,7 @@ import { createVuetify } from 'vuetify';
 import App from './App.vue';
 import router from './router';
 import { md3 } from 'vuetify/blueprints';
+import { createPinia } from 'pinia';
 
 const vuetify = createVuetify({
   blueprint: md3,
@@ -36,4 +37,6 @@ const vuetify = createVuetify({
   },
 });
 
-createApp(App).use(vuetify).use(router).mount('#app');
+const pinia = createPinia();
+
+createApp(App).use(vuetify).use(pinia).use(router).mount('#app');

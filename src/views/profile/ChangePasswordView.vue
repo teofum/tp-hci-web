@@ -16,14 +16,11 @@ const handleChangePassword = async () => {
     return;
   }
 
-  const token = localStorage.getItem('token');
-  if (!token) return;
-
   try {
     loading.value = true;
     error.value = '';
     success.value = '';
-    await auth.changePassword(token, currentPassword.value, newPassword.value);
+    await auth.changePassword(currentPassword.value, newPassword.value);
     success.value = 'Contraseña actualizada correctamente';
     currentPassword.value = '';
     newPassword.value = '';
@@ -38,39 +35,35 @@ const handleChangePassword = async () => {
 
 <template>
   <div>
-      <h1>Cambiar contraseña</h1>
+    <h1>Cambiar contraseña</h1>
 
-      <form @submit.prevent="handleChangePassword">
-        <VTextField
-          v-model="currentPassword"
-          placeholder="Contraseña actual"
-          type="password"
-          required
-        />
-        <VTextField
-          v-model="newPassword"
-          placeholder="Nueva contraseña"
-          type="password"
-          required
-        />
-        <VTextField
-          v-model="confirmNewPassword"
-          placeholder="Confirmar nueva contraseña"
-          type="password"
-          required
-        />
+    <form @submit.prevent="handleChangePassword">
+      <VTextField
+        v-model="currentPassword"
+        placeholder="Contraseña actual"
+        type="password"
+        required
+      />
+      <VTextField
+        v-model="newPassword"
+        placeholder="Nueva contraseña"
+        type="password"
+        required
+      />
+      <VTextField
+        v-model="confirmNewPassword"
+        placeholder="Confirmar nueva contraseña"
+        type="password"
+        required
+      />
 
-        <VBtn type="submit" block :loading="loading">
-          Cambiar contraseña
-        </VBtn>
-        <VAlert v-if="success" type="success" class="mt-2">{{
-          success
-        }}</VAlert>
-        <VAlert v-if="error" type="error" class="mt-2">{{ error }}</VAlert>
-      </form>
+      <VBtn type="submit" block :loading="loading"> Cambiar contraseña </VBtn>
+      <VAlert v-if="success" type="success" class="mt-2">{{ success }}</VAlert>
+      <VAlert v-if="error" type="error" class="mt-2">{{ error }}</VAlert>
+    </form>
 
-      <p class="mt-4">
-        <router-link to="/profile">Volver al perfil</router-link>
-      </p>
+    <p class="mt-4">
+      <router-link to="/profile">Volver al perfil</router-link>
+    </p>
   </div>
 </template>
