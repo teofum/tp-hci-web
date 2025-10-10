@@ -76,6 +76,21 @@ const router = createRouter({
         },
       ],
     },
+    {
+      path: '/list/:id',
+      name: 'list-detail',
+      component: () => import('../views/list/ListDetailView.vue'),
+    },
+    {
+      path: '/lists',
+      name: 'lists',
+      component: () => import('../views/lists/ShoppingListsView.vue'),
+    },
+    {
+      path: '/history',
+      name: 'history',
+      component: () => import('../views/history/HistoryListsView.vue'),
+    },
   ],
 });
 
