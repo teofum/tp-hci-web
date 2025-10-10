@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
 import { useStore } from '@/store/store';
-import NewListButton from '@/components/lists/AddListButton.vue';
 import ListItem from '@/components/ListItem.vue';
 import AddListDialog from '@/components/lists/AddListDialog.vue';
 import { useRouter } from 'vue-router';
+import ShareListDialog from '@/components/lists/ShareListDialog.vue';
 
 
 const store = useStore();
@@ -53,6 +53,15 @@ function redirectList(id: number) {
                     />
                   </template>
                 </AddListDialog>
+                  <ShareListDialog :list="list">
+                  <template v-slot:activator="{ props: activatorProps }">
+                    <v-list-item
+                      v-bind="activatorProps"
+                      prepend-icon="mdi-share-variant"
+                      title="Compartir"
+                    />
+                  </template>
+                </ShareListDialog>
                 <v-list-item
                   class="text-red"
                   prepend-icon="mdi-delete-outline"
