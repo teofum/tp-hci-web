@@ -4,7 +4,7 @@
   >
     <div class="auth-card">
       <div class="icon-box">
-        <!-- TODO: poner icono -->
+        <v-icon icon="mdi-shopping-outline" size="64" color="white" />
       </div>
 
       <router-view />
