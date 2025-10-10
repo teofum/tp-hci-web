@@ -46,7 +46,7 @@ const productsByCategory = computed(() => {
       <ManageCategories />
     </div>
 
-    <div class="d-flex flex-column ga-4 my-4">
+    <div class="d-flex flex-column ga-2 my-4">
       <v-text-field
         v-model="filter"
         label="Buscar"
