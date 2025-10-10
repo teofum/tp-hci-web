@@ -7,6 +7,12 @@ import type { Category, Product } from '@/schemas/product.schema';
 import type { List } from '@/schemas/list.schema';
 import { ref } from 'vue';
 
+/* TODO:
+ * hacer lo de history, shred users por lista
+ * pantry?
+ * purchesed list o purchased items?
+ */
+
 export const useStore = defineStore('main', () => {
   const products = ref([] as Product[]);
   const categories = ref([] as Category[]);
@@ -120,11 +126,6 @@ export const useStore = defineStore('main', () => {
     lists.value = lists.value.filter((product) => product.id !== id);
   }
 
-  async function purchaseList(id: number) {
-    await listsAPI.purchase(id);
-    // TODO Mark a shopping list as purchased and create a purchase history entry
-  }
-
   async function modifyList(
     id: number,
     name: string,
@@ -155,7 +156,6 @@ export const useStore = defineStore('main', () => {
     deleteCategory,
     addList,
     deleteList,
-    purchaseList,
     modifyList,
   };
 });

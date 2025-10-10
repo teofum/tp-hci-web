@@ -65,10 +65,6 @@ export const lists = {
     await API.post(`shopping-lists/${id}/reset`).withAuth().send();
   },
 
-  async moveToPantry(id: number) {
-    await API.post(`shopping-lists/${id}/move-to-pantry`).withAuth().send();
-  },
-
   async share(id: number, email: string) {
     await API.post(`shopping-lists/${id}/share`)
       .withAuth()
