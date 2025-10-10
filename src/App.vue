@@ -18,11 +18,12 @@ onMounted(() => store.init());
     <v-container>
       <v-app-bar v-if="!isAuthRoute" style="border-bottom: 1px solid #00000061">
         <template v-slot:prepend>
-            <div class="bar-icon-box">
-              <v-icon icon="mdi-shopping-outline" size="32" color="white" />
-            </div>
-                      <VBtn @click="router.push('/lists')"> Listas </VBtn>
+          <div class="bar-icon-box">
+            <v-icon icon="mdi-shopping-outline" size="32" color="white" />
+          </div>
+          <VBtn @click="router.push('/lists')"> Listas </VBtn>
           <VBtn @click="router.push('/history')"> Historial </VBtn>
+          <VBtn @click="router.push('/products')"> Productos </VBtn>
         </template>
 
         <template v-slot:append>
