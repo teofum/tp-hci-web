@@ -4,20 +4,24 @@ import { useStore } from '@/store/store';
 import NewListButton from '@/components/lists/AddListButton.vue';
 import ListItem from '@/components/ListItem.vue';
 import AddListDialog from '@/components/lists/AddListDialog.vue';
+import { useRouter } from 'vue-router';
 
 
 const store = useStore();
 const { lists } = storeToRefs(store);
 
+const router = useRouter();
 
+function redirectList(id: number) {
+  router.push({ name: 'list-detail', params: { id } });
+}
 
 </script>
 
 <template>
-  <div class="ml-body">
     <v-container max-width="800" class="container">
       <div class="d-flex flex-row justify-space-between align-center w-100">
-        <h1 class="text-high-emphasis">Listas</h1>
+        <h1 class="heading text-high-emphasis">Listas</h1>
       </div>
       <div class="ml_listas_container">
         <ul class="ml_listas">
@@ -27,6 +31,8 @@ const { lists } = storeToRefs(store);
             :name="list.name"
             :emoji="list.emoji"
             :detail="'TODO items completos'"
+            @click="redirectList(list.id)"
+            style="cursor: pointer;"
           >
             <v-menu>
               <template v-slot:activator="{ props: activatorProps }">
@@ -73,11 +79,15 @@ const { lists } = storeToRefs(store);
       </template>
     </AddListDialog>
     </v-container>
-    </div>
 </template>
 
 
 <style scoped>
+.heading {
+  font-size: 3rem;
+  font-weight: 700;
+}
+
 .ml-body {
   color: black;
   display: flex;
