@@ -1,6 +1,12 @@
 <script setup lang="ts">
-import ListEntry from '@/components/lists/ListEntry.vue';
+import { storeToRefs } from 'pinia';
+import { useStore } from '@/store/store';
 import NewListButton from '@/components/lists/AddListButton.vue';
+import ListItem from '@/components/ListItem.vue';
+
+const store = useStore();
+const { lists } = storeToRefs(store);
+
 
 
 </script>
@@ -13,9 +19,41 @@ import NewListButton from '@/components/lists/AddListButton.vue';
       </div>
       <div class="ml_listas_container">
         <ul class="ml_listas">
-          <li>
-            <ListEntry/>
-          </li>
+          <ListItem
+            v-for="list in lists"
+            :key="list.id"
+            :name="list.name"
+            :emoji="list.emoji"
+            :detail="'TODO items completos'"
+          >
+            <v-menu>
+              <template v-slot:activator="{ props: activatorProps }">
+                <v-btn
+                  v-bind="activatorProps"
+                  variant="text"
+                  icon="mdi-dots-vertical"
+                />
+              </template>
+
+              <!-- <v-list>
+                <AddListDialog :product="product">
+                  <template v-slot:activator="{ props: activatorProps }">
+                    <v-list-item
+                      v-bind="activatorProps"
+                      prepend-icon="mdi-pencil-outline"
+                      title="Modificar"
+                    />
+                  </template>
+                </AddListDialog>
+                <v-list-item
+                  class="text-red"
+                  prepend-icon="mdi-delete-outline"
+                  title="Eliminar"
+                  @click="store.deleteProduct(product.id)"
+                />
+              </v-list> -->
+            </v-menu>
+          </ListItem>
         </ul>
       </div>
 

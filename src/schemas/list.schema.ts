@@ -17,4 +17,4 @@ export const listSchema = z
     ...res,
   }));
 
-export type Product = z.infer<typeof listSchema>;
+export type List = z.infer<typeof listSchema>;
