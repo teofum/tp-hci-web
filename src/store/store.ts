@@ -115,6 +115,16 @@ export const useStore = defineStore('main', () => {
     ];
   }
 
+  async function deleteList(id: number) {
+    await listsAPI.delete(id);
+    lists.value = lists.value.filter((product) => product.id !== id);
+  }
+
+  async function purchaseList(id: number) {
+    await listsAPI.purchase(id);
+    // TODO Mark a shopping list as purchased and create a purchase history entry
+  }
+
   return {
     products,
     categories,
@@ -127,5 +137,7 @@ export const useStore = defineStore('main', () => {
     deleteProduct,
     deleteCategory,
     addList,
+    deleteList,
+    purchaseList,
   };
 });

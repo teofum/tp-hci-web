@@ -1,4 +1,4 @@
-import { listSchema } from '@/schemas/list.schema';
+import { listSchema, sharedUsersSchema } from '@/schemas/list.schema';
 import { API } from './api';
 import { fetchAll } from './fetchAll';
 import z from 'zod';
@@ -55,5 +55,39 @@ export const lists = {
 
   async delete(id: number) {
     await API.delete(`shopping-lists/${id}`).withAuth().send();
+  },
+
+  async purchase(id: number) {
+    await API.post(`shopping-lists/${id}/purchase`).withAuth().send();
+  },
+
+  async reset(id: number) {
+    await API.post(`shopping-lists/${id}/reset`).withAuth().send();
+  },
+
+  async moveToPantry(id: number) {
+    await API.post(`shopping-lists/${id}/move-to-pantry`).withAuth().send();
+  },
+
+  async share(id: number, email: string) {
+    await API.post(`shopping-lists/${id}/share`)
+      .withAuth()
+      .withBody({
+        email,
+      })
+      .send();
+  },
+
+  async sharedUsers(id: number) {
+    const res = await API.get(`shopping-lists/${id}/shared-users`)
+      .withAuth()
+      .send();
+    return sharedUsersSchema.array().parse(res);
+  },
+
+  async unshareUser(listId: number, userId: number) {
+    await API.delete(`shopping-lists/${listId}/share/${userId}`)
+      .withAuth()
+      .send();
   },
 };
