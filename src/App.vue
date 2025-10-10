@@ -18,18 +18,15 @@ onMounted(() => store.init());
     <v-container>
       <v-app-bar v-if="!isAuthRoute" style="border-bottom: 1px solid #00000061">
         <template v-slot:prepend>
-          <img
-            alt="Vue logo"
-            class="logo"
-            src="@/assets/logo.svg"
-            width="40"
-            height="40"
-          />
+            <div class="bar-icon-box">
+              <v-icon icon="mdi-shopping-outline" size="32" color="white" />
+            </div>
+                      <VBtn @click="router.push('/lists')"> Listas </VBtn>
+          <VBtn @click="router.push('/history')"> Historial </VBtn>
         </template>
 
-        <v-app-bar-title>Shopping list app</v-app-bar-title>
-
         <template v-slot:append>
+
           <VBtn @click="router.push('/profile')"> Mi Perfil </VBtn>
         </template>
       </v-app-bar>
@@ -48,5 +45,16 @@ $heading-font-family: 'Spline Sans';
 #app,
 :root {
   font-family: $body-font-family, sans-serif !important;
+}
+.bar-icon-box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 45px;
+  height: 45px;
+  background-color: #714e4a;
+  border-radius: 12px;
+  margin-bottom: 16px;
+  transform: translateY(7px);
 }
 </style>
