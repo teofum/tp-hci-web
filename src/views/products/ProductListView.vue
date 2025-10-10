@@ -6,9 +6,12 @@ import ListItem from '@/components/ListItem.vue';
 import ManageCategories from '@/components/products/ManageCategories.vue';
 import { useStore } from '@/store/store';
 import { computed } from 'vue';
+import { ref } from 'vue';
 
 const store = useStore();
 const { products } = storeToRefs(store);
+
+const filter = ref('');
 
 const productsByCategory = computed(() => {
   const categories: Record<number, [string, typeof products.value]> = {};
@@ -30,7 +33,7 @@ const productsByCategory = computed(() => {
 <template>
   <v-container max-width="800" class="container">
     <div class="d-flex flex-row justify-space-between align-center w-100">
-      <h1 class="text-high-emphasis">Productos</h1>
+      <h1 class="heading text-high-emphasis">Productos</h1>
       <ManageCategories />
     </div>
 
@@ -102,7 +105,13 @@ const productsByCategory = computed(() => {
 </template>
 
 <style scoped>
+.heading {
+  font-size: 3rem;
+  font-weight: 700;
+}
+
 .category-heading {
   font-size: 1.5rem;
+  font-weight: 700;
 }
 </style>

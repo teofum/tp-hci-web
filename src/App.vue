@@ -40,3 +40,13 @@ onMounted(() => store.init());
     </v-container>
   </v-app>
 </template>
+
+<style lang="scss">
+@import url('https://fonts.googleapis.com/css2?family=Spline+Sans:wght@300..700&display=swap');
+$body-font-family: 'Spline Sans';
+$heading-font-family: 'Spline Sans';
+#app,
+:root {
+  font-family: $body-font-family, sans-serif !important;
+}
+</style>
