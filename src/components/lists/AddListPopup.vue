@@ -1,4 +1,8 @@
-<script setup lang="ts">
+<template>
+  
+</template>
+
+<!-- <script setup lang="ts">
 import { ref } from 'vue';
 import EmojiPickerButton from '@/components/EmojiPickerButton.vue';
 import type { List } from '@/schemas/list.schema';
@@ -160,4 +164,4 @@ defineProps<{
     }
   }
 }
-</style>
+</style> -->

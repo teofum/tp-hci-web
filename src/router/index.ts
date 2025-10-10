@@ -7,8 +7,7 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      name: 'home',
-      component: () => import('../views/lists/ShoppingListsView.vue'),
+      redirect: '/lists',
     },
     {
       path: '/profile',
@@ -23,16 +22,6 @@ const router = createRouter({
           path: 'change-password',
           name: 'change-password',
           component: () => import('../views/profile/ChangePasswordView.vue'),
-        },
-      ],
-    },
-    {
-      path: '/products',
-      children: [
-        {
-          path: '',
-          name: 'products-list',
-          component: () => import('../views/products/ProductListView.vue'),
         },
       ],
     },
