@@ -46,6 +46,9 @@ const vuetify = createVuetify({
     VSelect: {
       hideDetails: true,
     },
+    VSwitch: {
+      hideDetails: true,
+    },
     VList: {
       rounded: 'lg',
     },
