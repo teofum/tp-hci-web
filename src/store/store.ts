@@ -3,8 +3,10 @@ import { defineStore } from 'pinia';
 import { products as productsApi } from '@/api/products';
 import { categories as categoriesApi } from '@/api/categories';
 import { lists as listsAPI } from '@/api/lists';
+import { items as itemsAPI } from '@/api/items';
 import type { Category, Product } from '@/schemas/product.schema';
 import type { List } from '@/schemas/list.schema';
+import type { Item } from '@/schemas/item.schema';
 import { ref } from 'vue';
 
 /* TODO:
@@ -17,45 +19,12 @@ export const useStore = defineStore('main', () => {
   const products = ref([] as Product[]);
   const categories = ref([] as Category[]);
   const lists = ref([] as List[]);
+  const items = ref([] as Item[]);
 
   async function init() {
     products.value = await productsApi.get();
     categories.value = await categoriesApi.get();
     lists.value = await listsAPI.get();
-    // TODO debug
-    lists.value.push({
-      id: 1,
-      name: 'super',
-      description: 'para la semana',
-      recurring: true,
-      owner: {
-        id: 101,
-        name: 'Seba',
-        surname: 'Lee',
-        email: 'seba@example.com',
-        metadata: {},
-        createdAt: '2025-09-15T09:00:00Z',
-        updatedAt: '2025-10-01T10:00:00Z',
-      },
-      sharedWith: [
-        {
-          id: 201,
-          name: 'test2',
-          surname: 'test2',
-          email: 'test2@example.com',
-        },
-        {
-          id: 202,
-          name: 'test',
-          surname: 'test',
-          email: 'test@example.com',
-        },
-      ],
-      lastPurchasedAt: '2025-09-15T09:00:00Z',
-      createdAt: '2025-09-15T09:00:00Z',
-      updatedAt: '2025-09-15T09:00:00Z',
-      emoji: '🛒',
-    });
   }
 
   async function addProduct(
@@ -151,17 +120,20 @@ export const useStore = defineStore('main', () => {
     lists.value = lists.value.map((l) => (l.id === id ? updatedList : l));
   }
 
+  /// list /////////////////////////////
+
+  async function getListItems(
+    id: number,
+    sort_by: 'updatedAt' | 'createdAt' | 'lastPurchasedAt' | 'productName',
+    sort_order: 'DESC' | 'ASC',
+  ) {
+    items.value = await itemsAPI.get(id, sort_by, sort_order);
+  }
+
   // async function addListItem(id: number, quantity: number, unit: string)
-  // async function getListItems(id: number, sort: string)
   // async function updateListItem(itemId: number, quantity: number, unit: string)
   // async function togglePurchaseListItem(id: number, itemId: number)
   // async function delelteListItem(id: number, itemId: number)
-  // async function ()
-  // async function ()
-  // async function ()
-  // async function ()
-  // async function ()
-  // async function ()
 
   return {
     products,
@@ -177,5 +149,6 @@ export const useStore = defineStore('main', () => {
     addList,
     deleteList,
     modifyList,
+    getListItems,
   };
 });
