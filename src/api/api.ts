@@ -22,6 +22,10 @@ export class API {
     return new API(url, 'DELETE');
   }
 
+  public static patch(url: string) {
+    return new API(url, 'PATCH');
+  }
+
   private constructor(url: string, method: RequestInit['method']) {
     this.url = new URL(url, BASE_URL);
     this.init = { method, headers: DEFAULT_HEADERS };

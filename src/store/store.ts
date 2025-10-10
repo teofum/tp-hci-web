@@ -130,10 +130,48 @@ export const useStore = defineStore('main', () => {
     items.value = await itemsAPI.get(id, sort_by, sort_order);
   }
 
-  // async function addListItem(id: number, quantity: number, unit: string)
-  // async function updateListItem(itemId: number, quantity: number, unit: string)
-  // async function togglePurchaseListItem(id: number, itemId: number)
-  // async function delelteListItem(id: number, itemId: number)
+  async function addListItem(
+    list_id: number,
+    productId: number,
+    quantity: number,
+    unit: string,
+    emoji: string,
+  ) {
+    items.value = [
+      ...items.value,
+      await itemsAPI.create(list_id, productId, quantity, unit, emoji),
+    ];
+  }
+
+  async function updateListItem(
+    list_id: number,
+    item_id: number,
+    productId: number,
+    quantity: number,
+    unit: string,
+    emoji: string,
+  ) {
+    const updatedItems = await itemsAPI.modify(
+      list_id,
+      item_id,
+      productId,
+      quantity,
+      unit,
+      emoji,
+    );
+    // todo esto revisar
+    items.value = items.value.map((l) => (l.id === list_id ? updatedItems : l));
+  }
+
+  async function togglePurchaseListItem(id: number, itemId: number) {
+    await itemsAPI.patch(id, itemId);
+    items.value = items.value.filter((item) => item.id !== id);
+  }
+
+  async function delelteListItem(id: number, itemId: number) {
+    await itemsAPI.delete(id, itemId);
+    items.value = items.value.filter((item) => item.id !== id);
+  }
 
   return {
     products,
@@ -150,5 +188,9 @@ export const useStore = defineStore('main', () => {
     deleteList,
     modifyList,
     getListItems,
+    addListItem,
+    updateListItem,
+    togglePurchaseListItem,
+    delelteListItem,
   };
 });
