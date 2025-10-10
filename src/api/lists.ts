@@ -1,4 +1,4 @@
-import { listsSchema } from '@/schemas/list.schema';
+import { listSchema } from '@/schemas/list.schema';
 import { API } from './api';
 import { fetchAll } from './fetchAll';
 
@@ -9,7 +9,7 @@ export const lists = {
         .withAuth()
         .withParams({ page: page.toString(), per_page: per_page.toString() })
         .send();
-      return listsSchema.array().parse(res);
+      return listSchema.array().parse(res);
     });
   },
 
@@ -29,6 +29,6 @@ export const lists = {
       })
       .send();
 
-    return listsSchema.parse(res);
+    return listSchema.parse(res);
   },
 };

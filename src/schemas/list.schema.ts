@@ -2,7 +2,7 @@ import z from 'zod';
 
 import { dateSchema } from './date.schema';
 
-export const listsSchema = z
+export const listSchema = z
   .object({
     id: z.int(),
     name: z.string(),
@@ -23,4 +23,4 @@ export const listsSchema = z
     ...res,
   }));
 
-export type List = z.infer<typeof listsSchema>;
+export type List = z.infer<typeof listSchema>;

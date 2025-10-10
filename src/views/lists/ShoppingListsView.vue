@@ -1,8 +1,11 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-import ListEntry from '@/components/lists/ListEntry.vue';
+import { storeToRefs } from 'pinia';
+import { useStore } from '@/store/store';
 import NewListButton from '@/components/lists/AddListButton.vue';
-import { lists as listsApi } from '@/api/lists';
+import ListItem from '@/components/ListItem.vue';
+
+const store = useStore();
+const { lists } = storeToRefs(store);
 
 
 
@@ -16,9 +19,41 @@ import { lists as listsApi } from '@/api/lists';
       </div>
       <div class="ml_listas_container">
         <ul class="ml_listas">
-          <li>
-            <ListEntry/>
-          </li>
+          <ListItem
+            v-for="list in lists"
+            :key="list.id"
+            :name="list.name"
+            :emoji="list.emoji"
+            :detail="'TODO items completos'"
+          >
+            <v-menu>
+              <template v-slot:activator="{ props: activatorProps }">
+                <v-btn
+                  v-bind="activatorProps"
+                  variant="text"
+                  icon="mdi-dots-vertical"
+                />
+              </template>
+
+              <!-- <v-list>
+                <AddListDialog :product="product">
+                  <template v-slot:activator="{ props: activatorProps }">
+                    <v-list-item
+                      v-bind="activatorProps"
+                      prepend-icon="mdi-pencil-outline"
+                      title="Modificar"
+                    />
+                  </template>
+                </AddListDialog>
+                <v-list-item
+                  class="text-red"
+                  prepend-icon="mdi-delete-outline"
+                  title="Eliminar"
+                  @click="store.deleteProduct(product.id)"
+                />
+              </v-list> -->
+            </v-menu>
+          </ListItem>
         </ul>
       </div>
 
@@ -27,24 +62,6 @@ import { lists as listsApi } from '@/api/lists';
     </div>
 </template>
 
-<!-- ejemplo vue for -- 
-<script setup>
-import { ref } from 'vue'
-
-const list = ref([1, 2, 3])
-</script>
-
-<template>
-  <button @click="list.push(list.length + 1)">Push Number</button>
-  <button @click="list.pop()">Pop Number</button>
-  
-  <ul v-if=" list.length">
-    <li v-for="item of list">{{ item }}</li>
-  </ul>
-  <p v-else-if="list.length">List is not empty, but hidden.</p>
-  <p v-else>List is empty.</p>
-</template>
--->
 
 <style scoped>
 .ml-body {

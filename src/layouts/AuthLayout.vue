@@ -1,10 +1,10 @@
 <template>
   <div
-    class="d-flex justify-center align-center h-screen bg-surface overflow-auto py-10"
+    class="d-flex justify-center align-center min-h-screen bg-surface py-10"
   >
     <div class="auth-card">
       <div class="icon-box">
-        <!-- TODO: poner icono -->
+        <v-icon icon="mdi-shopping-outline" size="64" color="white" />
       </div>
 
       <router-view />

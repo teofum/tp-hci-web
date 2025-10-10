@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<!-- <script setup lang="ts">
 import { ref } from 'vue';
 import { storeToRefs } from 'pinia';
 
@@ -101,4 +101,4 @@ async function commit() {
 .select {
   flex-grow: 1;
 }
-</style>
+</style> -->
