@@ -1,41 +1,11 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref } from 'vue';
 import ListEntry from '@/components/lists/ListEntry.vue';
 import NewListButton from '@/components/lists/AddListButton.vue';
 import { lists as listsApi } from '@/api/lists';
 
-type ShoppingListItem = {
-  id: number;
-  name: string;
-};
 
-type ShoppingList = {
-  id: number;
-  name: string;
-  itemsCount?: number;
-  items_count?: number;
-  items?: ShoppingListItem[];
-  imageUrl?: string;
-  image_url?: string;
-};
 
-const lists = ref<ShoppingList[]>([]);
-const loading = ref(false);
-const error = ref<string | null>(null);
-
-async function loadLists() {
-  loading.value = true;
-  error.value = null;
-  try {
-    lists.value = await listsApi.getLists({ page: 1, per_page: 20, order: 'ASC' });
-  } catch (e) {
-    error.value = e instanceof Error ? e.message : 'Error al cargar las listas';
-  } finally {
-    loading.value = false;
-  }
-}
-
-onMounted(loadLists);
 </script>
 
 <template>
@@ -46,17 +16,8 @@ onMounted(loadLists);
       </div>
       <div class="ml_listas_container">
         <ul class="ml_listas">
-          <li v-if="loading"><p>Cargando…</p></li>
-          <li v-else-if="error"><p>{{ error }}</p></li>
-          <li v-else-if="!lists.length"><p>Sin listas todavía.</p></li>
-
-          <li v-for="l in lists" :key="l.id">
-            <ListEntry
-              :id="l.id"
-              :name="l.name"
-              :items-count="l.itemsCount ?? l.items_count ?? (l.items?.length ?? 0)"
-              :image="l.imageUrl ?? l.image_url ?? ''"
-            />
+          <li>
+            <ListEntry/>
           </li>
         </ul>
       </div>

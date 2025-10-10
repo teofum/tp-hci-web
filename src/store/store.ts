@@ -1,9 +1,9 @@
 import { defineStore } from 'pinia';
 
-import { categories as categoriesApi } from '@/api/categories';
 import { products as productsApi } from '@/api/products';
-import { ref } from 'vue';
+import { categories as categoriesApi } from '@/api/categories';
 import type { Category, Product } from '@/schemas/product.schema';
+import { ref } from 'vue';
 
 export const useStore = defineStore('main', () => {
   const products = ref([] as Product[]);

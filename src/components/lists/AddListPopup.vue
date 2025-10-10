@@ -1,5 +1,15 @@
-
 <script setup lang="ts">
+import { ref } from 'vue';
+import EmojiPickerButton from '@/components/EmojiPickerButton.vue';
+import type { List } from '@/schemas/list.schema';
+
+const { list } = defineProps<{
+  list?: List;
+}>();
+
+const listName = ref(list?.name ?? '');
+const productEmoji = ref(list?.emoji ?? '📦');
+
 defineProps<{
   TogglePopup: () => void;
 }>();
@@ -10,15 +20,19 @@ defineProps<{
 <template>
   <div class="popup">
     <div class="popup-inner">
+
       <button class="popup-close-button" @click="TogglePopup()">X</button>
+      
       <div class="popup-inner-content">
+        
         <h1 class="agregar-lista-titulo">Agregar lista</h1>
-        <div class="emoji-div">
-          <img src="https://th.bing.com/th/id/OIP.K3p3FqsRjBTPQmAEOQBJ4AHaH1?w=195&h=206&c=7&r=0&o=7&cb=12&dpr=1.3&pid=1.7&rm=3" class="emoji">
-          <button class="elegir-emoji-button">Elegir Emoji</button>
-        </div>
+        
+        <EmojiPickerButton v-model="productEmoji" />
+        
         <input type="text" id="name" placeholder="Nombre" class="nombre-lista">
+        
         <button class="agregar-button">Agregar</button>
+      
       </div>
     </div>
   </div>
