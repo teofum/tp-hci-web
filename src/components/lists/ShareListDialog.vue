@@ -12,19 +12,18 @@ async function shareCommit() {} // TODO
 </script>
 
 <template>
-  
   <v-dialog max-width="600">
-
-        <template v-slot:activator="{ props: activatorProps }">
+    <template v-slot:activator="{ props: activatorProps }">
       <slot name="activator" :props="activatorProps" />
     </template>
 
-        <template v-slot:default="{ isActive }">
-      <v-card
-        variant="outlined"
-        class="bg-surface"
-        :title="'Compartir lista'"
-      >
+    <template v-slot:default="{ isActive }">
+      <v-card variant="outlined" class="bg-surface" :title="'Compartir lista'">
+
+        <v-card-subtitle>Usuarios compartidos</v-card-subtitle>
+
+        ...
+
         <v-card-item>
           <div class="d-flex flex-column align-center py-2 ga-4">
             <v-text-field
@@ -35,6 +34,10 @@ async function shareCommit() {} // TODO
             />
           </div>
         </v-card-item>
+
+        <v-card-subtitle>Usuarios sugeridos</v-card-subtitle>
+
+        ...
 
         <v-card-actions>
           <v-spacer />
