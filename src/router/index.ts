@@ -69,12 +69,12 @@ const router = createRouter({
     {
       path: '/list/:id',
       name: 'list-detail',
-      component: () => import('../views/list/ListDetailView.vue'),
+      component: () => import('../views/lists/ListDetailView.vue'),
     },
     {
       path: '/lists',
       name: 'lists',
-      component: () => import('../views/lists/ShoppingListsView.vue'),
+      component: () => import('../views/lists/ListsView.vue'),
     },
     {
       path: '/history',
