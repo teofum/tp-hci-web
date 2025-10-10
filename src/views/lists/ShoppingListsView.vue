@@ -15,7 +15,7 @@ const { lists } = storeToRefs(store);
   <div class="ml-body">
     <v-container max-width="800" class="container">
       <div class="d-flex flex-row justify-space-between align-center w-100">
-        <h1 class="text-high-emphasis">Mis Listas</h1>
+        <h1 class="text-high-emphasis">Listas</h1>
       </div>
       <div class="ml_listas_container">
         <ul class="ml_listas">
