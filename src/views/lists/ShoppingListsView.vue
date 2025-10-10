@@ -3,6 +3,8 @@ import { storeToRefs } from 'pinia';
 import { useStore } from '@/store/store';
 import NewListButton from '@/components/lists/AddListButton.vue';
 import ListItem from '@/components/ListItem.vue';
+import AddListDialog from '@/components/lists/AddListDialog.vue';
+
 
 const store = useStore();
 const { lists } = storeToRefs(store);
@@ -35,8 +37,8 @@ const { lists } = storeToRefs(store);
                 />
               </template>
 
-              <!-- <v-list>
-                <AddListDialog :product="product">
+              <v-list>
+                <AddListDialog :list="list">
                   <template v-slot:activator="{ props: activatorProps }">
                     <v-list-item
                       v-bind="activatorProps"
@@ -49,15 +51,27 @@ const { lists } = storeToRefs(store);
                   class="text-red"
                   prepend-icon="mdi-delete-outline"
                   title="Eliminar"
-                  @click="store.deleteProduct(product.id)"
+                  @click="store.deleteList(list.id)"
                 />
-              </v-list> -->
+            </v-list>
             </v-menu>
           </ListItem>
         </ul>
       </div>
 
-      <NewListButton>+ Nueva Lista</NewListButton>
+      <AddListDialog>
+      <template v-slot:activator="{ props: activatorProps }">
+        <v-fab
+          v-bind="activatorProps"
+          app
+          location="bottom end"
+          size="x-large"
+          text="Agregar lista"
+          prepend-icon="mdi-plus"
+          variant="flat"
+        />
+      </template>
+    </AddListDialog>
     </v-container>
     </div>
 </template>

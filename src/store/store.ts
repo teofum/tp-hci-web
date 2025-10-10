@@ -18,30 +18,30 @@ export const useStore = defineStore('main', () => {
     lists.value = await listsAPI.get();
 
     // TODO debug
-    lists.value.push(
-      {
-        id: 1,
-        name: 'Supermercado',
-        description: 'Lista de compras semanal',
-        recurring: true,
-        emoji: '🛒',
-        owner: 101,
-        lastPurchasedAt: '2025-10-08 12:00:00',
-        createdAt: '2025-10-01 09:30:00',
-        updatedAt: '2025-10-08 12:00:00',
-      },
-      {
-        id: 2,
-        name: 'Fiesta',
-        description: 'Preparativos para la fiesta de cumpleaños',
-        recurring: false,
-        emoji: '🎉',
-        owner: 102,
-        lastPurchasedAt: '2025-09-25 18:45:00',
-        createdAt: '2025-09-20 15:00:00',
-        updatedAt: '2025-09-25 18:45:00',
-      },
-    );
+    // lists.value.push(
+    //   {
+    //     id: 1,
+    //     name: 'Supermercado',
+    //     description: 'Lista de compras semanal',
+    //     recurring: true,
+    //     emoji: '🛒',
+    //     owner: 101,
+    //     lastPurchasedAt: '2025-10-08 12:00:00',
+    //     createdAt: '2025-10-01 09:30:00',
+    //     updatedAt: '2025-10-08 12:00:00',
+    //   },
+    //   {
+    //     id: 2,
+    //     name: 'Fiesta',
+    //     description: 'Preparativos para la fiesta de cumpleaños',
+    //     recurring: false,
+    //     emoji: '🎉',
+    //     owner: 102,
+    //     lastPurchasedAt: '2025-09-25 18:45:00',
+    //     createdAt: '2025-09-20 15:00:00',
+    //     updatedAt: '2025-09-25 18:45:00',
+    //   },
+    // );
   }
 
   async function addProduct(
@@ -115,6 +115,28 @@ export const useStore = defineStore('main', () => {
     ];
   }
 
+  async function modifyList(
+    id: number,
+    name: string,
+    description: string,
+    recurring: boolean,
+    emoji: string,
+  ) {
+    const updatedList = await listsAPI.modify(
+      id,
+      name,
+      description,
+      recurring,
+      emoji,
+    );
+    lists.value = lists.value.map((l) => (l.id === id ? updatedList : l));
+  }
+
+  async function deleteList(id: number) {
+    await listsAPI.delete(id);
+    lists.value = lists.value.filter((l) => l.id !== id);
+  }
+
   return {
     products,
     categories,
@@ -127,5 +149,7 @@ export const useStore = defineStore('main', () => {
     deleteProduct,
     deleteCategory,
     addList,
+    modifyList,
+    deleteList,
   };
 });

@@ -1,38 +1,37 @@
-<!-- <script setup lang="ts">
+<script setup lang="ts">
 import { ref } from 'vue';
-import { storeToRefs } from 'pinia';
-
-import AddCategoryDialog from './AddCategoryDialog.vue';
 import EmojiPickerButton from '@/components/EmojiPickerButton.vue';
 import { useStore } from '@/store/store';
-import type { Product } from '@/schemas/product.schema';
+import type { List } from '@/schemas/list.schema';
 
 const store = useStore();
-const { categories } = storeToRefs(store);
 
-const { product } = defineProps<{
-  product?: Product;
+const { list } = defineProps<{
+  list?: List;
 }>();
 
-const productName = ref(product?.name ?? '');
-const productEmoji = ref(product?.emoji ?? '📦');
-const productCategory = ref(product?.category?.id);
+const listName = ref(list?.name ?? '');
+const listDescription = ref(list?.description ?? '');
+const listEmoji = ref(list?.emoji ?? '📝');
+const listRecurring = ref(list?.recurring ?? false);
 
-const isEditing = product !== undefined;
+const isEditing = list !== undefined;
 
 async function commit() {
-  if (isEditing) {
-    store.modifyProduct(
-      product.id,
-      productName.value,
-      productEmoji.value,
-      productCategory.value ?? null,
+  if (isEditing && list) {
+    await store.modifyList(
+      list.id,
+      listName.value,
+      listDescription.value,
+      listRecurring.value,
+      listEmoji.value,
     );
   } else {
-    store.addProduct(
-      productName.value,
-      productEmoji.value,
-      productCategory.value ?? null,
+    await store.addList(
+      listName.value,
+      listDescription.value,
+      listRecurring.value,
+      listEmoji.value,
     );
   }
 }
@@ -52,30 +51,30 @@ async function commit() {
       >
         <v-card-item>
           <div class="d-flex flex-column align-center py-2 ga-4">
-            <EmojiPickerButton v-model="productEmoji" />
+            <EmojiPickerButton v-model="listEmoji" />
 
             <v-text-field
-              v-model="productName"
+              v-model="listName"
               label="Nombre"
               type="text"
               class="w-100"
             />
 
-            <div class="d-flex flex-row align-center ga-4 w-100">
-              <v-select
-                v-model="productCategory"
-                label="Categoría"
-                :items="categories"
-                :item-props="
-                  (category) => ({
-                    value: category.id,
-                    title: `${category.emoji} ${category.name}`,
-                  })
-                "
-                class="select"
-              />
-              <AddCategoryDialog />
-            </div>
+            <v-text-field
+              v-model="listDescription"
+              label="Descripción"
+              type="text"
+              class="w-100"
+            />
+
+            <!-- TODO recurring no sé para qué sirve (ver consignas) -->
+            <v-switch
+              v-model="listRecurring"
+              label="Recurrente"
+              inset
+              color="primary"
+            />
+
           </div>
         </v-card-item>
 
@@ -85,7 +84,7 @@ async function commit() {
           <v-btn
             variant="flat"
             :text="isEditing ? 'Guardar cambios' : 'Agregar'"
-            :disabled="!productName"
+            :disabled="!listName"
             @click="
               commit();
               isActive.value = false;
@@ -101,4 +100,4 @@ async function commit() {
 .select {
   flex-grow: 1;
 }
-</style> -->
+</style>
