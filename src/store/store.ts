@@ -6,6 +6,7 @@ import { lists as listsAPI } from '@/api/lists';
 import { items as itemsAPI } from '@/api/items';
 import type { Category, Product } from '@/schemas/product.schema';
 import type { List } from '@/schemas/list.schema';
+import type { Item } from '@/schemas/item.schema';
 import { ref } from 'vue';
 
 /* TODO:
