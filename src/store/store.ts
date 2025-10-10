@@ -2,16 +2,20 @@ import { defineStore } from 'pinia';
 
 import { products as productsApi } from '@/api/products';
 import { categories as categoriesApi } from '@/api/categories';
+import { lists as listsAPI } from '@/api/lists';
 import type { Category, Product } from '@/schemas/product.schema';
+import type { List } from '@/schemas/list.schema';
 import { ref } from 'vue';
 
 export const useStore = defineStore('main', () => {
   const products = ref([] as Product[]);
   const categories = ref([] as Category[]);
+  const lists = ref([] as List[]);
 
   async function init() {
     products.value = await productsApi.get();
     categories.value = await categoriesApi.get();
+    lists.value = await listsAPI.get();
   }
 
   async function addProduct(
@@ -71,9 +75,24 @@ export const useStore = defineStore('main', () => {
     products.value = await productsApi.get();
   }
 
+  //// lists //////////////
+
+  async function addList(
+    name: string,
+    description: string,
+    recurring: boolean,
+    emoji: string,
+  ) {
+    lists.value = [
+      ...lists.value,
+      await listsAPI.create(name, description, recurring, emoji),
+    ];
+  }
+
   return {
     products,
     categories,
+    lists,
     init,
     addProduct,
     addCategory,
@@ -81,5 +100,6 @@ export const useStore = defineStore('main', () => {
     modifyCategory,
     deleteProduct,
     deleteCategory,
+    addList,
   };
 });

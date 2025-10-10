@@ -2,13 +2,19 @@ import z from 'zod';
 
 import { dateSchema } from './date.schema';
 
-export const listSchema = z
+export const listsSchema = z
   .object({
     id: z.int(),
     name: z.string(),
+    description: z.string(),
+    recurring: z.boolean(),
+
     metadata: z.object({
       emoji: z.emoji(),
     }),
+
+    owner: z.int(),
+    lastPurchasedAt: dateSchema,
     createdAt: dateSchema,
     updatedAt: dateSchema,
   })
@@ -17,4 +23,4 @@ export const listSchema = z
     ...res,
   }));
 
-export type Product = z.infer<typeof listSchema>;
+export type List = z.infer<typeof listsSchema>;
