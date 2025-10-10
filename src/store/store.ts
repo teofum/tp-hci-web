@@ -151,6 +151,18 @@ export const useStore = defineStore('main', () => {
     lists.value = lists.value.map((l) => (l.id === id ? updatedList : l));
   }
 
+  // async function addListItem(id: number, quantity: number, unit: string)
+  // async function getListItems(id: number, sort: string)
+  // async function updateListItem(itemId: number, quantity: number, unit: string)
+  // async function togglePurchaseListItem(id: number, itemId: number)
+  // async function delelteListItem(id: number, itemId: number)
+  // async function ()
+  // async function ()
+  // async function ()
+  // async function ()
+  // async function ()
+  // async function ()
+
   return {
     products,
     categories,
