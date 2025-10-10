@@ -16,32 +16,40 @@ export const useStore = defineStore('main', () => {
     products.value = await productsApi.get();
     categories.value = await categoriesApi.get();
     lists.value = await listsAPI.get();
-
     // TODO debug
-    // lists.value.push(
-    //   {
-    //     id: 1,
-    //     name: 'Supermercado',
-    //     description: 'Lista de compras semanal',
-    //     recurring: true,
-    //     emoji: '🛒',
-    //     owner: 101,
-    //     lastPurchasedAt: '2025-10-08 12:00:00',
-    //     createdAt: '2025-10-01 09:30:00',
-    //     updatedAt: '2025-10-08 12:00:00',
-    //   },
-    //   {
-    //     id: 2,
-    //     name: 'Fiesta',
-    //     description: 'Preparativos para la fiesta de cumpleaños',
-    //     recurring: false,
-    //     emoji: '🎉',
-    //     owner: 102,
-    //     lastPurchasedAt: '2025-09-25 18:45:00',
-    //     createdAt: '2025-09-20 15:00:00',
-    //     updatedAt: '2025-09-25 18:45:00',
-    //   },
-    // );
+    lists.value.push({
+      id: 1,
+      name: 'super',
+      description: 'para la semana',
+      recurring: true,
+      owner: {
+        id: 101,
+        name: 'Seba',
+        surname: 'Lee',
+        email: 'seba@example.com',
+        metadata: {},
+        createdAt: '2025-09-15T09:00:00Z',
+        updatedAt: '2025-10-01T10:00:00Z',
+      },
+      sharedWith: [
+        {
+          id: 201,
+          name: 'test2',
+          surname: 'test2',
+          email: 'test2@example.com',
+        },
+        {
+          id: 202,
+          name: 'test',
+          surname: 'test',
+          email: 'test@example.com',
+        },
+      ],
+      lastPurchasedAt: '2025-09-15T09:00:00Z',
+      createdAt: '2025-09-15T09:00:00Z',
+      updatedAt: '2025-09-15T09:00:00Z',
+      emoji: '🛒',
+    });
   }
 
   async function addProduct(
