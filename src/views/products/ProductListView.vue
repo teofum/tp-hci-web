@@ -15,7 +15,11 @@ const filter = ref('');
 
 const productsByCategory = computed(() => {
   const categories: Record<number, [string, typeof products.value]> = {};
-  for (const product of products.value) {
+  for (const product of products.value.filter(
+    (product) =>
+      !filter.value ||
+      product.name.toLowerCase().includes(filter.value.toLowerCase()),
+  )) {
     const catId = product.category?.id ?? -1;
 
     if (!categories[catId]) {
@@ -37,6 +41,17 @@ const productsByCategory = computed(() => {
       <ManageCategories />
     </div>
 
+    <div class="d-flex flex-column ga-4 my-4">
+      <v-text-field
+        v-model="filter"
+        label="Buscar"
+        type="text"
+        class="w-100"
+        clearable
+        clear-icon="mdi-close-circle-outline"
+      />
+    </div>
+
     <div
       v-for="[key, [categoryName, products]] in Object.entries(
         productsByCategory,
@@ -46,6 +61,7 @@ const productsByCategory = computed(() => {
       <h2 class="text-medium-emphasis mt-3 category-heading">
         {{ categoryName }}
       </h2>
+
       <ul>
         <ListItem
           v-for="product in products"
