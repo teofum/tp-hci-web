@@ -1,7 +1,6 @@
 import { listSchema, sharedUsersSchema } from '@/schemas/list.schema';
 import { API } from './api';
 import { fetchAll } from './fetchAll';
-import z from 'zod';
 
 export const lists = {
   async get() {
@@ -50,7 +49,7 @@ export const lists = {
       })
       .send();
 
-    return z.object({ list: listSchema }).parse(res).list;
+    return listSchema.parse(res);
   },
 
   async delete(id: number) {
