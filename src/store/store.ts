@@ -4,13 +4,15 @@ import { products as productsApi } from '@/api/products';
 import { categories as categoriesApi } from '@/api/categories';
 import { lists as listsAPI } from '@/api/lists';
 import { items as itemsAPI } from '@/api/items';
+import { purchases as purchasesAPI } from '@/api/purchases';
 import type { Category, Product } from '@/schemas/product.schema';
 import type { List, SharedUsers } from '@/schemas/list.schema';
 import type { Item } from '@/schemas/item.schema';
+import type { Purchase } from '@/schemas/purchases.schema';
 import { ref } from 'vue';
 
 /* TODO:
- * hacer lo de history, shred users por lista
+ * hacer lo de history, shared users por lista
  * pantry?
  * purchesed list o purchased items?
  */
@@ -19,8 +21,9 @@ export const useStore = defineStore('main', () => {
   const products = ref([] as Product[]);
   const categories = ref([] as Category[]);
   const lists = ref([] as List[]);
-  const items = ref([] as Item[]);
-  const sharedWith = ref([] as SharedUsers[]);
+  const items = ref([] as Item[]); // context dependant
+  const sharedWith = ref([] as SharedUsers[]); // context dependant
+  const history = ref([] as Purchase[]); // context dependant
 
   async function init() {
     products.value = await productsApi.get();
@@ -182,12 +185,31 @@ export const useStore = defineStore('main', () => {
 
   async function togglePurchaseListItem(id: number, itemId: number) {
     await itemsAPI.patch(id, itemId);
-    items.value = items.value.filter((item) => item.id !== id);
+    items.value = items.value.filter((item) => item.id !== id); // todo esto noc si va
   }
 
   async function delelteListItem(id: number, itemId: number) {
     await itemsAPI.delete(id, itemId);
     items.value = items.value.filter((item) => item.id !== id);
+  }
+
+  /// purchased / history /////////
+
+  async function getPurchases(
+    list_id: number,
+    sort_by: 'createdAt' | 'list' | 'id',
+    order: 'ASC' | 'DESC',
+  ) {
+    history.value = await purchasesAPI.get(list_id, sort_by, order);
+  }
+
+  // esta medio sus
+  //  async function getPurchaseDetails( purchase_id: number ) {
+  //    return await purchasesAPI.getPurchaseDetails(purchase_id);
+  //  }
+
+  async function restorPurchase(purchase_id: number) {
+    await purchasesAPI.restore(purchase_id);
   }
 
   return {
@@ -212,5 +234,7 @@ export const useStore = defineStore('main', () => {
     updateListItem,
     togglePurchaseListItem,
     delelteListItem,
+    getPurchases,
+    restorPurchase,
   };
 });
