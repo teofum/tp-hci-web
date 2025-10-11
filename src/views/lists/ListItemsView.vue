@@ -1,33 +1,30 @@
 <script setup lang="ts">
-import { useRouter } from 'vue-router'
-import { computed, ref } from 'vue'
-import ItemEntry from '@/components/list/ItemEntry.vue'
-import NewItemButton from '@/components/list/NewItemButton.vue'
-import ShareListPopup from '@/components/list/ShareListPopup.vue'
-import { storeToRefs } from 'pinia'
-import { useStore } from '@/store/store'
+import { useRouter } from 'vue-router';
+import { computed, ref } from 'vue';
+import ItemEntry from '@/components/list/ItemEntry.vue';
+import NewItemButton from '@/components/list/NewItemButton.vue';
+import ShareListPopup from '@/components/list/ShareListPopup.vue';
+import { storeToRefs } from 'pinia';
+import { useStore } from '@/store/store';
 import AddItemDialog from '@/components/products/AddProductDialog.vue';
 import ListItem from '@/components/ListItem.vue';
 
-
 const store = useStore();
 
-const router = useRouter()
+const router = useRouter();
 
 function goBack() {
-  router.push('/')
+  router.push('/');
 }
 
-const sharePopupTrigger = ref(false)
+const sharePopupTrigger = ref(false);
 
 function TogglePopup() {
-  sharePopupTrigger.value = !sharePopupTrigger.value
+  sharePopupTrigger.value = !sharePopupTrigger.value;
 }
 
-
-
 // TODO debug
-const { products } = storeToRefs(store);// TODO esto cambiarlo a productos dentro de la lista en sí
+const { products } = storeToRefs(store); // TODO esto cambiarlo a productos dentro de la lista en sí
 
 const filter = ref('');
 const groupByCategory = ref(true);
@@ -55,7 +52,6 @@ const productsByCategory = computed(() => {
 
   return categories;
 });
-
 </script>
 
 <template>
@@ -65,41 +61,52 @@ const productsByCategory = computed(() => {
       <div class="div-title-share">
         <h1 class="l-titulo">Nombre de la lista</h1>
         <button class="l-share-button" @click="TogglePopup">
-          <img src="https://cdn-icons-png.flaticon.com/256/512/512189.png"><!--todo: placeholder-->
+          <img
+            src="https://cdn-icons-png.flaticon.com/256/512/512189.png"
+          /><!--todo: placeholder-->
         </button>
       </div>
-      <input type="text" id="name" placeholder="Buscar productos" class="l-searchbar">
+      <input
+        type="text"
+        id="name"
+        placeholder="Buscar productos"
+        class="l-searchbar"
+      />
       <div class="l-filters">
         <button class="l-filter-dropdown">
           <span>Ordenar y Filtrar</span>
           <span class="chevron">▾</span>
         </button>
-      
+
         <label class="l-group-toggle">
           <span class="label-text">Agrupar por categoría</span>
-          <input type="checkbox" v-model="groupByCategory">
+          <input type="checkbox" v-model="groupByCategory" />
           <span class="l-switch" aria-hidden="true"></span>
         </label>
       </div>
       <div class="l-items-container">
         <ul class="l-categories">
-            <li>
-                <ul class="l_items">
-                    <li>
-                        <ItemEntry /> 
-                    </li>
-                </ul>
-            </li>
+          <li>
+            <ul class="l_items">
+              <li>
+                <ItemEntry />
+              </li>
+            </ul>
+          </li>
         </ul>
       </div>
       <NewItemButton> + Nuevo Item </NewItemButton>
-      <ShareListPopup  v-if="sharePopupTrigger" :TogglePopup="() => TogglePopup()" />
+      <ShareListPopup
+        v-if="sharePopupTrigger"
+        :TogglePopup="() => TogglePopup()"
+      />
     </div>
   </div>
 
+  <!-- new structure, TODO ir migrando lo de arriba acá  -->
 
-  
   <v-container max-width="800" class="container">
+    <v-btn @click="goBack" variant="text" prepend-icon="mdi-chevron-left">Listas</v-btn>
     <div class="d-flex flex-row justify-space-between align-center w-100">
       <h1 class="heading text-high-emphasis">TODO nombre lista</h1>
     </div>
@@ -122,15 +129,7 @@ const productsByCategory = computed(() => {
       />
     </div>
 
-
-
-
-
-
-
-    
-
-        <div v-if="groupByCategory">
+    <div v-if="groupByCategory">
       <div
         v-for="[key, [categoryName, products]] in Object.entries(
           productsByCategory,
@@ -220,7 +219,7 @@ const productsByCategory = computed(() => {
       </ul>
     </div>
 
-        <div
+    <div
       v-if="
         Object.keys(productsByCategory).length === 0 ||
         filteredProducts.length === 0
@@ -229,8 +228,7 @@ const productsByCategory = computed(() => {
       No hay productos
     </div>
 
-
-      <AddItemDialog>
+    <AddItemDialog>
       <template v-slot:activator="{ props: activatorProps }">
         <v-fab
           v-bind="activatorProps"
@@ -243,9 +241,6 @@ const productsByCategory = computed(() => {
         />
       </template>
     </AddItemDialog>
-
-
-
   </v-container>
 </template>
 
@@ -270,7 +265,7 @@ const list = ref([1, 2, 3])
 
 <style>
 .l-body {
-  /* todo colores en variables */ 
+  /* todo colores en variables */
   color: black;
   position: relative;
 
@@ -278,7 +273,7 @@ const list = ref([1, 2, 3])
   justify-content: center;
   align-items: flex-start;
   min-height: 100vh;
-  background-color: #EFEFE9;
+  background-color: #efefe9;
 
   .l-back-button {
     position: absolute;
@@ -290,7 +285,7 @@ const list = ref([1, 2, 3])
     font-size: 1rem;
     cursor: pointer;
     transition: opacity 0.3s ease;
-  
+
     &:hover {
       opacity: 0.6;
     }
@@ -312,7 +307,7 @@ const list = ref([1, 2, 3])
       display: flex;
       justify-content: space-between;
       align-items: center;
-      
+
       .l-titulo {
         font-size: 2rem;
         font-weight: 700;
@@ -350,9 +345,9 @@ const list = ref([1, 2, 3])
       display: flex;
       justify-content: space-between;
       align-items: center;
-      
+
       padding: 10px 0;
-    
+
       .l-filter-dropdown {
         display: inline-flex;
         align-items: center;
@@ -361,28 +356,32 @@ const list = ref([1, 2, 3])
         border: none;
         border-radius: 9999px;
         cursor: pointer;
-        background: #D8D3CD;
-        box-shadow: inset 0 0 0 1px rgba(0,0,0,0.08);
+        background: #d8d3cd;
+        box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.08);
         transition: opacity 0.2s ease;
-      
-        .chevron { line-height: 1; }
-      
-        &:hover { opacity: 0.85; }
+
+        .chevron {
+          line-height: 1;
+        }
+
+        &:hover {
+          opacity: 0.85;
+        }
       }
-    
+
       .l-group-toggle {
         display: inline-flex;
         align-items: center;
         gap: 12px;
         cursor: pointer;
         user-select: none;
-      
+
         .label-text {
           /* mismo tono de texto que usás */
           color: #000;
           font-size: 0.9rem;
         }
-      
+
         /* checkbox oculto */
         input {
           position: absolute;
@@ -391,7 +390,7 @@ const list = ref([1, 2, 3])
           height: 0;
           pointer-events: none;
         }
-      
+
         /* switch visual */
         .l-switch {
           position: relative;
@@ -399,11 +398,11 @@ const list = ref([1, 2, 3])
           height: 26px;
           border-radius: 9999px;
           background: #2e3f39; /* verde oscuro como en la captura */
-          box-shadow: inset 0 0 0 1px rgba(0,0,0,0.15);
+          box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.15);
           transition: background 0.2s ease;
-        
+
           &::after {
-            content: "";
+            content: '';
             position: absolute;
             top: 3px;
             left: 3px;
@@ -411,22 +410,21 @@ const list = ref([1, 2, 3])
             height: 20px;
             border-radius: 50%;
             background: #fff;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
             transition: transform 0.2s ease;
           }
         }
-      
+
         /* estado checked */
         input:checked + .l-switch {
           background: #3b4f47;
-        
+
           &::after {
             transform: translateX(20px);
           }
         }
       }
     }
-
 
     .l-items-container {
       width: 100%;
@@ -439,14 +437,14 @@ const list = ref([1, 2, 3])
         /* list container for categories */
         width: 100%;
         list-style-type: none;
-        padding: 0; 
+        padding: 0;
         margin: 0;
 
         li {
           ul.l_items {
             width: 100%;
             list-style-type: none;
-            padding: 0; 
+            padding: 0;
             margin: 0;
           }
         }
@@ -455,7 +453,7 @@ const list = ref([1, 2, 3])
       .l_items {
         width: 100%;
         list-style-type: none;
-        padding: 0; 
+        padding: 0;
         margin: 0;
       }
     }
@@ -467,10 +465,11 @@ p {
   color: #000000a6;
   margin: 0;
   text-align: center;
-}a {
+}
+a {
   color: #000000a6;
   text-decoration: none;
-  
+
   &:hover {
     text-decoration: underline;
   }
@@ -498,4 +497,3 @@ p {
   }
 }
 </style>
-
