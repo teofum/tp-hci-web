@@ -8,6 +8,7 @@ import { storeToRefs } from 'pinia';
 import { useStore } from '@/store/store';
 import AddItemDialog from '@/components/products/AddProductDialog.vue';
 import ListItem from '@/components/ListItem.vue';
+import ShareListDialog from '@/components/lists/ShareListDialog.vue';
 
 const store = useStore();
 
@@ -106,11 +107,13 @@ const productsByCategory = computed(() => {
   <!-- new structure, TODO ir migrando lo de arriba acá  -->
 
   <v-container max-width="800" class="container">
-    <v-btn @click="goBack" variant="text" prepend-icon="mdi-chevron-left">Listas</v-btn>
+    <v-btn @click="goBack" variant="text" prepend-icon="mdi-chevron-left"
+      >Listas</v-btn
+    >
     <div class="d-flex flex-row justify-space-between align-center w-100">
       <h1 class="heading text-high-emphasis">TODO nombre lista</h1>
+      <ShareListDialog />
     </div>
-
     <div class="d-flex flex-column ga-2 my-4">
       <v-text-field
         v-model="filter"
@@ -120,6 +123,14 @@ const productsByCategory = computed(() => {
         clearable
         clear-icon="mdi-close-circle-outline"
       />
+    </div>
+
+    <div class="d-flex justify-space-between ">
+      <v-select
+        :items="['Fecha', 'Items']" 
+        label="Ordenar por"
+        style="max-width: 160px"
+      ></v-select>
       <v-switch
         v-model="groupByCategory"
         label="Agrupar por categoría"
@@ -128,7 +139,6 @@ const productsByCategory = computed(() => {
         class="switch"
       />
     </div>
-
     <div v-if="groupByCategory">
       <div
         v-for="[key, [categoryName, products]] in Object.entries(

@@ -14,7 +14,11 @@ async function shareCommit() {} // TODO
 <template>
   <v-dialog max-width="600">
     <template v-slot:activator="{ props: activatorProps }">
-      <slot name="activator" :props="activatorProps" />
+      <v-btn
+        v-bind="activatorProps"
+        icon="mdi-share-variant"
+        variant="text"
+      />
     </template>
 
     <template v-slot:default="{ isActive }">

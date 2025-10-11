@@ -36,12 +36,19 @@ function redirectList(id: number) {
       />
     </div>
 
-    <div class="d-flex gap-4">
-      <v-select :items="['Fecha', 'Items']" label="Ordenar por"></v-select>
+    <div class="d-flex ga-4">
+      <v-select
+        :items="['Fecha', 'Items']"
+        label="Ordenar por"
+        style="max-width: 160px"
+      >
+
+      </v-select>
 
       <v-select
         :items="['Hoy', 'Hace una semana', 'Hace un mes']"
         label="Filtrar"
+        style="max-width: 160px"
       ></v-select>
     </div>
 
