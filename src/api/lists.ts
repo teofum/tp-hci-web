@@ -80,7 +80,7 @@ export const lists = {
     return sharedUsersSchema.array().parse(res);
   },
 
-  async unshareUser(listId: number, userId: number) {
+  async unshare(listId: number, userId: number) {
     await API.delete(`shopping-lists/${listId}/share/${userId}`)
       .withAuth()
       .send();
