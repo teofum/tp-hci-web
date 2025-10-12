@@ -3,8 +3,11 @@ import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { VTextField, VBtn, VAlert } from 'vuetify/components';
 import { auth } from '@/api/users';
+import { useStore } from '@/store/store';
 
 const router = useRouter();
+const store = useStore();
+
 const email = ref('');
 const password = ref('');
 const error = ref('');
@@ -16,6 +19,7 @@ const handleLogin = async () => {
     error.value = '';
     const { token } = await auth.login(email.value, password.value);
     localStorage.setItem('token', token);
+    await store.init();
     router.push('/');
   } catch {
     error.value = 'Email o contraseña incorrectos';

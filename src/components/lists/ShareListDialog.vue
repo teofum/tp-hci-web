@@ -15,12 +15,29 @@ const { user: currentUser } = storeToRefs(store);
 
 const shareEmail = ref('');
 
+const sharePending = ref(false);
+const unsharePending = ref(false);
+
 async function share() {
-  store.shareList(list.id, shareEmail.value);
+  sharePending.value = true;
+  try {
+    await store.shareList(list.id, shareEmail.value);
+  } catch (e) {
+    console.error(e);
+  } finally {
+    sharePending.value = false;
+  }
 }
 
 async function unshare(userId: number) {
-  store.unshareList(list.id, userId);
+  unsharePending.value = true;
+  try {
+    await store.unshareList(list.id, userId);
+  } catch (e) {
+    console.error(e);
+  } finally {
+    unsharePending.value = false;
+  }
 }
 
 function initials(user: User) {
@@ -70,6 +87,7 @@ function initials(user: User) {
                 color="error"
                 variant="tonal"
                 size="x-small"
+                :loading="unsharePending"
                 @click="unshare(user.id)"
               />
             </li>
@@ -98,9 +116,12 @@ function initials(user: User) {
             variant="flat"
             text="Compartir"
             :disabled="!shareEmail || !z.email().safeParse(shareEmail).success"
+            :loading="sharePending"
             @click="
-              share();
-              isActive.value = false;
+              async () => {
+                await share();
+                isActive.value = false;
+              }
             "
           />
         </v-card-actions>
