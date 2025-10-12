@@ -1,3 +1,4 @@
+import { ref } from 'vue';
 import { defineStore } from 'pinia';
 
 import { products as productsApi } from '@/api/products';
@@ -5,11 +6,12 @@ import { categories as categoriesApi } from '@/api/categories';
 import { lists as listsAPI } from '@/api/lists';
 import { items as itemsAPI } from '@/api/items';
 import { purchases as purchasesAPI } from '@/api/purchases';
+import { auth as authApi } from '@/api/users';
 import type { Category, Product } from '@/schemas/product.schema';
 import type { List } from '@/schemas/list.schema';
 import type { Item } from '@/schemas/item.schema';
 import type { Purchase } from '@/schemas/purchases.schema';
-import { ref } from 'vue';
+import type { User } from '@/schemas/user.schema';
 
 export const useStore = defineStore('main', () => {
   const products = ref([] as Product[]);
@@ -18,8 +20,10 @@ export const useStore = defineStore('main', () => {
 
   const items = ref({} as Record<List['id'], Item[]>);
   const history = ref({} as Record<List['id'], Purchase[]>);
+  const user = ref<User>();
 
   async function init() {
+    user.value = await authApi.getCurrentUser();
     products.value = await productsApi.get();
     categories.value = await categoriesApi.get();
     lists.value = await listsAPI.get();
@@ -221,6 +225,7 @@ export const useStore = defineStore('main', () => {
   }
 
   return {
+    user,
     products,
     categories,
     lists,

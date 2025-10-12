@@ -4,12 +4,14 @@ import { useStore } from '@/store/store';
 import z from 'zod';
 import type { List } from '@/schemas/list.schema';
 import type { User } from '@/schemas/user.schema';
+import { storeToRefs } from 'pinia';
 
 const { list } = defineProps<{
   list: List;
 }>();
 
 const store = useStore();
+const { user: currentUser } = storeToRefs(store);
 
 const shareEmail = ref('');
 
@@ -39,6 +41,19 @@ function initials(user: User) {
           class="shared-with-container"
         >
           <ul class="shared-with">
+            <li v-if="list.owner.id !== currentUser?.id" class="shared-item">
+              <div class="avatar bg-surface-variant text-secondary">
+                {{ initials(list.owner) }}
+              </div>
+              <div class="name">
+                {{ list.owner.name }} {{ list.owner.surname }}
+              </div>
+              <v-icon
+                class="owner bg-surface text-secondary"
+                icon="mdi-crown-outline"
+                size="small"
+              />
+            </li>
             <li
               v-for="user in list.sharedWith"
               :key="user.id"
@@ -49,6 +64,7 @@ function initials(user: User) {
               </div>
               <div class="name">{{ user.name }} {{ user.surname }}</div>
               <v-btn
+                v-if="user.id !== currentUser?.id"
                 class="unshare bg-surface"
                 icon="mdi-close"
                 color="error"
@@ -73,6 +89,11 @@ function initials(user: User) {
 
         <v-card-actions>
           <v-spacer />
+          <v-btn
+            variant="text"
+            text="Cancelar"
+            @click="isActive.value = false"
+          />
           <v-btn
             variant="flat"
             text="Compartir"
@@ -115,10 +136,21 @@ function initials(user: User) {
   position: relative;
   min-width: 5rem;
 
-  .unshare {
+  .unshare,
+  .owner {
     position: absolute;
     top: -0.5rem;
     right: 0;
+  }
+
+  .owner {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    background-image: linear-gradient(
+      rgba(var(--v-theme-secondary), 0.3),
+      rgba(var(--v-theme-secondary), 0.3)
+    );
   }
 }
 
