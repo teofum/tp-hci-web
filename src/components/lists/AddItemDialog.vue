@@ -29,14 +29,14 @@ async function commit() {
       item.id,
       itemProductId.value,
       Number(itemQuantity.value),
-      itemUnit.value ?? '',
+      itemUnit.value || 'unidades',
     );
   } else {
     store.addListItem(
       listId,
       itemProductId.value,
       Number(itemQuantity.value),
-      itemUnit.value ?? '',
+      itemUnit.value || 'unidades',
     );
   }
 }
@@ -72,6 +72,7 @@ async function commit() {
             </div>
 
             <v-select
+              v-if="!isEditing"
               v-model="itemProductId"
               label="Producto"
               :items="products"

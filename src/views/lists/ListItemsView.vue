@@ -24,6 +24,7 @@ onMounted(async () => {
   try {
     await store.getListItems(listId, 'createdAt', 'DESC');
   } catch (e) {
+    console.error(e);
     error.value = JSON.stringify(e, null, 2);
   } finally {
     loading.value = false;
@@ -74,7 +75,7 @@ function togglePurchased(itemId: number, purchased: boolean) {
 </script>
 
 <template>
-  <div v-if="error">Error: {{ error }}</div>
+  <div class="error" v-if="error">Error: {{ error }}</div>
   <div
     class="loading bg-surface"
     v-else-if="
@@ -248,9 +249,16 @@ function togglePurchased(itemId: number, purchased: boolean) {
 </template>
 
 <style>
+.error {
+  width: 100%;
+  padding-top: 8rem;
+  display: grid;
+  place-items: center;
+}
+
 .loading {
   width: 100%;
-  height: 100%;
+  padding-top: 8rem;
   display: grid;
   place-items: center;
 }
