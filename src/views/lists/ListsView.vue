@@ -30,7 +30,6 @@ function redirectList(id: number) {
           :emoji="list.emoji"
           :detail="list.description"
           @click="redirectList(list.id)"
-          style="cursor: pointer"
         >
           <v-menu>
             <template v-slot:activator="{ props: activatorProps }">

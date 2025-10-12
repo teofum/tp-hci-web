@@ -48,6 +48,7 @@ const progressHeight = computed(() =>
   &.clickable {
     border-radius: 1.5rem;
     transition: background-color 300ms ease;
+    cursor: pointer;
     &:hover {
       background-color: rgba(var(--v-theme-background));
     }
