@@ -175,6 +175,7 @@ async function restorePurchasedList(id: number) {
             :name="purchase.list.name"
             :emoji="purchase.list.emoji"
             :detail="getDetailLine(purchase)"
+            @click="viewDetail(purchase.id)"
           >
             <v-menu>
               <template v-slot:activator="{ props: activatorProps }">
@@ -214,6 +215,7 @@ async function restorePurchasedList(id: number) {
           :name="purchase.list.name"
           :emoji="purchase.list.emoji"
           :detail="getDetailLine(purchase)"
+          @click="viewDetail(purchase.id)"
         >
           <v-menu>
             <template v-slot:activator="{ props: activatorProps }">

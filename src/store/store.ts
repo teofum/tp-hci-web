@@ -123,8 +123,9 @@ export const useStore = defineStore('main', () => {
   }
 
   async function purchaseList(id: number) {
-    await listsAPI.purchase(id);
-    lists.value = lists.value.filter((list) => list.id !== id);
+    const list = await listsAPI.purchase(id);
+    if (!list.recurring)
+      lists.value = lists.value.filter((list) => list.id !== id);
   }
 
   /// share list ///////////////////////
