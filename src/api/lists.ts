@@ -65,7 +65,8 @@ export const lists = {
   },
 
   async reset(id: number) {
-    await API.post(`shopping-lists/${id}/reset`).withAuth().send();
+    const res = await API.post(`shopping-lists/${id}/reset`).withAuth().send();
+    return listSchema.parse(res);
   },
 
   async share(id: number, email: string) {

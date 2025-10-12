@@ -4,6 +4,7 @@ import { storeToRefs } from 'pinia';
 
 import { useStore } from '@/store/store';
 import type { Item } from '@/schemas/item.schema';
+import AddProductDialog from '../products/AddProductDialog.vue';
 
 const store = useStore();
 const { products } = storeToRefs(store);
@@ -71,19 +72,33 @@ async function commit() {
               />
             </div>
 
-            <v-select
+            <div
               v-if="!isEditing"
-              v-model="itemProductId"
-              label="Producto"
-              :items="products"
-              :item-props="
-                (product) => ({
-                  value: product.id,
-                  title: `${product.emoji} ${product.name}`,
-                })
-              "
-              class="select w-100"
-            />
+              class="d-flex flex-row align-center ga-4 w-100"
+            >
+              <v-select
+                v-model="itemProductId"
+                label="Producto"
+                :items="products"
+                :item-props="
+                  (product) => ({
+                    value: product.id,
+                    title: `${product.emoji} ${product.name}`,
+                  })
+                "
+                class="select"
+              />
+              <AddProductDialog>
+                <template v-slot:activator="{ props: activatorProps }">
+                  <v-btn
+                    v-bind="activatorProps"
+                    text="Nuevo producto"
+                    prepend-icon="mdi-plus"
+                    variant="flat"
+                  />
+                </template>
+              </AddProductDialog>
+            </div>
           </div>
         </v-card-item>
 

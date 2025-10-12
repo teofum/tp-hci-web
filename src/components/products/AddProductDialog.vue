@@ -78,7 +78,7 @@ async function commit() {
                 <template v-slot:activator="{ props: activatorProps }">
                   <v-btn
                     v-bind="activatorProps"
-                    text="Agregar categoría"
+                    text="Nueva categoría"
                     prepend-icon="mdi-plus"
                     variant="flat"
                   />
