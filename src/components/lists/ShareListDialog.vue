@@ -4,6 +4,11 @@ import EmojiPickerButton from '@/components/EmojiPickerButton.vue';
 import { useStore } from '@/store/store';
 import type { List } from '@/schemas/list.schema';
 
+
+const props = defineProps<{
+  withText?: boolean;
+}>();
+
 const store = useStore();
 
 const shareUsername = ref('');
@@ -14,11 +19,7 @@ async function shareCommit() {} // TODO
 <template>
   <v-dialog max-width="600">
     <template v-slot:activator="{ props: activatorProps }">
-      <v-btn
-        v-bind="activatorProps"
-        icon="mdi-share-variant"
-        variant="text"
-      />
+      <slot name="activator" :props="activatorProps" />
     </template>
 
     <template v-slot:default="{ isActive }">
