@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { computed } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useRouter } from 'vue-router';
 import z from 'zod';
@@ -33,10 +33,21 @@ async function restorePurchasedList() {
 </script>
 
 <template>
-  <div class="error" v-if="error">Error: {{ error }}</div>
-  <div class="loading bg-surface" v-else-if="loading || !purchase">
+  <div class="loading bg-surface" v-if="loading">
     <v-progress-circular indeterminate color="primary" />
   </div>
+  <v-card variant="tonal" class="error" v-else-if="error || !purchase">
+    <div class="heading">Algo salió mal</div>
+    <p class="description" v-if="!error">No se encontró esta compra.</p>
+    <p class="description" v-else>Ocurrió un error inesperado.</p>
+    <v-btn
+      to="/history"
+      variant="flat"
+      prepend-icon="mdi-arrow-left"
+      text="Volver al historial"
+      class="mt-8"
+    />
+  </v-card>
   <v-container v-else max-width="800" class="container">
     <v-btn @click="goBack" variant="text" prepend-icon="mdi-chevron-left">
       Historial
@@ -92,6 +103,21 @@ async function restorePurchasedList() {
 </template>
 
 <style scoped>
+.error {
+  width: 100%;
+  margin-top: 8rem;
+  padding: 3rem;
+  display: grid;
+  place-items: center;
+}
+
+.loading {
+  width: 100%;
+  padding-top: 8rem;
+  display: grid;
+  place-items: center;
+}
+
 .heading {
   font-size: 3rem;
   font-weight: 700;
