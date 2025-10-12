@@ -3,6 +3,7 @@ import { API } from './api';
 import { fetchAll } from './fetchAll';
 import { purchaseSchema } from '@/schemas/purchases.schema';
 import { paginatedResponseSchema } from '@/schemas/api.schema';
+import z from 'zod';
 
 export const purchases = {
   async get() {
@@ -21,7 +22,7 @@ export const purchases = {
   },
 
   async getPurchaseDetails(purchase_id: number) {
-    const res = await API.get(`purchase/${purchase_id}`)
+    const res = await API.get(`purchases/${purchase_id}`)
       .withAuth()
       .withParams({
         id: purchase_id.toString(),
@@ -31,12 +32,9 @@ export const purchases = {
   },
 
   async restore(purchase_id: number) {
-    const res = await API.post(`purchase/${purchase_id}/restore`)
+    const res = await API.post(`purchases/${purchase_id}/restore`)
       .withAuth()
-      .withParams({
-        id: purchase_id.toString(),
-      })
       .send();
-    return listSchema.parse(res);
+    return z.object({ list: listSchema }).parse(res).list;
   },
 };

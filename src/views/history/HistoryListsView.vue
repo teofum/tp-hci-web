@@ -22,10 +22,6 @@ onMounted(async () => {
   await store.getPurchases();
 });
 
-function viewDetail(id: number) {
-  router.push({ name: 'history-detail', params: { id } });
-}
-
 const groupByTimePeriod = ref(true);
 const filter = ref('');
 const orderBy = ref<'date' | 'name'>('date');
@@ -101,6 +97,15 @@ const purchasesByTimePeriod = computed(() => {
 
 function getDetailLine(purchase: Purchase) {
   return `${purchase.items.length} producto${purchase.items.length === 1 ? '' : 's'} — ${new Date(purchase.createdAt).toLocaleDateString('es-ar')}`;
+}
+
+function viewDetail(id: number) {
+  router.push({ name: 'history-detail', params: { id } });
+}
+
+async function restorePurchasedList(id: number) {
+  await store.restorePurchase(id);
+  router.push({ name: 'lists' });
 }
 </script>
 
@@ -192,8 +197,8 @@ function getDetailLine(purchase: Purchase) {
                 </AddListDialog>
                 <v-list-item
                   prepend-icon="mdi-reload"
-                  title="Recuperar"
-                  @click="store.deleteList(purchase.id)"
+                  title="Repetir lista"
+                  @click="restorePurchasedList(purchase.id)"
                 />
               </v-list>
             </v-menu>
@@ -220,19 +225,10 @@ function getDetailLine(purchase: Purchase) {
             </template>
 
             <v-list>
-              <AddListDialog :list="purchase">
-                <template v-slot:activator="{ props: activatorProps }">
-                  <v-list-item
-                    v-bind="activatorProps"
-                    prepend-icon="mdi-pencil-outline"
-                    title="Modificar"
-                  />
-                </template>
-              </AddListDialog>
               <v-list-item
                 prepend-icon="mdi-reload"
-                title="Recuperar"
-                @click="store.deleteList(purchase.id)"
+                title="Repetir lista"
+                @click="restorePurchasedList(purchase.id)"
               />
             </v-list>
           </v-menu>

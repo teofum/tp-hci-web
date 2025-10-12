@@ -217,7 +217,8 @@ export const useStore = defineStore('main', () => {
   }
 
   async function restorePurchase(purchase_id: number) {
-    await purchasesAPI.restore(purchase_id);
+    const newList = await purchasesAPI.restore(purchase_id);
+    lists.value = [...lists.value, newList];
   }
 
   return {
