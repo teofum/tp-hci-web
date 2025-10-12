@@ -9,6 +9,7 @@ import ShareListDialog from '@/components/lists/ShareListDialog.vue';
 import z from 'zod';
 import { onMounted } from 'vue';
 import AddListDialog from '@/components/lists/AddListDialog.vue';
+import ConfirmationDialog from '@/components/ConfirmationDialog.vue';
 
 const props = defineProps<{ id: string }>();
 
@@ -95,7 +96,9 @@ function markCompleted() {
     <div class="d-flex flex-row align-center w-100">
       <h1 class="heading text-high-emphasis mr-auto">{{ list.name }}</h1>
       <v-tooltip
-        v-if="items[listId].filter((i) => i.purchased).length > 0"
+        v-if="
+          items[listId].length > 0 && items[listId].every((i) => i.purchased)
+        "
         text="Marcar como completada"
         location="top"
       >
@@ -104,10 +107,40 @@ function markCompleted() {
             icon="mdi-check"
             v-bind="tooltipProps"
             variant="text"
-            @click="markCompleted()"
+            @click="markCompleted"
           />
         </template>
       </v-tooltip>
+      <ConfirmationDialog
+        v-else-if="items[listId].filter((i) => i.purchased).length > 0"
+        title="Completar lista"
+        @confirm="markCompleted"
+      >
+        <template v-slot:activator="{ props: activatorProps }">
+          <v-tooltip text="Marcar como completada" location="top">
+            <template v-slot:activator="{ props: tooltipProps }">
+              <v-btn
+                icon="mdi-check"
+                v-bind="{ ...activatorProps, ...tooltipProps }"
+                variant="text"
+              />
+            </template>
+          </v-tooltip>
+        </template>
+
+        <template v-slot:default>
+          <p>
+            Esta lista todavía tiene algunos productos sin comprar. ¿Marcarla
+            como completada de todos modos?
+          </p>
+          <p class="mt-3 warning text-error" v-if="!list.recurring">
+            Esta operación eliminará la lista de compras permanentemente.
+          </p>
+          <p class="mt-3 warning" v-else>
+            Esta operación volverá la lista a su estado inicial.
+          </p>
+        </template>
+      </ConfirmationDialog>
       <AddListDialog :list="list">
         <template v-slot:activator="{ props: activatorProps }">
           <v-tooltip text="Modificar" location="top">
@@ -308,5 +341,10 @@ function markCompleted() {
       padding-inline-end: 10px;
     }
   }
+}
+
+.warning {
+  font-size: 0.875rem;
+  font-weight: 600;
 }
 </style>
