@@ -11,12 +11,6 @@ import type { Item } from '@/schemas/item.schema';
 import type { Purchase } from '@/schemas/purchases.schema';
 import { ref } from 'vue';
 
-/* TODO:
- * hacer lo de history, shared users por lista
- * pantry?
- * purchesed list o purchased items?
- */
-
 export const useStore = defineStore('main', () => {
   const products = ref([] as Product[]);
   const categories = ref([] as Category[]);
@@ -132,8 +126,12 @@ export const useStore = defineStore('main', () => {
   }
 
   async function unshareList(id: number, userId: number) {
-    const updatedList = await listsAPI.unshare(id, userId);
-    lists.value = lists.value.map((l) => (l.id === id ? updatedList : l));
+    await listsAPI.unshare(id, userId);
+    lists.value = lists.value.map((l) =>
+      l.id === id
+        ? { ...l, sharedWith: l.sharedWith.filter((u) => u.id !== userId) }
+        : l,
+    );
   }
 
   /// list /////////////////////////////

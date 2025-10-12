@@ -73,17 +73,21 @@ function togglePurchased(itemId: number, purchased: boolean) {
 </script>
 
 <template>
-  <div v-if="loading || filteredItems === null || itemsByCategory === null">
+  <div v-if="error">Error: {{ error }}</div>
+  <div
+    v-else-if="
+      loading || filteredItems === null || itemsByCategory === null || !list
+    "
+  >
     Loading...
   </div>
-  <div v-else-if="error">Error: {{ error }}</div>
   <v-container v-else max-width="800" class="container">
     <v-btn @click="goBack" variant="text" prepend-icon="mdi-chevron-left">
       Listas
     </v-btn>
     <div class="d-flex flex-row justify-space-between align-center w-100">
-      <h1 class="heading text-high-emphasis">{{ list?.name }}</h1>
-      <ShareListDialog :list-id="listId">
+      <h1 class="heading text-high-emphasis">{{ list.name }}</h1>
+      <ShareListDialog :list="list">
         <template v-slot:activator="{ props: activatorProps }">
           <v-btn
             icon="mdi-share-variant"

@@ -76,9 +76,8 @@ export const lists = {
   },
 
   async unshare(listId: number, userId: number) {
-    const res = await API.delete(`shopping-lists/${listId}/share/${userId}`)
+    await API.delete(`shopping-lists/${listId}/share/${userId}`)
       .withAuth()
       .send();
-    return listSchema.parse(res);
   },
 };
