@@ -4,14 +4,12 @@ import { userSchema } from './user.schema';
 import { listSchema } from './list.schema';
 import { itemSchema } from './item.schema';
 
-export const purchseSchema = z.object({
+export const purchaseSchema = z.object({
   id: z.int(),
-  metadata: z.object({
-    emoji: z.emoji(),
-  }),
+  metadata: z.object({}),
   owner: userSchema,
   list: listSchema,
   listItemArray: z.array(itemSchema).optional(),
 });
 
-export type Purchase = z.infer<typeof purchseSchema>;
+export type Purchase = z.infer<typeof purchaseSchema>;

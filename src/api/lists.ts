@@ -58,7 +58,10 @@ export const lists = {
   },
 
   async purchase(id: number) {
-    await API.post(`shopping-lists/${id}/purchase`).withAuth().send();
+    const res = await API.post(`shopping-lists/${id}/purchase`)
+      .withAuth()
+      .send();
+    return listSchema.parse(res);
   },
 
   async reset(id: number) {

@@ -4,9 +4,10 @@ import { useStore } from '@/store/store';
 import { useRouter } from 'vue-router';
 import ListItem from '@/components/ListItem.vue';
 import { ref, computed } from 'vue';
+import { onMounted } from 'vue';
 
 const store = useStore();
-const { lists } = storeToRefs(store);
+const { history } = storeToRefs(store);
 const router = useRouter();
 
 const searchQuery = ref('');
@@ -14,10 +15,13 @@ const orderBy = ref('name');
 const filterBy = ref('all');
 
 function redirectList(id: number) {
-  router.push({ name: 'list-detail', params: { id } });
+  router.push({ name: 'list', params: { id } });
 }
 
-// const filteredLists = ; // TODO listas filtradas
+onMounted(async () => {
+  await store.getPurchases();
+  console.log(history.value);
+});
 </script>
 
 <template>
@@ -42,26 +46,23 @@ function redirectList(id: number) {
         label="Ordenar por"
         style="max-width: 160px"
       >
-
       </v-select>
 
       <v-select
-        :items="['Hoy', 'Hace una semana', 'Hace un mes']"
+        :items="['Hoy', 'Hace una semana', 'Hace un mes', 'Todo']"
         label="Filtrar"
         style="max-width: 160px"
-      ></v-select>
+      />
     </div>
 
     <div class="ml_listas_container">
       <ul class="ml_listas">
         <ListItem
-          v-for="list in lists"
-          :key="list.id"
-          :name="list.name"
-          :emoji="list.emoji"
+          v-for="item in history"
+          :key="item.id"
+          :name="item.list.name"
+          :emoji="item.list.emoji"
           :detail="'TODO items completos'"
-          @click="redirectList(list.id)"
-          style="cursor: pointer"
         >
           <v-menu>
             <template v-slot:activator="{ props: activatorProps }">
@@ -73,7 +74,7 @@ function redirectList(id: number) {
             </template>
 
             <v-list>
-              <AddListDialog :list="list">
+              <AddListDialog :list="item">
                 <template v-slot:activator="{ props: activatorProps }">
                   <v-list-item
                     v-bind="activatorProps"
@@ -85,7 +86,7 @@ function redirectList(id: number) {
               <v-list-item
                 prepend-icon="mdi-reload"
                 title="Recuperar"
-                @click="store.deleteList(list.id)"
+                @click="store.deleteList(item.id)"
               />
             </v-list>
           </v-menu>

@@ -55,6 +55,9 @@ const vuetify = createVuetify({
     VList: {
       rounded: 'lg',
     },
+    VTooltip: {
+      contentClass: 'bg-primary',
+    },
   },
 });
 

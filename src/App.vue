@@ -1,9 +1,9 @@
 <script setup lang="ts">
+import { computed, ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { computed, ref } from 'vue';
 import { VBtn } from 'vuetify/components';
+
 import { useStore } from './store/store';
-import { onMounted } from 'vue';
 
 const route = useRoute();
 const router = useRouter();

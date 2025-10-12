@@ -19,7 +19,7 @@ export const useStore = defineStore('main', () => {
   const lists = ref([] as List[]);
 
   const items = ref({} as Record<List['id'], Item[]>);
-  const history = ref({} as Record<List['id'], Purchase[]>);
+  const history = ref([] as Purchase[]);
   const user = ref<User>();
 
   async function init() {
@@ -102,7 +102,7 @@ export const useStore = defineStore('main', () => {
 
   async function deleteList(id: number) {
     await listsAPI.delete(id);
-    lists.value = lists.value.filter((product) => product.id !== id);
+    lists.value = lists.value.filter((list) => list.id !== id);
   }
 
   async function modifyList(
@@ -120,6 +120,11 @@ export const useStore = defineStore('main', () => {
       emoji,
     );
     lists.value = lists.value.map((l) => (l.id === id ? updatedList : l));
+  }
+
+  async function purchaseList(id: number) {
+    await listsAPI.purchase(id);
+    lists.value = lists.value.filter((list) => list.id !== id);
   }
 
   /// share list ///////////////////////
@@ -207,18 +212,9 @@ export const useStore = defineStore('main', () => {
 
   /// purchased / history /////////
 
-  async function getPurchases(
-    list_id: number,
-    sort_by: 'createdAt' | 'list' | 'id',
-    order: 'ASC' | 'DESC',
-  ) {
-    history.value[list_id] = await purchasesAPI.get(list_id, sort_by, order);
+  async function getPurchases() {
+    history.value = await purchasesAPI.get();
   }
-
-  // esta medio sus
-  //  async function getPurchaseDetails( purchase_id: number ) {
-  //    return await purchasesAPI.getPurchaseDetails(purchase_id);
-  //  }
 
   async function restorePurchase(purchase_id: number) {
     await purchasesAPI.restore(purchase_id);
@@ -230,6 +226,7 @@ export const useStore = defineStore('main', () => {
     categories,
     lists,
     items,
+    history,
     init,
     addProduct,
     addCategory,
@@ -249,5 +246,6 @@ export const useStore = defineStore('main', () => {
     deleteListItem,
     getPurchases,
     restorePurchase,
+    purchaseList,
   };
 });

@@ -72,6 +72,11 @@ const itemsByCategory = computed(() => {
 function togglePurchased(itemId: number, purchased: boolean) {
   store.togglePurchaseListItem(listId, itemId, purchased);
 }
+
+function markCompleted() {
+  store.purchaseList(listId);
+  router.push('/lists');
+}
 </script>
 
 <template>
@@ -90,22 +95,44 @@ function togglePurchased(itemId: number, purchased: boolean) {
     </v-btn>
     <div class="d-flex flex-row align-center w-100">
       <h1 class="heading text-high-emphasis mr-auto">{{ list.name }}</h1>
+      <v-tooltip
+        v-if="items[listId].filter((i) => i.purchased).length > 0"
+        text="Marcar como completada"
+        location="top"
+      >
+        <template v-slot:activator="{ props: tooltipProps }">
+          <v-btn
+            icon="mdi-check"
+            v-bind="tooltipProps"
+            variant="text"
+            @click="markCompleted()"
+          />
+        </template>
+      </v-tooltip>
       <AddListDialog :list="list">
         <template v-slot:activator="{ props: activatorProps }">
-          <v-btn
-            icon="mdi-pencil-outline"
-            v-bind="activatorProps"
-            variant="text"
-          />
+          <v-tooltip text="Modificar" location="top">
+            <template v-slot:activator="{ props: tooltipProps }">
+              <v-btn
+                icon="mdi-pencil-outline"
+                v-bind="{ ...activatorProps, ...tooltipProps }"
+                variant="text"
+              />
+            </template>
+          </v-tooltip>
         </template>
       </AddListDialog>
       <ShareListDialog :list="list">
         <template v-slot:activator="{ props: activatorProps }">
-          <v-btn
-            icon="mdi-share-variant"
-            v-bind="activatorProps"
-            variant="text"
-          />
+          <v-tooltip text="Compartir" location="top">
+            <template v-slot:activator="{ props: tooltipProps }">
+              <v-btn
+                icon="mdi-share-variant"
+                v-bind="{ ...activatorProps, ...tooltipProps }"
+                variant="text"
+              />
+            </template>
+          </v-tooltip>
         </template>
       </ShareListDialog>
     </div>
