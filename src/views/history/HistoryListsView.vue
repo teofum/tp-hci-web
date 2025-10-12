@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { storeToRefs } from 'pinia';
-import { useStore } from '@/store/store';
-import { useRouter } from 'vue-router';
-import ListItem from '@/components/ListItem.vue';
 import { ref, computed } from 'vue';
-import { onMounted } from 'vue';
+import { useRouter } from 'vue-router';
+import { storeToRefs } from 'pinia';
+
+import ListItem from '@/components/ListItem.vue';
+import { useSetup } from '@/composables/useSetup';
+import { useStore } from '@/store/store';
 import type { Purchase } from '@/schemas/purchases.schema';
 
 const PERIOD_NAME = {
@@ -18,7 +19,7 @@ const router = useRouter();
 const store = useStore();
 const { history, products } = storeToRefs(store);
 
-onMounted(async () => {
+const { loading, error } = useSetup(async () => {
   await store.getPurchases();
 });
 
@@ -110,7 +111,11 @@ async function restorePurchasedList(id: number) {
 </script>
 
 <template>
-  <v-container max-width="800" class="container">
+  <div class="error" v-if="error">Error: {{ error }}</div>
+  <div class="loading bg-surface" v-else-if="loading">
+    <v-progress-circular indeterminate color="primary" />
+  </div>
+  <v-container v-else max-width="800" class="container">
     <div class="d-flex flex-row justify-space-between align-center w-100">
       <h1 class="heading text-high-emphasis">Historial</h1>
     </div>

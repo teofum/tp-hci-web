@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import { storeToRefs } from 'pinia';
-import { useStore } from '@/store/store';
-import { useRouter } from 'vue-router';
-import ListItem from '@/components/ListItem.vue';
 import { ref, computed } from 'vue';
-import { onMounted } from 'vue';
+import { storeToRefs } from 'pinia';
+import { useRouter } from 'vue-router';
 import z from 'zod';
+
+import ListItem from '@/components/ListItem.vue';
+import { useSetup } from '@/composables/useSetup';
+import { useStore } from '@/store/store';
 
 const props = defineProps<{ id: string }>();
 
@@ -17,20 +18,10 @@ function goBack() {
 const store = useStore();
 const { history, products } = storeToRefs(store);
 
-const loading = ref(true);
-const error = ref<string | null>(null);
-
 const purchaseId = z.coerce.number().parse(props.id);
-onMounted(async () => {
-  try {
-    if (!history.value.find((p) => p.id === purchaseId))
-      await store.getPurchases();
-  } catch (e) {
-    console.error(e);
-    error.value = JSON.stringify(e, null, 2);
-  } finally {
-    loading.value = false;
-  }
+const { loading, error } = useSetup(async () => {
+  if (!history.value.find((p) => p.id === purchaseId))
+    await store.getPurchases();
 });
 
 const purchase = computed(() => history.value.find((p) => p.id === purchaseId));

@@ -2,14 +2,15 @@
 import { useRouter } from 'vue-router';
 import { computed, ref } from 'vue';
 import { storeToRefs } from 'pinia';
+import z from 'zod';
+
 import { useStore } from '@/store/store';
 import AddItemDialog from '@/components/lists/AddItemDialog.vue';
 import ListItem from '@/components/ListItem.vue';
 import ShareListDialog from '@/components/lists/ShareListDialog.vue';
-import z from 'zod';
-import { onMounted } from 'vue';
 import AddListDialog from '@/components/lists/AddListDialog.vue';
 import ConfirmationDialog from '@/components/ConfirmationDialog.vue';
+import { useSetup } from '@/composables/useSetup';
 
 const props = defineProps<{ id: string }>();
 
@@ -18,20 +19,10 @@ function goBack() {
   router.push('/lists');
 }
 
-const loading = ref(true);
-const error = ref<string | null>(null);
-
 const listId = z.coerce.number().parse(props.id);
-onMounted(async () => {
-  try {
-    await store.getListItems(listId, 'createdAt', 'DESC');
-  } catch (e) {
-    console.error(e);
-    error.value = JSON.stringify(e, null, 2);
-  } finally {
-    loading.value = false;
-  }
-});
+const { loading, error } = useSetup(
+  async () => await store.getListItems(listId, 'createdAt', 'DESC'),
+);
 
 const store = useStore();
 const { lists, items } = storeToRefs(store);

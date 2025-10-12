@@ -1,34 +1,19 @@
 <script setup lang="ts">
-import { computed, ref, onMounted } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
+import { computed } from 'vue';
+import { useRoute } from 'vue-router';
+import { storeToRefs } from 'pinia';
 import { VBtn } from 'vuetify/components';
 
-import { useStore } from './store/store';
-import { storeToRefs } from 'pinia';
+import { useSetup } from '@/composables/useSetup';
+import { useStore } from '@/store/store';
 
 const route = useRoute();
-const router = useRouter();
 const isAuthRoute = computed(() => route.path.startsWith('/auth'));
 
 const store = useStore();
 const { user } = storeToRefs(store);
-
-const loading = ref(true);
-const error = ref<string | null>(null);
-
-onMounted(async () => {
-  try {
-    if (!isAuthRoute.value) await store.init();
-  } catch (e) {
-    if (e instanceof Error && e.message === 'Invalid authorization') {
-      router.push('/auth/signin');
-    } else {
-      console.error(e);
-      error.value = JSON.stringify(e, null, 2);
-    }
-  } finally {
-    loading.value = false;
-  }
+const { loading, error } = useSetup(async () => {
+  if (!isAuthRoute.value) await store.init();
 });
 </script>
 
