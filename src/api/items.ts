@@ -28,15 +28,14 @@ export const items = {
     productId: number,
     quantity: number,
     unit: string,
-    emoji: string,
   ) {
     const res = await API.post(`shopping-lists/${list_id}/items`)
       .withAuth()
       .withBody({
-        productId,
+        product: { id: productId },
         quantity,
         unit,
-        metadata: { emoji },
+        metadata: {},
       })
       .send();
 
@@ -49,15 +48,14 @@ export const items = {
     productId: number,
     quantity: number,
     unit: string,
-    emoji: string,
   ) {
     const res = await API.put(`shopping-lists/${list_id}/items/${item_id}`)
       .withAuth()
       .withBody({
-        productId,
+        product: { id: productId },
         quantity,
         unit,
-        metadata: { emoji },
+        metadata: {},
       })
       .send();
 
@@ -66,7 +64,9 @@ export const items = {
 
   // toggles the purchased status of an item
   async patch(list_id: number, item_id: number) {
-    const res = await API.patch(`shopping-lists/${list_id}/items/${item_id}`);
+    const res = await API.patch(`shopping-lists/${list_id}/items/${item_id}`)
+      .withAuth()
+      .send();
     return itemSchema.parse(res);
   },
 

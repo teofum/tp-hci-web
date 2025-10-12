@@ -7,12 +7,10 @@ export const itemSchema = z
   .object({
     id: z.int(),
     quantity: z.int(),
-    unit: z.string(),
-    metadata: z.object({
-      emoji: z.emoji(),
-    }),
+    unit: z.string().nullable(),
+    metadata: z.object({}),
     purchased: z.boolean(),
-    lastPurchasedAt: dateSchema,
+    lastPurchasedAt: dateSchema.nullable(),
     createdAt: dateSchema,
     updatedAt: dateSchema,
     product: productSchema,

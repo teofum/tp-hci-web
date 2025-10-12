@@ -2,47 +2,42 @@
 import { ref } from 'vue';
 import { storeToRefs } from 'pinia';
 
-import EmojiPickerButton from '@/components/EmojiPickerButton.vue';
 import { useStore } from '@/store/store';
-import type { Product } from '@/schemas/product.schema';
+import type { Item } from '@/schemas/item.schema';
 
 const store = useStore();
-const { categories } = storeToRefs(store);
+const { products } = storeToRefs(store);
 
-const { product } = defineProps<{
-  product?: Product;
+const { item, listId } = defineProps<{
+  listId: number;
+  item?: Item;
 }>();
 
-// TODO esto cambiarlo a items
-// hardcodeado con products para debug
-const itemName = ref(product?.name ?? '');
-const itemEmoji = ref(product?.emoji ?? '📦');
-const itemQuantity = ref(product?.name ?? '');
-const itemPrice = ref(product?.name ?? '');
-const itemCategory = ref(product?.category?.id);
+const itemProductId = ref(item?.product.id ?? null);
+const itemQuantity = ref(item?.quantity ?? 1);
+const itemUnit = ref(item?.unit ?? '');
 
-const isEditing = product !== undefined;
+const isEditing = item !== undefined;
 
 // TODO cambiar a items
 async function commit() {
+  if (itemProductId.value === null) return;
+
   if (isEditing) {
-    //   store.modifyItem(
-    //     product.id,
-    //     itemName.value,
-    //     itemEmoji.value,
-    //     itemQuantity.value,
-    //     itemPrice.value,
-    //     itemCategory.value ?? null,
-    //   );
-    // } else {
-    //   store.addProduct(
-    //     product.id,
-    //     itemName.value,
-    //     itemEmoji.value,
-    //     itemQuantity.value,
-    //     itemPrice.value,
-    //     itemCategory.value ?? null,
-    //   );
+    store.updateListItem(
+      listId,
+      item.id,
+      itemProductId.value,
+      itemQuantity.value,
+      itemUnit.value,
+    );
+  } else {
+    store.addListItem(
+      listId,
+      itemProductId.value,
+      itemQuantity.value,
+      itemUnit.value,
+    );
   }
 }
 </script>
@@ -61,46 +56,31 @@ async function commit() {
       >
         <v-card-item>
           <div class="d-flex flex-column align-center py-2 ga-4">
-            <EmojiPickerButton v-model="itemEmoji" />
+            <div class="quantity-unit-field-container">
+              <v-text-field
+                v-model="itemQuantity"
+                label="Cantidad"
+                type="number"
+              />
 
-            <v-text-field
-              v-model="itemName"
-              label="Nombre"
-              type="text"
-              class="w-100"
-            />
-          </div>
-        </v-card-item>
-
-        <v-card-subtitle>Detalles</v-card-subtitle>
-
-        <v-card-item>
-          <div class="d-flex flex-column ga-4">
-            <v-text-field
-              v-model="itemQuantity"
-              label="Cantidad (unidades, kg, etc)"
-              type="number"
-              class="w-100"
-            />
-
-            <v-text-field
-              v-model="itemPrice"
-              label="Precio"
-              type="text"
-              class="w-100"
-            />
+              <v-text-field
+                v-model="itemUnit"
+                label="Unidad (opcional)"
+                type="text"
+              />
+            </div>
 
             <v-select
-              v-model="itemCategory"
-              label="Categoría"
-              :items="categories"
+              v-model="itemProductId"
+              label="Producto"
+              :items="products"
               :item-props="
-                (category) => ({
-                  value: category.id,
-                  title: `${category.emoji} ${category.name}`,
+                (product) => ({
+                  value: product.id,
+                  title: `${product.emoji} ${product.name}`,
                 })
               "
-              class="select"
+              class="select w-100"
             />
           </div>
         </v-card-item>
@@ -111,7 +91,7 @@ async function commit() {
           <v-btn
             variant="flat"
             :text="isEditing ? 'Guardar cambios' : 'Agregar'"
-            :disabled="!itemName"
+            :disabled="!itemQuantity || itemProductId === null"
             @click="
               commit();
               isActive.value = false;
@@ -126,5 +106,12 @@ async function commit() {
 <style scoped>
 .select {
   flex-grow: 1;
+}
+
+.quantity-unit-field-container {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 0.5rem;
 }
 </style>

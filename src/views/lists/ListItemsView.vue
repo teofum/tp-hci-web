@@ -70,7 +70,7 @@ const itemsByCategory = computed(() => {
 
 <template>
   <div v-if="loading || filteredItems === null || itemsByCategory === null">
-    Loading...
+    Loading... {{ JSON.stringify(items) }}
   </div>
   <div v-else-if="error !== null">Error: {{ error }}</div>
   <v-container v-else max-width="800" class="container">
@@ -81,9 +81,11 @@ const itemsByCategory = computed(() => {
       <h1 class="heading text-high-emphasis">{{ list?.name }}</h1>
       <ShareListDialog>
         <template v-slot:activator="{ props: activatorProps }">
-          <v-btn v-bind="activatorProps" variant="text">
-            <v-icon>mdi-share-variant</v-icon>
-          </v-btn>
+          <v-btn
+            icon="mdi-share-variant"
+            v-bind="activatorProps"
+            variant="text"
+          />
         </template>
       </ShareListDialog>
     </div>
@@ -103,7 +105,7 @@ const itemsByCategory = computed(() => {
         :items="['Fecha', 'Items']"
         label="Ordenar por"
         style="max-width: 160px"
-      ></v-select>
+      />
       <v-switch
         v-model="groupByCategory"
         label="Agrupar por categoría"
@@ -141,7 +143,7 @@ const itemsByCategory = computed(() => {
                 </template>
 
                 <v-list>
-                  <AddProductDialog :product="item.product">
+                  <AddItemDialog :list-id="listId" :item="item">
                     <template v-slot:activator="{ props: activatorProps }">
                       <v-list-item
                         v-bind="activatorProps"
@@ -149,7 +151,7 @@ const itemsByCategory = computed(() => {
                         title="Modificar"
                       />
                     </template>
-                  </AddProductDialog>
+                  </AddItemDialog>
                   <v-list-item
                     class="text-red"
                     prepend-icon="mdi-delete-outline"
@@ -184,7 +186,7 @@ const itemsByCategory = computed(() => {
               </template>
 
               <v-list>
-                <AddProductDialog :product="item.product">
+                <AddItemDialog :list-id="listId" :item="item">
                   <template v-slot:activator="{ props: activatorProps }">
                     <v-list-item
                       v-bind="activatorProps"
@@ -192,7 +194,7 @@ const itemsByCategory = computed(() => {
                       title="Modificar"
                     />
                   </template>
-                </AddProductDialog>
+                </AddItemDialog>
                 <v-list-item
                   class="text-red"
                   prepend-icon="mdi-delete-outline"
@@ -214,14 +216,14 @@ const itemsByCategory = computed(() => {
       No hay items
     </div>
 
-    <AddItemDialog>
+    <AddItemDialog :list-id="listId">
       <template v-slot:activator="{ props: activatorProps }">
         <v-fab
           v-bind="activatorProps"
           app
           location="bottom end"
           size="x-large"
-          text="Agregar item"
+          text="Agregar producto"
           prepend-icon="mdi-plus"
           variant="flat"
         />

@@ -148,7 +148,11 @@ export const useStore = defineStore('main', () => {
     sort_by: 'updatedAt' | 'createdAt' | 'lastPurchasedAt' | 'productName',
     sort_order: 'DESC' | 'ASC',
   ) {
-    items.value[list_id] = await itemsAPI.get(list_id, sort_by, sort_order);
+    items.value = {
+      ...items.value,
+      [list_id]: await itemsAPI.get(list_id, sort_by, sort_order),
+    };
+    console.log(items.value);
   }
 
   async function addListItem(
@@ -156,11 +160,10 @@ export const useStore = defineStore('main', () => {
     productId: number,
     quantity: number,
     unit: string,
-    emoji: string,
   ) {
     items.value[list_id] = [
       ...items.value[list_id],
-      await itemsAPI.create(list_id, productId, quantity, unit, emoji),
+      await itemsAPI.create(list_id, productId, quantity, unit),
     ];
   }
 
@@ -170,7 +173,6 @@ export const useStore = defineStore('main', () => {
     productId: number,
     quantity: number,
     unit: string,
-    emoji: string,
   ) {
     const updatedItems = await itemsAPI.modify(
       list_id,
@@ -178,7 +180,6 @@ export const useStore = defineStore('main', () => {
       productId,
       quantity,
       unit,
-      emoji,
     );
     // todo esto revisar
     items.value[list_id] = items.value[list_id].map((l) =>
