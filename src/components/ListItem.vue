@@ -1,18 +1,27 @@
 <script setup lang="ts">
-defineProps<{
+import { computed } from 'vue';
+
+const props = defineProps<{
   name: string;
   detail?: string;
   emoji?: string;
   purchased?: boolean;
+  progress?: number;
 }>();
+
+const progressHeight = computed(() =>
+  props.purchased ? 100 : (props.progress ?? 0) * 100,
+);
 </script>
 
 <template>
   <li class="container">
-    <div
-      :class="`emoji-container ${purchased ? 'bg-success purchased' : 'bg-surface-variant'}`"
-    >
-      {{ emoji }}
+    <div class="emoji-container bg-surface-variant">
+      <div
+        class="progress bg-success"
+        :style="{ height: `${progressHeight}%` }"
+      />
+      <div class="emoji">{{ emoji }}</div>
     </div>
 
     <div :class="`text-container${purchased ? ' purchased' : ''}`">
@@ -46,8 +55,23 @@ defineProps<{
   font-size: 2rem;
   border-radius: 12px;
 
-  &.purchased {
+  position: relative;
+  overflow: hidden;
+
+  .progress {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
     background-image: linear-gradient(hsl(0 0 100 / 0.4), hsl(0 0 100 / 0.4));
+
+    transition-property: height;
+    transition-timing-function: ease-in-out;
+    transition-duration: 200ms;
+  }
+
+  .emoji {
+    position: relative;
   }
 }
 

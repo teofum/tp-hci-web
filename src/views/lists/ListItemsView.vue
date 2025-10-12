@@ -250,6 +250,7 @@ function togglePurchased(itemId: number, purchased: boolean) {
   font-size: 1.5rem;
   font-weight: 700;
 }
+
 .switch {
   .v-selection-control {
     flex-direction: row-reverse;

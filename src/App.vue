@@ -18,8 +18,12 @@ onMounted(async () => {
   try {
     if (!isAuthRoute.value) await store.init();
   } catch (e) {
-    console.error(e);
-    error.value = JSON.stringify(e, null, 2);
+    if (e instanceof Error && e.message === 'Invalid authorization') {
+      router.push('/auth/signin');
+    } else {
+      console.error(e);
+      error.value = JSON.stringify(e, null, 2);
+    }
   } finally {
     loading.value = false;
   }
