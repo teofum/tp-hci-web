@@ -1,30 +1,23 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { VTextField, VBtn, VAlert } from 'vuetify/components';
 import { auth } from '@/api/users';
+import { useStore } from '@/store/store';
+import { storeToRefs } from 'pinia';
 
 const router = useRouter();
-const name = ref('');
-const surname = ref('');
-const email = ref('');
+
+const store = useStore();
+const { user } = storeToRefs(store);
+
+const name = ref(user.value?.name ?? '');
+const surname = ref(user.value?.surname ?? '');
+const email = ref(user.value?.email ?? '');
+
 const error = ref('');
 const success = ref('');
 const loading = ref(false);
-const loadingProfile = ref(true);
-
-onMounted(async () => {
-  try {
-    const data = await auth.getCurrentUser();
-    name.value = data.name;
-    surname.value = data.surname;
-    email.value = data.email;
-  } catch {
-    router.push('/auth/signin');
-  } finally {
-    loadingProfile.value = false;
-  }
-});
 
 const handleUpdate = async () => {
   try {
@@ -53,10 +46,17 @@ const handleLogout = async () => {
 </script>
 
 <template>
-  <div v-if="!loadingProfile">
-    <h1>Mi Perfil</h1>
+  <div>
+    <h1>Perfil</h1>
 
     <form @submit.prevent="handleUpdate">
+      <VAlert v-if="success" variant="tonal" type="success" class="mt-2">
+        {{ success }}
+      </VAlert>
+      <VAlert v-if="error" variant="tonal" type="error" class="mt-2">
+        {{ error }}
+      </VAlert>
+
       <VTextField v-model="name" placeholder="Nombre" type="text" required />
       <VTextField
         v-model="surname"
@@ -72,8 +72,6 @@ const handleLogout = async () => {
       />
 
       <VBtn type="submit" block :loading="loading">Guardar cambios</VBtn>
-      <VAlert v-if="success" type="success" class="mt-2">{{ success }}</VAlert>
-      <VAlert v-if="error" type="error" class="mt-2">{{ error }}</VAlert>
     </form>
 
     <VBtn
