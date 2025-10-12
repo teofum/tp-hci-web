@@ -5,9 +5,6 @@ import { useStore } from '@/store/store';
 import type { List } from '@/schemas/list.schema';
 
 
-const props = defineProps<{
-  withText?: boolean;
-}>();
 
 const store = useStore();
 

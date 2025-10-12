@@ -7,7 +7,7 @@ import AddItemDialog from '@/components/products/AddProductDialog.vue';
 import ListItem from '@/components/ListItem.vue';
 import ShareListDialog from '@/components/lists/ShareListDialog.vue';
 
-import ItemEntry from '@/components/list/ItemEntry.vue';
+
 import NewItemButton from '@/components/list/NewItemButton.vue';
 
 const store = useStore();
@@ -56,7 +56,6 @@ const productsByCategory = computed(() => {
 </script>
 
 <template>
-  <ItemEntry />
   <NewItemButton> + Nuevo Item </NewItemButton>
 
   <!-- new structure, TODO ir migrando lo de arriba acá  -->
@@ -67,7 +66,16 @@ const productsByCategory = computed(() => {
     >
     <div class="d-flex flex-row justify-space-between align-center w-100">
       <h1 class="heading text-high-emphasis">TODO nombre lista</h1>
-      <ShareListDialog />
+      <ShareListDialog>
+        <template v-slot:activator="{ props: activatorProps }">
+        <v-btn
+          v-bind="activatorProps"
+          variant="text"
+        >
+          <v-icon>mdi-share-variant</v-icon>
+        </v-btn>
+        </template>
+      </ShareListDialog>
     </div>
     <div class="d-flex flex-column ga-2 my-4">
       <v-text-field
@@ -225,10 +233,9 @@ const productsByCategory = computed(() => {
   font-size: 1.5rem;
   font-weight: 700;
 }
-
 .switch {
   .v-selection-control {
-    flex-direction: row-reverse !important;
+    flex-direction: row-reverse;
 
     .v-label {
       padding-inline-start: 0;
