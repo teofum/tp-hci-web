@@ -58,6 +58,9 @@ const vuetify = createVuetify({
     VTooltip: {
       contentClass: 'bg-primary',
     },
+    VChip: {
+      rounded: 'xl',
+    },
   },
 });
 

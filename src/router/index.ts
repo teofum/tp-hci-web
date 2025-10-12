@@ -82,6 +82,12 @@ const router = createRouter({
       name: 'history',
       component: () => import('../views/history/HistoryListsView.vue'),
     },
+    {
+      path: '/history/:id',
+      name: 'history-detail',
+      component: () => import('../views/history/HistoryItemView.vue'),
+      props: true,
+    },
   ],
 });
 

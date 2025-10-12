@@ -16,7 +16,7 @@ const PERIOD_NAME = {
 
 const router = useRouter();
 const store = useStore();
-const { history } = storeToRefs(store);
+const { history, products } = storeToRefs(store);
 
 onMounted(async () => {
   await store.getPurchases();
@@ -187,16 +187,13 @@ async function restorePurchasedList(id: number) {
               </template>
 
               <v-list>
-                <AddListDialog :list="purchase">
-                  <template v-slot:activator="{ props: activatorProps }">
-                    <v-list-item
-                      v-bind="activatorProps"
-                      prepend-icon="mdi-pencil-outline"
-                      title="Modificar"
-                    />
-                  </template>
-                </AddListDialog>
                 <v-list-item
+                  :disabled="
+                    purchase.list.recurring ||
+                    !purchase.items.every((i) =>
+                      products.find((p) => p.id === i.product.id),
+                    )
+                  "
                   prepend-icon="mdi-reload"
                   title="Repetir lista"
                   @click="restorePurchasedList(purchase.id)"

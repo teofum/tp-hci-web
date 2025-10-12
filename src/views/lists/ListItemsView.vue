@@ -14,12 +14,13 @@ const props = defineProps<{ id: string }>();
 
 const router = useRouter();
 function goBack() {
-  router.push('/');
+  router.push('/lists');
 }
 
 const loading = ref(true);
 const error = ref<string | null>(null);
 
+const listId = z.coerce.number().parse(props.id);
 onMounted(async () => {
   try {
     await store.getListItems(listId, 'createdAt', 'DESC');
@@ -33,8 +34,6 @@ onMounted(async () => {
 
 const store = useStore();
 const { lists, items } = storeToRefs(store);
-
-const listId = z.coerce.number().parse(props.id);
 
 const list = computed(() => lists.value.find((l) => l.id === listId));
 
