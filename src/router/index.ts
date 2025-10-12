@@ -70,6 +70,7 @@ const router = createRouter({
       path: '/list/:id',
       name: 'list-detail',
       component: () => import('../views/lists/ListItemsView.vue'),
+      props: true,
     },
     {
       path: '/lists',

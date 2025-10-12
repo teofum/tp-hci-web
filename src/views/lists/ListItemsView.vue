@@ -6,47 +6,62 @@ import { useStore } from '@/store/store';
 import AddItemDialog from '@/components/lists/AddItemDialog.vue';
 import ListItem from '@/components/ListItem.vue';
 import ShareListDialog from '@/components/lists/ShareListDialog.vue';
+import z from 'zod';
+import { onMounted } from 'vue';
 
-
-const store = useStore();
+const props = defineProps<{ id: string }>();
 
 const router = useRouter();
-
 function goBack() {
   router.push('/');
 }
 
-const sharePopupTrigger = ref(false);
+const loading = ref(true);
+const error = ref<string | null>(null);
 
-function TogglePopup() {
-  sharePopupTrigger.value = !sharePopupTrigger.value;
-}
+onMounted(async () => {
+  try {
+    await store.getListItems(listId, 'createdAt', 'DESC');
+  } catch (e) {
+    error.value = JSON.stringify(e);
+  } finally {
+    loading.value = false;
+  }
+});
 
-// TODO debug
-const { products } = storeToRefs(store); // TODO esto cambiarlo a productos dentro de la lista en sí
+const store = useStore();
+const { lists, items } = storeToRefs(store);
+
+const listId = z.coerce.number().parse(props.id);
+
+const list = computed(() => lists.value.find((l) => l.id === listId));
 
 const filter = ref('');
 const groupByCategory = ref(true);
 
-const filteredProducts = computed(() =>
-  products.value.filter(
-    (product) =>
-      !filter.value ||
-      product.name.toLowerCase().includes(filter.value.toLowerCase()),
-  ),
-);
+const filteredItems = computed(() => {
+  if (!items.value[listId]) return null;
 
-const productsByCategory = computed(() => {
-  const categories: Record<number, [string, typeof products.value]> = {};
-  for (const product of filteredProducts.value) {
-    const catId = product.category?.id ?? -1;
+  return items.value[listId].filter(
+    (item) =>
+      !filter.value ||
+      item.product.name.toLowerCase().includes(filter.value.toLowerCase()),
+  );
+});
+
+const itemsByCategory = computed(() => {
+  if (!filteredItems.value) return null;
+
+  const categories: Record<number, [string, (typeof items.value)[number]]> = {};
+  for (const item of filteredItems.value) {
+    const catId = item.product.category?.id ?? -1;
 
     if (!categories[catId]) {
-      const catName = product.category?.name ?? 'Sin categoría';
+      const catName = item.product.category?.name ?? 'Sin categoría';
       categories[catId] = [catName, []];
     }
 
-    categories[catId][1].push(product);
+    categories[catId][1].push(item);
   }
 
   return categories;
@@ -54,20 +69,21 @@ const productsByCategory = computed(() => {
 </script>
 
 <template>
-  <v-container max-width="800" class="container">
-    <v-btn @click="goBack" variant="text" prepend-icon="mdi-chevron-left"
-      >Listas</v-btn
-    >
+  <div v-if="loading || filteredItems === null || itemsByCategory === null">
+    Loading...
+  </div>
+  <div v-else-if="error !== null">Error: {{ error }}</div>
+  <v-container v-else max-width="800" class="container">
+    <v-btn @click="goBack" variant="text" prepend-icon="mdi-chevron-left">
+      Listas
+    </v-btn>
     <div class="d-flex flex-row justify-space-between align-center w-100">
-      <h1 class="heading text-high-emphasis">TODO nombre lista</h1>
+      <h1 class="heading text-high-emphasis">{{ list?.name }}</h1>
       <ShareListDialog>
         <template v-slot:activator="{ props: activatorProps }">
-        <v-btn
-          v-bind="activatorProps"
-          variant="text"
-        >
-          <v-icon>mdi-share-variant</v-icon>
-        </v-btn>
+          <v-btn v-bind="activatorProps" variant="text">
+            <v-icon>mdi-share-variant</v-icon>
+          </v-btn>
         </template>
       </ShareListDialog>
     </div>
@@ -98,9 +114,7 @@ const productsByCategory = computed(() => {
     </div>
     <div v-if="groupByCategory">
       <div
-        v-for="[key, [categoryName, products]] in Object.entries(
-          productsByCategory,
-        )"
+        v-for="[key, [categoryName, items]] in Object.entries(itemsByCategory)"
         :key="key"
       >
         <h2 class="text-medium-emphasis mt-3 category-heading">
@@ -109,11 +123,11 @@ const productsByCategory = computed(() => {
 
         <ul>
           <ListItem
-            v-for="product in products"
-            :key="product.id"
-            :name="product.name"
-            :emoji="product.emoji"
-            :detail="product.category?.name ?? 'Sin categoría'"
+            v-for="item in items"
+            :key="item.id"
+            :name="item.product.name"
+            :emoji="item.product.emoji"
+            :detail="item.product.category?.name ?? 'Sin categoría'"
           >
             <div class="d-flex justify-space-between">
               <v-checkbox-btn></v-checkbox-btn>
@@ -127,7 +141,7 @@ const productsByCategory = computed(() => {
                 </template>
 
                 <v-list>
-                  <AddProductDialog :product="product">
+                  <AddProductDialog :product="item.product">
                     <template v-slot:activator="{ props: activatorProps }">
                       <v-list-item
                         v-bind="activatorProps"
@@ -140,7 +154,7 @@ const productsByCategory = computed(() => {
                     class="text-red"
                     prepend-icon="mdi-delete-outline"
                     title="Eliminar"
-                    @click="store.deleteProduct(product.id)"
+                    @click="store.deleteListItem(listId, item.id)"
                   />
                 </v-list>
               </v-menu>
@@ -152,11 +166,11 @@ const productsByCategory = computed(() => {
     <div v-else>
       <ul>
         <ListItem
-          v-for="product in filteredProducts"
-          :key="product.id"
-          :name="product.name"
-          :emoji="product.emoji"
-          :detail="product.category?.name ?? 'Sin categoría'"
+          v-for="item in filteredItems"
+          :key="item.id"
+          :name="item.product.name"
+          :emoji="item.product.emoji"
+          :detail="item.product.category?.name ?? 'Sin categoría'"
         >
           <div class="d-flex justify-space-between">
             <v-checkbox-btn></v-checkbox-btn>
@@ -170,7 +184,7 @@ const productsByCategory = computed(() => {
               </template>
 
               <v-list>
-                <AddProductDialog :product="product">
+                <AddProductDialog :product="item.product">
                   <template v-slot:activator="{ props: activatorProps }">
                     <v-list-item
                       v-bind="activatorProps"
@@ -183,7 +197,7 @@ const productsByCategory = computed(() => {
                   class="text-red"
                   prepend-icon="mdi-delete-outline"
                   title="Eliminar"
-                  @click="store.deleteProduct(product.id)"
+                  @click="store.deleteListItem(listId, item.id)"
                 />
               </v-list>
             </v-menu>
@@ -194,8 +208,7 @@ const productsByCategory = computed(() => {
 
     <div
       v-if="
-        Object.keys(productsByCategory).length === 0 ||
-        filteredProducts.length === 0
+        Object.keys(itemsByCategory).length === 0 || filteredItems.length === 0
       "
     >
       No hay items

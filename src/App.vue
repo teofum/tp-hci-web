@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useRoute, useRouter } from 'vue-router';
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 import { VBtn } from 'vuetify/components';
 import { useStore } from './store/store';
 import { onMounted } from 'vue';
@@ -10,7 +10,19 @@ const router = useRouter();
 const isAuthRoute = computed(() => route.path.startsWith('/auth'));
 
 const store = useStore();
-onMounted(() => store.init());
+
+const loading = ref(true);
+const error = ref<string | null>(null);
+
+onMounted(async () => {
+  try {
+    await store.init();
+  } catch (e) {
+    error.value = JSON.stringify(e);
+  } finally {
+    loading.value = false;
+  }
+});
 </script>
 
 <template>
@@ -27,13 +39,13 @@ onMounted(() => store.init());
         </template>
 
         <template v-slot:append>
-
           <VBtn @click="router.push('/profile')"> Mi Perfil </VBtn>
         </template>
       </v-app-bar>
 
       <v-main>
-        <RouterView />
+        <div v-if="loading">Loading...</div>
+        <RouterView v-else />
       </v-main>
     </v-container>
   </v-app>

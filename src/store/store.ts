@@ -21,12 +21,10 @@ export const useStore = defineStore('main', () => {
   const products = ref([] as Product[]);
   const categories = ref([] as Category[]);
   const lists = ref([] as List[]);
-  //const items = ref([] as Item[]); // context dependant
-  const items = ref({} as Record<number, Item[]>);
-  //const sharedWith = ref([] as SharedUsers[]); // context dependant
-  const sharedWith = ref({} as Record<number, SharedUsers[]>);
-  //const history = ref([] as Purchase[]); // context dependant
-  const history = ref({} as Record<number, Purchase[]>);
+
+  const items = ref({} as Record<List['id'], Item[]>);
+  const sharedWith = ref({} as Record<List['id'], SharedUsers[]>);
+  const history = ref({} as Record<List['id'], Purchase[]>);
 
   async function init() {
     products.value = await productsApi.get();
@@ -226,6 +224,7 @@ export const useStore = defineStore('main', () => {
     products,
     categories,
     lists,
+    items,
     init,
     addProduct,
     addCategory,
@@ -243,7 +242,7 @@ export const useStore = defineStore('main', () => {
     addListItem,
     updateListItem,
     togglePurchaseListItem,
-    delelteListItem,
+    deleteListItem: delelteListItem,
     getPurchases,
     restorPurchase,
   };

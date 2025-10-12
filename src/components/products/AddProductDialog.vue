@@ -74,7 +74,16 @@ async function commit() {
                 "
                 class="select"
               />
-              <AddCategoryDialog />
+              <AddCategoryDialog>
+                <template v-slot:activator="{ props: activatorProps }">
+                  <v-btn
+                    v-bind="activatorProps"
+                    text="Agregar categoría"
+                    prepend-icon="mdi-plus"
+                    variant="flat"
+                  />
+                </template>
+              </AddCategoryDialog>
             </div>
           </div>
         </v-card-item>
