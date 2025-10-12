@@ -65,9 +65,10 @@ export const items = {
   },
 
   // toggles the purchased status of an item
-  async patch(list_id: number, item_id: number) {
+  async togglePurchased(list_id: number, item_id: number, purchased: boolean) {
     const res = await API.patch(`shopping-lists/${list_id}/items/${item_id}`)
       .withAuth()
+      .withBody({ purchased })
       .send();
     return itemSchema.parse(res);
   },

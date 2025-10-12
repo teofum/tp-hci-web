@@ -66,11 +66,15 @@ const itemsByCategory = computed(() => {
 
   return categories;
 });
+
+function togglePurchased(itemId: number, purchased: boolean) {
+  store.togglePurchaseListItem(listId, itemId, purchased);
+}
 </script>
 
 <template>
   <div v-if="loading || filteredItems === null || itemsByCategory === null">
-    Loading... {{ JSON.stringify(items) }}
+    Loading...
   </div>
   <div v-else-if="error">Error: {{ error }}</div>
   <v-container v-else max-width="800" class="container">
@@ -129,10 +133,14 @@ const itemsByCategory = computed(() => {
             :key="item.id"
             :name="item.product.name"
             :emoji="item.product.emoji"
-            :detail="item.product.category?.name ?? 'Sin categoría'"
+            :detail="`${item.quantity} ${item.unit}`"
+            :purchased="item.purchased"
           >
-            <div class="d-flex justify-space-between">
-              <v-checkbox-btn></v-checkbox-btn>
+            <div class="d-flex justify-space-between align-center">
+              <v-checkbox-btn
+                :model-value="item.purchased"
+                @update:model-value="togglePurchased(item.id, !item.purchased)"
+              />
               <v-menu>
                 <template v-slot:activator="{ props: activatorProps }">
                   <v-btn
@@ -172,7 +180,7 @@ const itemsByCategory = computed(() => {
           :key="item.id"
           :name="item.product.name"
           :emoji="item.product.emoji"
-          :detail="item.product.category?.name ?? 'Sin categoría'"
+          :detail="`${item.quantity} ${item.unit}`"
         >
           <div class="d-flex justify-space-between">
             <v-checkbox-btn></v-checkbox-btn>

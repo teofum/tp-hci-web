@@ -185,15 +185,23 @@ export const useStore = defineStore('main', () => {
     );
   }
 
-  async function togglePurchaseListItem(list_id: number, itemId: number) {
-    const updatedItem = await itemsAPI.patch(list_id, itemId);
+  async function togglePurchaseListItem(
+    list_id: number,
+    itemId: number,
+    purchased: boolean,
+  ) {
+    const updatedItem = await itemsAPI.togglePurchased(
+      list_id,
+      itemId,
+      purchased,
+    );
 
     items.value[list_id] = items.value[list_id].map((item) =>
-      item.id === itemId ? { ...item, purchased: updatedItem.purchased } : item,
+      item.id === itemId ? updatedItem : item,
     );
   }
 
-  async function delelteListItem(list_id: number, itemId: number) {
+  async function deleteListItem(list_id: number, itemId: number) {
     await itemsAPI.delete(list_id, itemId);
     items.value[list_id] = items.value[list_id].filter(
       (item) => item.id !== itemId,
@@ -215,7 +223,7 @@ export const useStore = defineStore('main', () => {
   //    return await purchasesAPI.getPurchaseDetails(purchase_id);
   //  }
 
-  async function restorPurchase(purchase_id: number) {
+  async function restorePurchase(purchase_id: number) {
     await purchasesAPI.restore(purchase_id);
   }
 
@@ -241,8 +249,8 @@ export const useStore = defineStore('main', () => {
     addListItem,
     updateListItem,
     togglePurchaseListItem,
-    deleteListItem: delelteListItem,
+    deleteListItem,
     getPurchases,
-    restorPurchase,
+    restorePurchase,
   };
 });

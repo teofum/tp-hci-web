@@ -3,16 +3,19 @@ defineProps<{
   name: string;
   detail?: string;
   emoji?: string;
+  purchased?: boolean;
 }>();
 </script>
 
 <template>
   <li class="container">
-    <div class="emoji-container bg-surface-variant">
+    <div
+      :class="`emoji-container ${purchased ? 'bg-success purchased' : 'bg-surface-variant'}`"
+    >
       {{ emoji }}
     </div>
 
-    <div class="text-container">
+    <div :class="`text-container${purchased ? ' purchased' : ''}`">
       <h3 class="name text-high-emphasis">{{ name }}</h3>
       <p class="detail text-medium-emphasis" v-if="detail">{{ detail }}</p>
     </div>
@@ -42,12 +45,23 @@ defineProps<{
   height: 4rem;
   font-size: 2rem;
   border-radius: 12px;
+
+  &.purchased {
+    background-image: linear-gradient(hsl(0 0 100 / 0.4), hsl(0 0 100 / 0.4));
+  }
 }
 
 .text-container {
   display: flex;
   flex-direction: column;
   flex-grow: 1;
+
+  &.purchased {
+    * {
+      text-decoration: line-through;
+      opacity: 0.8;
+    }
+  }
 
   h3 {
     font-size: 1.25rem;

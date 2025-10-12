@@ -49,6 +49,9 @@ const vuetify = createVuetify({
     VSwitch: {
       hideDetails: true,
     },
+    VCheckBox: {
+      hideDetails: true,
+    },
     VList: {
       rounded: 'lg',
     },
