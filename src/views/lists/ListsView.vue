@@ -51,7 +51,7 @@ function redirectList(id: number) {
                   />
                 </template>
               </AddListDialog>
-              <ShareListDialog>
+              <ShareListDialog :list-id="list.id">
                 <template v-slot:activator="{ props: activatorProps }">
                   <v-list-item
                     v-bind="activatorProps"

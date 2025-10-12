@@ -6,7 +6,7 @@ import { lists as listsAPI } from '@/api/lists';
 import { items as itemsAPI } from '@/api/items';
 import { purchases as purchasesAPI } from '@/api/purchases';
 import type { Category, Product } from '@/schemas/product.schema';
-import type { List, SharedUsers } from '@/schemas/list.schema';
+import type { List } from '@/schemas/list.schema';
 import type { Item } from '@/schemas/item.schema';
 import type { Purchase } from '@/schemas/purchases.schema';
 import { ref } from 'vue';
@@ -23,7 +23,6 @@ export const useStore = defineStore('main', () => {
   const lists = ref([] as List[]);
 
   const items = ref({} as Record<List['id'], Item[]>);
-  const sharedWith = ref({} as Record<List['id'], SharedUsers[]>);
   const history = ref({} as Record<List['id'], Purchase[]>);
 
   async function init() {
@@ -127,18 +126,14 @@ export const useStore = defineStore('main', () => {
 
   /// share list ///////////////////////
 
-  async function getSharedUsers(id: number) {
-    sharedWith.value[id] = await listsAPI.sharedUsers(id);
-  }
-
   async function shareList(id: number, email: string) {
-    await listsAPI.share(id, email);
-    await getSharedUsers(id);
+    const updatedList = await listsAPI.share(id, email);
+    lists.value = lists.value.map((l) => (l.id === id ? updatedList : l));
   }
 
   async function unshareList(id: number, userId: number) {
-    await listsAPI.unshare(id, userId);
-    await getSharedUsers(id);
+    const updatedList = await listsAPI.unshare(id, userId);
+    lists.value = lists.value.map((l) => (l.id === id ? updatedList : l));
   }
 
   /// list /////////////////////////////
@@ -242,7 +237,6 @@ export const useStore = defineStore('main', () => {
     addList,
     deleteList,
     modifyList,
-    getSharedUsers,
     shareList,
     unshareList,
     getListItems,

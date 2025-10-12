@@ -1,4 +1,4 @@
-import { listSchema, sharedUsersSchema } from '@/schemas/list.schema';
+import { listSchema } from '@/schemas/list.schema';
 import { API } from './api';
 import { fetchAll } from './fetchAll';
 import { paginatedResponseSchema } from '@/schemas/api.schema';
@@ -66,24 +66,19 @@ export const lists = {
   },
 
   async share(id: number, email: string) {
-    await API.post(`shopping-lists/${id}/share`)
+    const res = await API.post(`shopping-lists/${id}/share`)
       .withAuth()
       .withBody({
         email,
       })
       .send();
-  },
-
-  async sharedUsers(id: number) {
-    const res = await API.get(`shopping-lists/${id}/shared-users`)
-      .withAuth()
-      .send();
-    return sharedUsersSchema.array().parse(res);
+    return listSchema.parse(res);
   },
 
   async unshare(listId: number, userId: number) {
-    await API.delete(`shopping-lists/${listId}/share/${userId}`)
+    const res = await API.delete(`shopping-lists/${listId}/share/${userId}`)
       .withAuth()
       .send();
+    return listSchema.parse(res);
   },
 };

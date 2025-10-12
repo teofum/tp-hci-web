@@ -3,13 +3,6 @@ import z from 'zod';
 import { dateSchema } from './date.schema';
 import { userSchema } from './user.schema';
 
-export const sharedUsersSchema = z.object({
-  id: z.int(),
-  name: z.string(),
-  surname: z.string(),
-  email: z.email(),
-});
-
 export const listSchema = z
   .object({
     id: z.int(),
@@ -22,7 +15,7 @@ export const listSchema = z
     }),
 
     owner: userSchema,
-    sharedWith: z.array(sharedUsersSchema).optional(),
+    sharedWith: z.array(userSchema),
     lastPurchasedAt: dateSchema.nullable(),
     createdAt: dateSchema,
     updatedAt: dateSchema,
@@ -33,5 +26,3 @@ export const listSchema = z
   }));
 
 export type List = z.infer<typeof listSchema>;
-
-export type SharedUsers = z.infer<typeof sharedUsersSchema>;

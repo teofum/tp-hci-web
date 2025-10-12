@@ -83,7 +83,7 @@ function togglePurchased(itemId: number, purchased: boolean) {
     </v-btn>
     <div class="d-flex flex-row justify-space-between align-center w-100">
       <h1 class="heading text-high-emphasis">{{ list?.name }}</h1>
-      <ShareListDialog>
+      <ShareListDialog :list-id="listId">
         <template v-slot:activator="{ props: activatorProps }">
           <v-btn
             icon="mdi-share-variant"
