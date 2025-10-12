@@ -11,6 +11,7 @@ import ShareListDialog from '@/components/lists/ShareListDialog.vue';
 import AddListDialog from '@/components/lists/AddListDialog.vue';
 import ConfirmationDialog from '@/components/ConfirmationDialog.vue';
 import { useSetup } from '@/composables/useSetup';
+import { APIError } from '@/api/error';
 
 const props = defineProps<{ id: string }>();
 
@@ -22,6 +23,13 @@ function goBack() {
 const listId = z.coerce.number().parse(props.id);
 const { loading, error } = useSetup(
   async () => await store.getListItems(listId, 'createdAt', 'DESC'),
+  (e) => {
+    if (e instanceof APIError) {
+      return { status: e.statusCode, detail: e.status };
+    } else {
+      return { status: -1, detail: 'Unknown error' };
+    }
+  },
 );
 
 const store = useStore();
@@ -71,7 +79,20 @@ function markCompleted() {
 </script>
 
 <template>
-  <div class="error" v-if="error">Error: {{ error }}</div>
+  <v-card variant="tonal" class="error" v-if="error">
+    <div class="heading">Algo salió mal</div>
+    <p class="description" v-if="error.status === 404">
+      No se encontró esta lista.
+    </p>
+    <p class="description" v-else>Ocurrió un error inesperado.</p>
+    <v-btn
+      to="/lists"
+      variant="flat"
+      prepend-icon="mdi-arrow-left"
+      text="Volver a listas"
+      class="mt-8"
+    />
+  </v-card>
   <div
     class="loading bg-surface"
     v-else-if="
@@ -301,7 +322,8 @@ function markCompleted() {
 <style>
 .error {
   width: 100%;
-  padding-top: 8rem;
+  margin-top: 8rem;
+  padding: 3rem;
   display: grid;
   place-items: center;
 }
