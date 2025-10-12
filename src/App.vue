@@ -4,12 +4,14 @@ import { useRoute, useRouter } from 'vue-router';
 import { VBtn } from 'vuetify/components';
 
 import { useStore } from './store/store';
+import { storeToRefs } from 'pinia';
 
 const route = useRoute();
 const router = useRouter();
 const isAuthRoute = computed(() => route.path.startsWith('/auth'));
 
 const store = useStore();
+const { user } = storeToRefs(store);
 
 const loading = ref(true);
 const error = ref<string | null>(null);
@@ -35,16 +37,21 @@ onMounted(async () => {
     <v-container>
       <v-app-bar v-if="!isAuthRoute" style="border-bottom: 1px solid #00000061">
         <template v-slot:prepend>
-          <div class="bar-icon-box">
-            <v-icon icon="mdi-shopping-outline" size="32" color="white" />
+          <div class="d-flex flex-row align-center pl-4">
+            <div class="bar-icon-box bg-secondary mr-2">
+              <v-icon icon="mdi-shopping-outline" size="24" color="white" />
+            </div>
+            <v-btn to="/lists" text="Listas" />
+            <v-btn to="/history" text="Historial" />
+            <v-btn to="/products" text="Productos" />
           </div>
-          <VBtn @click="router.push('/lists')"> Listas </VBtn>
-          <VBtn @click="router.push('/history')"> Historial </VBtn>
-          <VBtn @click="router.push('/products')"> Productos </VBtn>
         </template>
 
         <template v-slot:append>
-          <VBtn @click="router.push('/profile')"> Mi Perfil </VBtn>
+          <div class="d-flex flex-row ga-2 align-center pr-4">
+            <div>Hola, {{ user?.name }}!</div>
+            <v-btn to="/profile" text="Perfil" />
+          </div>
         </template>
       </v-app-bar>
 
@@ -66,6 +73,14 @@ onMounted(async () => {
   display: grid;
   place-items: center;
 }
+.bar-icon-box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 12px;
+}
 </style>
 
 <style lang="scss">
@@ -75,16 +90,5 @@ $heading-font-family: 'Spline Sans';
 #app,
 :root {
   font-family: $body-font-family, sans-serif !important;
-}
-.bar-icon-box {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 45px;
-  height: 45px;
-  background-color: #714e4a;
-  border-radius: 12px;
-  margin-bottom: 16px;
-  transform: translateY(7px);
 }
 </style>
