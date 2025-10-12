@@ -49,13 +49,24 @@ onMounted(async () => {
       </v-app-bar>
 
       <v-main>
-        <div v-if="loading">Loading...</div>
+        <div class="loading bg-surface" v-if="loading">
+          <v-progress-circular indeterminate color="primary" />
+        </div>
         <div v-else-if="error">Error: {{ error }}</div>
         <RouterView v-else />
       </v-main>
     </v-container>
   </v-app>
 </template>
+
+<style scoped>
+.loading {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+}
+</style>
 
 <style lang="scss">
 @import url('https://fonts.googleapis.com/css2?family=Spline+Sans:wght@300..700&display=swap');

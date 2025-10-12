@@ -8,6 +8,7 @@ import ListItem from '@/components/ListItem.vue';
 import ShareListDialog from '@/components/lists/ShareListDialog.vue';
 import z from 'zod';
 import { onMounted } from 'vue';
+import AddListDialog from '@/components/lists/AddListDialog.vue';
 
 const props = defineProps<{ id: string }>();
 
@@ -75,18 +76,28 @@ function togglePurchased(itemId: number, purchased: boolean) {
 <template>
   <div v-if="error">Error: {{ error }}</div>
   <div
+    class="loading bg-surface"
     v-else-if="
       loading || filteredItems === null || itemsByCategory === null || !list
     "
   >
-    Loading...
+    <v-progress-circular indeterminate color="primary" />
   </div>
   <v-container v-else max-width="800" class="container">
     <v-btn @click="goBack" variant="text" prepend-icon="mdi-chevron-left">
       Listas
     </v-btn>
-    <div class="d-flex flex-row justify-space-between align-center w-100">
-      <h1 class="heading text-high-emphasis">{{ list.name }}</h1>
+    <div class="d-flex flex-row align-center w-100">
+      <h1 class="heading text-high-emphasis mr-auto">{{ list.name }}</h1>
+      <AddListDialog :list="list">
+        <template v-slot:activator="{ props: activatorProps }">
+          <v-btn
+            icon="mdi-pencil-outline"
+            v-bind="activatorProps"
+            variant="text"
+          />
+        </template>
+      </AddListDialog>
       <ShareListDialog :list="list">
         <template v-slot:activator="{ props: activatorProps }">
           <v-btn
@@ -105,14 +116,6 @@ function togglePurchased(itemId: number, purchased: boolean) {
         class="w-100"
         clearable
         clear-icon="mdi-close-circle-outline"
-      />
-    </div>
-
-    <div class="d-flex justify-space-between">
-      <v-select
-        :items="['Fecha', 'Items']"
-        label="Ordenar por"
-        style="max-width: 160px"
       />
       <v-switch
         v-model="groupByCategory"
@@ -245,6 +248,13 @@ function togglePurchased(itemId: number, purchased: boolean) {
 </template>
 
 <style>
+.loading {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+}
+
 .heading {
   font-size: 3rem;
   font-weight: 700;
