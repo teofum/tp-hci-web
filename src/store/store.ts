@@ -184,8 +184,11 @@ export const useStore = defineStore('main', () => {
   }
 
   async function togglePurchaseListItem(id: number, itemId: number) {
-    await itemsAPI.patch(id, itemId);
-    items.value = items.value.filter((item) => item.id !== id); // todo esto noc si va
+    const updatedItem = await itemsAPI.patch(id, itemId);
+
+    items.value = items.value.map((item) =>
+      item.id === itemId ? { ...item, purchased: updatedItem.purchased } : item,
+    );
   }
 
   async function delelteListItem(id: number, itemId: number) {
