@@ -24,7 +24,12 @@ async function shareCommit() {} // TODO
 
         <v-card-subtitle>Usuarios compartidos</v-card-subtitle>
 
-        ...
+        <v-card>
+          <v-card-item>
+            <div>TODO...</div>
+          </v-card-item>
+        </v-card>
+        
 
         <v-card-item>
           <div class="d-flex flex-column align-center py-2 ga-4">
@@ -39,7 +44,11 @@ async function shareCommit() {} // TODO
 
         <v-card-subtitle>Usuarios sugeridos</v-card-subtitle>
 
-        ...
+        <v-card>
+          <v-card-item>
+            <div>TODO...</div>
+          </v-card-item>
+        </v-card>
 
         <v-card-actions>
           <v-spacer />
