@@ -15,7 +15,7 @@ const progressHeight = computed(() =>
 </script>
 
 <template>
-  <li class="container">
+  <li :class="`container ${$attrs.onClick ? 'clickable' : ''}`">
     <div class="emoji-container bg-surface-variant">
       <div
         class="progress bg-success"
@@ -44,6 +44,14 @@ const progressHeight = computed(() =>
   padding: 1rem;
 
   user-select: none;
+
+  &.clickable {
+    border-radius: 1.5rem;
+    transition: background-color 300ms ease;
+    &:hover {
+      background-color: rgba(var(--v-theme-background));
+    }
+  }
 }
 
 .emoji-container {

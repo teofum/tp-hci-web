@@ -5,23 +5,103 @@ import { useRouter } from 'vue-router';
 import ListItem from '@/components/ListItem.vue';
 import { ref, computed } from 'vue';
 import { onMounted } from 'vue';
+import type { Purchase } from '@/schemas/purchases.schema';
 
+const PERIOD_NAME = {
+  day: 'Hoy',
+  week: 'Última semana',
+  month: 'Último mes',
+  older: 'Hace mucho tiempo',
+} as const;
+
+const router = useRouter();
 const store = useStore();
 const { history } = storeToRefs(store);
-const router = useRouter();
-
-const searchQuery = ref('');
-const orderBy = ref('name');
-const filterBy = ref('all');
-
-function redirectList(id: number) {
-  router.push({ name: 'list', params: { id } });
-}
 
 onMounted(async () => {
   await store.getPurchases();
-  console.log(history.value);
 });
+
+function viewDetail(id: number) {
+  router.push({ name: 'history-detail', params: { id } });
+}
+
+const groupByTimePeriod = ref(true);
+const filter = ref('');
+const orderBy = ref<'date' | 'name'>('date');
+const filterBy = ref<'day' | 'week' | 'month' | 'all'>('all');
+
+function getTimePeriod(date: Date): keyof typeof PERIOD_NAME {
+  const now = new Date();
+  const diffMillis = now.getTime() - date.getTime();
+  const diffDays = Math.floor(diffMillis / (24 * 60 * 60 * 1000));
+
+  if (diffDays < 1) return 'day';
+  if (diffDays < 7) return 'week';
+  if (diffDays < 30) return 'month';
+  return 'older';
+}
+
+function purchaseVisible(
+  period: keyof typeof PERIOD_NAME,
+  periodFilter: typeof filterBy.value,
+) {
+  switch (periodFilter) {
+    case 'all':
+      return true;
+    case 'month':
+      return period !== 'older';
+    case 'week':
+      return period === 'day' || period === 'week';
+    case 'day':
+      return period === 'day';
+  }
+}
+
+const filteredPurchases = computed(() => {
+  const filtered = history.value
+    .filter(
+      (purchase) =>
+        !filter.value ||
+        purchase.list.name.toLowerCase().includes(filter.value.toLowerCase()),
+    )
+    .filter((purchase) =>
+      purchaseVisible(
+        getTimePeriod(new Date(purchase.createdAt)),
+        filterBy.value,
+      ),
+    );
+  filtered.sort((a, b) =>
+    orderBy.value === 'date'
+      ? a.createdAt > b.createdAt
+        ? -1
+        : 1
+      : a.list.name > b.list.name
+        ? -1
+        : 1,
+  );
+
+  return filtered;
+});
+
+const purchasesByTimePeriod = computed(() => {
+  const periods: Record<string, [string, typeof history.value]> = {};
+  for (const purchase of filteredPurchases.value) {
+    const periodId = getTimePeriod(new Date(purchase.createdAt));
+    if (!periods[periodId]) {
+      const periodName = PERIOD_NAME[periodId];
+      periods[periodId] = [periodName, []];
+    }
+
+    periods[periodId][1].push(purchase);
+  }
+
+  return periods;
+});
+
+function getDetailLine(purchase: Purchase) {
+  return `${purchase.items.length} producto${purchase.items.length === 1 ? '' : 's'} — ${new Date(purchase.createdAt).toLocaleDateString('es-ar')}`;
+}
 </script>
 
 <template>
@@ -30,39 +110,105 @@ onMounted(async () => {
       <h1 class="heading text-high-emphasis">Historial</h1>
     </div>
 
-    <div class="d-flex flex-column ga-2 my-4">
+    <div class="d-flex flex-column ga-3 my-4">
       <v-text-field
-        label="Buscar listas"
+        v-model="filter"
+        label="Buscar"
         type="text"
         class="w-100"
         clearable
         clear-icon="mdi-close-circle-outline"
       />
+
+      <div class="d-flex ga-4">
+        <v-select
+          v-model="orderBy"
+          :items="[
+            { title: 'Fecha', value: 'date' },
+            { title: 'Nombre', value: 'name' },
+          ]"
+          label="Ordenar por"
+          style="max-width: 160px"
+        >
+        </v-select>
+        <v-select
+          v-model="filterBy"
+          :items="[
+            { title: 'Hoy', value: 'day' },
+            { title: 'Última semana', value: 'week' },
+            { title: 'Último mes', value: 'month' },
+            { title: 'Todo', value: 'all' },
+          ]"
+          label="Ver"
+          style="max-width: 160px"
+        />
+        <v-switch
+          v-model="groupByTimePeriod"
+          label="Agrupar por período"
+          inset
+          color="primary"
+          class="switch ml-auto"
+        />
+      </div>
     </div>
 
-    <div class="d-flex ga-4">
-      <v-select
-        :items="['Fecha', 'Items']"
-        label="Ordenar por"
-        style="max-width: 160px"
+    <div v-if="groupByTimePeriod">
+      <div
+        v-for="[key, [periodName, purchases]] in Object.entries(
+          purchasesByTimePeriod,
+        )"
+        :key="key"
       >
-      </v-select>
+        <h2 class="text-medium-emphasis mt-3 category-heading">
+          {{ periodName }}
+        </h2>
 
-      <v-select
-        :items="['Hoy', 'Hace una semana', 'Hace un mes', 'Todo']"
-        label="Filtrar"
-        style="max-width: 160px"
-      />
+        <ul>
+          <ListItem
+            v-for="purchase in purchases"
+            :key="purchase.id"
+            :name="purchase.list.name"
+            :emoji="purchase.list.emoji"
+            :detail="getDetailLine(purchase)"
+          >
+            <v-menu>
+              <template v-slot:activator="{ props: activatorProps }">
+                <v-btn
+                  v-bind="activatorProps"
+                  variant="text"
+                  icon="mdi-dots-vertical"
+                />
+              </template>
+
+              <v-list>
+                <AddListDialog :list="purchase">
+                  <template v-slot:activator="{ props: activatorProps }">
+                    <v-list-item
+                      v-bind="activatorProps"
+                      prepend-icon="mdi-pencil-outline"
+                      title="Modificar"
+                    />
+                  </template>
+                </AddListDialog>
+                <v-list-item
+                  prepend-icon="mdi-reload"
+                  title="Recuperar"
+                  @click="store.deleteList(purchase.id)"
+                />
+              </v-list>
+            </v-menu>
+          </ListItem>
+        </ul>
+      </div>
     </div>
-
-    <div class="ml_listas_container">
-      <ul class="ml_listas">
+    <div v-else>
+      <ul>
         <ListItem
-          v-for="item in history"
-          :key="item.id"
-          :name="item.list.name"
-          :emoji="item.list.emoji"
-          :detail="'TODO items completos'"
+          v-for="purchase in filteredPurchases"
+          :key="purchase.id"
+          :name="purchase.list.name"
+          :emoji="purchase.list.emoji"
+          :detail="getDetailLine(purchase)"
         >
           <v-menu>
             <template v-slot:activator="{ props: activatorProps }">
@@ -74,7 +220,7 @@ onMounted(async () => {
             </template>
 
             <v-list>
-              <AddListDialog :list="item">
+              <AddListDialog :list="purchase">
                 <template v-slot:activator="{ props: activatorProps }">
                   <v-list-item
                     v-bind="activatorProps"
@@ -86,7 +232,7 @@ onMounted(async () => {
               <v-list-item
                 prepend-icon="mdi-reload"
                 title="Recuperar"
-                @click="store.deleteList(item.id)"
+                @click="store.deleteList(purchase.id)"
               />
             </v-list>
           </v-menu>
@@ -113,6 +259,11 @@ onMounted(async () => {
 <style scoped>
 .heading {
   font-size: 3rem;
+  font-weight: 700;
+}
+
+.category-heading {
+  font-size: 1.5rem;
   font-weight: 700;
 }
 </style>
