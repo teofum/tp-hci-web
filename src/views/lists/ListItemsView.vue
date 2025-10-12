@@ -23,7 +23,7 @@ onMounted(async () => {
   try {
     await store.getListItems(listId, 'createdAt', 'DESC');
   } catch (e) {
-    error.value = JSON.stringify(e);
+    error.value = JSON.stringify(e, null, 2);
   } finally {
     loading.value = false;
   }
@@ -72,7 +72,7 @@ const itemsByCategory = computed(() => {
   <div v-if="loading || filteredItems === null || itemsByCategory === null">
     Loading... {{ JSON.stringify(items) }}
   </div>
-  <div v-else-if="error !== null">Error: {{ error }}</div>
+  <div v-else-if="error">Error: {{ error }}</div>
   <v-container v-else max-width="800" class="container">
     <v-btn @click="goBack" variant="text" prepend-icon="mdi-chevron-left">
       Listas

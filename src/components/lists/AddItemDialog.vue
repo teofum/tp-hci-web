@@ -14,7 +14,7 @@ const { item, listId } = defineProps<{
 }>();
 
 const itemProductId = ref(item?.product.id ?? null);
-const itemQuantity = ref(item?.quantity ?? 1);
+const itemQuantity = ref(item?.quantity.toString() ?? '1');
 const itemUnit = ref(item?.unit ?? '');
 
 const isEditing = item !== undefined;
@@ -28,15 +28,15 @@ async function commit() {
       listId,
       item.id,
       itemProductId.value,
-      itemQuantity.value,
-      itemUnit.value,
+      Number(itemQuantity.value),
+      itemUnit.value ?? '',
     );
   } else {
     store.addListItem(
       listId,
       itemProductId.value,
-      itemQuantity.value,
-      itemUnit.value,
+      Number(itemQuantity.value),
+      itemUnit.value ?? '',
     );
   }
 }
@@ -61,6 +61,7 @@ async function commit() {
                 v-model="itemQuantity"
                 label="Cantidad"
                 type="number"
+                min="1"
               />
 
               <v-text-field
@@ -91,7 +92,9 @@ async function commit() {
           <v-btn
             variant="flat"
             :text="isEditing ? 'Guardar cambios' : 'Agregar'"
-            :disabled="!itemQuantity || itemProductId === null"
+            :disabled="
+              !itemQuantity || !Number(itemQuantity) || itemProductId === null
+            "
             @click="
               commit();
               isActive.value = false;

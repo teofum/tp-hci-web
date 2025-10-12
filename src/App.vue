@@ -16,9 +16,10 @@ const error = ref<string | null>(null);
 
 onMounted(async () => {
   try {
-    await store.init();
+    if (!isAuthRoute.value) await store.init();
   } catch (e) {
-    error.value = JSON.stringify(e);
+    console.error(e);
+    error.value = JSON.stringify(e, null, 2);
   } finally {
     loading.value = false;
   }
@@ -45,6 +46,7 @@ onMounted(async () => {
 
       <v-main>
         <div v-if="loading">Loading...</div>
+        <div v-else-if="error">Error: {{ error }}</div>
         <RouterView v-else />
       </v-main>
     </v-container>

@@ -1,6 +1,7 @@
 import { listSchema, sharedUsersSchema } from '@/schemas/list.schema';
 import { API } from './api';
 import { fetchAll } from './fetchAll';
+import { paginatedResponseSchema } from '@/schemas/api.schema';
 
 export const lists = {
   async get() {
@@ -9,7 +10,7 @@ export const lists = {
         .withAuth()
         .withParams({ page: page.toString(), per_page: per_page.toString() })
         .send();
-      return listSchema.array().parse(res);
+      return paginatedResponseSchema(listSchema).parse(res).data;
     });
   },
 

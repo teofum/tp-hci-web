@@ -152,7 +152,6 @@ export const useStore = defineStore('main', () => {
       ...items.value,
       [list_id]: await itemsAPI.get(list_id, sort_by, sort_order),
     };
-    console.log(items.value);
   }
 
   async function addListItem(
@@ -174,16 +173,15 @@ export const useStore = defineStore('main', () => {
     quantity: number,
     unit: string,
   ) {
-    const updatedItems = await itemsAPI.modify(
+    const updatedItem = await itemsAPI.modify(
       list_id,
       item_id,
       productId,
       quantity,
       unit,
     );
-    // todo esto revisar
     items.value[list_id] = items.value[list_id].map((l) =>
-      l.id === list_id ? updatedItems : l,
+      l.id === item_id ? updatedItem : l,
     );
   }
 
@@ -198,7 +196,7 @@ export const useStore = defineStore('main', () => {
   async function delelteListItem(list_id: number, itemId: number) {
     await itemsAPI.delete(list_id, itemId);
     items.value[list_id] = items.value[list_id].filter(
-      (item) => item.id !== list_id,
+      (item) => item.id !== itemId,
     );
   }
 

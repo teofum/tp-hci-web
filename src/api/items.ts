@@ -1,6 +1,8 @@
 import { itemSchema } from '@/schemas/item.schema';
 import { API } from './api';
 import { fetchAll } from './fetchAll';
+import { paginatedResponseSchema } from '@/schemas/api.schema';
+import z from 'zod';
 
 export const items = {
   async get(
@@ -19,7 +21,7 @@ export const items = {
           sort_order: sort_order.toString(),
         })
         .send();
-      return itemSchema.array().parse(res);
+      return paginatedResponseSchema(itemSchema).parse(res).data;
     });
   },
 
@@ -39,7 +41,7 @@ export const items = {
       })
       .send();
 
-    return itemSchema.parse(res);
+    return z.object({ item: itemSchema }).parse(res).item;
   },
 
   async modify(
