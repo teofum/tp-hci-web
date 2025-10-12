@@ -13,26 +13,36 @@ const { product } = defineProps<{
   product?: Product;
 }>();
 
-const productName = ref(product?.name ?? '');
-const productEmoji = ref(product?.emoji ?? '📦');
-const productCategory = ref(product?.category?.id);
+// TODO esto cambiarlo a items
+// hardcodeado con products para debug
+const itemName = ref(product?.name ?? '');
+const itemEmoji = ref(product?.emoji ?? '📦');
+const itemQuantity = ref(product?.name ?? '');
+const itemPrice = ref(product?.name ?? '');
+const itemCategory = ref(product?.category?.id);
 
 const isEditing = product !== undefined;
 
+// TODO cambiar a items
 async function commit() {
   if (isEditing) {
-    store.modifyProduct(
-      product.id,
-      productName.value,
-      productEmoji.value,
-      productCategory.value ?? null,
-    );
-  } else {
-    store.addProduct(
-      productName.value,
-      productEmoji.value,
-      productCategory.value ?? null,
-    );
+    //   store.modifyItem(
+    //     product.id,
+    //     itemName.value,
+    //     itemEmoji.value,
+    //     itemQuantity.value,
+    //     itemPrice.value,
+    //     itemCategory.value ?? null,
+    //   );
+    // } else {
+    //   store.addProduct(
+    //     product.id,
+    //     itemName.value,
+    //     itemEmoji.value,
+    //     itemQuantity.value,
+    //     itemPrice.value,
+    //     itemCategory.value ?? null,
+    //   );
   }
 }
 </script>
@@ -47,19 +57,51 @@ async function commit() {
       <v-card
         variant="outlined"
         class="bg-surface"
-        :title="`${isEditing ? 'Modificar' : 'Agregar'} producto`"
+        :title="`${isEditing ? 'Modificar' : 'Agregar'} item`"
       >
         <v-card-item>
           <div class="d-flex flex-column align-center py-2 ga-4">
-            <EmojiPickerButton v-model="productEmoji" />
+            <EmojiPickerButton v-model="itemEmoji" />
 
             <v-text-field
-              v-model="productName"
+              v-model="itemName"
               label="Nombre"
               type="text"
               class="w-100"
             />
+          </div>
+        </v-card-item>
 
+        <v-card-subtitle>Detalles</v-card-subtitle>
+
+        <v-card-item>
+          <div class="d-flex flex-column ga-4">
+            <v-text-field
+              v-model="itemQuantity"
+              label="Cantidad (unidades, kg, etc)"
+              type="number"
+              class="w-100"
+            />
+
+            <v-text-field
+              v-model="itemPrice"
+              label="Precio"
+              type="text"
+              class="w-100"
+            />
+
+            <v-select
+              v-model="itemCategory"
+              label="Categoría"
+              :items="categories"
+              :item-props="
+                (category) => ({
+                  value: category.id,
+                  title: `${category.emoji} ${category.name}`,
+                })
+              "
+              class="select"
+            />
           </div>
         </v-card-item>
 
@@ -69,7 +111,7 @@ async function commit() {
           <v-btn
             variant="flat"
             :text="isEditing ? 'Guardar cambios' : 'Agregar'"
-            :disabled="!productName"
+            :disabled="!itemName"
             @click="
               commit();
               isActive.value = false;

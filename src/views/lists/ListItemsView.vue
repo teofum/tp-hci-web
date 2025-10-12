@@ -3,7 +3,7 @@ import { useRouter } from 'vue-router';
 import { computed, ref } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useStore } from '@/store/store';
-import AddItemDialog from '@/components/products/AddProductDialog.vue';
+import AddItemDialog from '@/components/lists/AddItemDialog.vue';
 import ListItem from '@/components/ListItem.vue';
 import ShareListDialog from '@/components/lists/ShareListDialog.vue';
 
@@ -56,10 +56,6 @@ const productsByCategory = computed(() => {
 </script>
 
 <template>
-  <NewItemButton> + Nuevo Item </NewItemButton>
-
-  <!-- new structure, TODO ir migrando lo de arriba acá  -->
-
   <v-container max-width="800" class="container">
     <v-btn @click="goBack" variant="text" prepend-icon="mdi-chevron-left"
       >Listas</v-btn
