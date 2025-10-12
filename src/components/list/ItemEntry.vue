@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import itemSettingsPopup from './ItemSettingsPopup.vue'
 
 const listSettingsPopupTrigger = ref(false)
 const isChecked = ref(false)

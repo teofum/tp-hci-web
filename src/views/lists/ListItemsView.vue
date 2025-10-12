@@ -1,14 +1,17 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router';
 import { computed, ref } from 'vue';
-import ItemEntry from '@/components/list/ItemEntry.vue';
-import NewItemButton from '@/components/list/NewItemButton.vue';
-import ShareListPopup from '@/components/list/ShareListPopup.vue';
 import { storeToRefs } from 'pinia';
 import { useStore } from '@/store/store';
 import AddItemDialog from '@/components/products/AddProductDialog.vue';
 import ListItem from '@/components/ListItem.vue';
 import ShareListDialog from '@/components/lists/ShareListDialog.vue';
+
+
+
+import ItemEntry from '@/components/list/ItemEntry.vue';
+import NewItemButton from '@/components/list/NewItemButton.vue';
+
 
 const store = useStore();
 
@@ -58,10 +61,6 @@ const productsByCategory = computed(() => {
 <template>
   <ItemEntry />
       <NewItemButton> + Nuevo Item </NewItemButton>
-      <ShareListPopup
-        v-if="sharePopupTrigger"
-        :TogglePopup="() => TogglePopup()"
-      />
 
 
 
@@ -87,7 +86,7 @@ const productsByCategory = computed(() => {
       />
     </div>
 
-    <div class="d-flex justify-space-between ">
+    <div class="d-flex justify-space-between">
       <v-select
         :items="['Fecha', 'Items']" 
         label="Ordenar por"
@@ -120,6 +119,9 @@ const productsByCategory = computed(() => {
             :emoji="product.emoji"
             :detail="product.category?.name ?? 'Sin categoría'"
           >
+
+            <div class="d-flex justify-space-between">
+            <v-checkbox-btn></v-checkbox-btn>
             <v-menu>
               <template v-slot:activator="{ props: activatorProps }">
                 <v-btn
@@ -147,6 +149,7 @@ const productsByCategory = computed(() => {
                 />
               </v-list>
             </v-menu>
+            </div>
           </ListItem>
         </ul>
       </div>
@@ -160,6 +163,8 @@ const productsByCategory = computed(() => {
           :emoji="product.emoji"
           :detail="product.category?.name ?? 'Sin categoría'"
         >
+
+          <v-checkbox></v-checkbox>
           <v-menu>
             <template v-slot:activator="{ props: activatorProps }">
               <v-btn
