@@ -8,8 +8,6 @@ import ListItem from '@/components/ListItem.vue';
 import ShareListDialog from '@/components/lists/ShareListDialog.vue';
 
 
-import NewItemButton from '@/components/list/NewItemButton.vue';
-
 const store = useStore();
 
 const router = useRouter();
