@@ -7,11 +7,8 @@ import AddItemDialog from '@/components/products/AddProductDialog.vue';
 import ListItem from '@/components/ListItem.vue';
 import ShareListDialog from '@/components/lists/ShareListDialog.vue';
 
-
-
 import ItemEntry from '@/components/list/ItemEntry.vue';
 import NewItemButton from '@/components/list/NewItemButton.vue';
-
 
 const store = useStore();
 
@@ -60,10 +57,7 @@ const productsByCategory = computed(() => {
 
 <template>
   <ItemEntry />
-      <NewItemButton> + Nuevo Item </NewItemButton>
-
-
-
+  <NewItemButton> + Nuevo Item </NewItemButton>
 
   <!-- new structure, TODO ir migrando lo de arriba acá  -->
 
@@ -88,7 +82,7 @@ const productsByCategory = computed(() => {
 
     <div class="d-flex justify-space-between">
       <v-select
-        :items="['Fecha', 'Items']" 
+        :items="['Fecha', 'Items']"
         label="Ordenar por"
         style="max-width: 160px"
       ></v-select>
@@ -119,8 +113,50 @@ const productsByCategory = computed(() => {
             :emoji="product.emoji"
             :detail="product.category?.name ?? 'Sin categoría'"
           >
-
             <div class="d-flex justify-space-between">
+              <v-checkbox-btn></v-checkbox-btn>
+              <v-menu>
+                <template v-slot:activator="{ props: activatorProps }">
+                  <v-btn
+                    v-bind="activatorProps"
+                    variant="text"
+                    icon="mdi-dots-vertical"
+                  />
+                </template>
+
+                <v-list>
+                  <AddProductDialog :product="product">
+                    <template v-slot:activator="{ props: activatorProps }">
+                      <v-list-item
+                        v-bind="activatorProps"
+                        prepend-icon="mdi-pencil-outline"
+                        title="Modificar"
+                      />
+                    </template>
+                  </AddProductDialog>
+                  <v-list-item
+                    class="text-red"
+                    prepend-icon="mdi-delete-outline"
+                    title="Eliminar"
+                    @click="store.deleteProduct(product.id)"
+                  />
+                </v-list>
+              </v-menu>
+            </div>
+          </ListItem>
+        </ul>
+      </div>
+    </div>
+    <div v-else>
+      <ul>
+        <ListItem
+          v-for="product in filteredProducts"
+          :key="product.id"
+          :name="product.name"
+          :emoji="product.emoji"
+          :detail="product.category?.name ?? 'Sin categoría'"
+        >
+          <div class="d-flex justify-space-between">
             <v-checkbox-btn></v-checkbox-btn>
             <v-menu>
               <template v-slot:activator="{ props: activatorProps }">
@@ -149,49 +185,7 @@ const productsByCategory = computed(() => {
                 />
               </v-list>
             </v-menu>
-            </div>
-          </ListItem>
-        </ul>
-      </div>
-    </div>
-    <div v-else>
-      <ul>
-        <ListItem
-          v-for="product in filteredProducts"
-          :key="product.id"
-          :name="product.name"
-          :emoji="product.emoji"
-          :detail="product.category?.name ?? 'Sin categoría'"
-        >
-
-          <v-checkbox></v-checkbox>
-          <v-menu>
-            <template v-slot:activator="{ props: activatorProps }">
-              <v-btn
-                v-bind="activatorProps"
-                variant="text"
-                icon="mdi-dots-vertical"
-              />
-            </template>
-
-            <v-list>
-              <AddProductDialog :product="product">
-                <template v-slot:activator="{ props: activatorProps }">
-                  <v-list-item
-                    v-bind="activatorProps"
-                    prepend-icon="mdi-pencil-outline"
-                    title="Modificar"
-                  />
-                </template>
-              </AddProductDialog>
-              <v-list-item
-                class="text-red"
-                prepend-icon="mdi-delete-outline"
-                title="Eliminar"
-                @click="store.deleteProduct(product.id)"
-              />
-            </v-list>
-          </v-menu>
+          </div>
         </ListItem>
       </ul>
     </div>
@@ -202,7 +196,7 @@ const productsByCategory = computed(() => {
         filteredProducts.length === 0
       "
     >
-      No hay productos
+      No hay items
     </div>
 
     <AddItemDialog>
@@ -220,25 +214,6 @@ const productsByCategory = computed(() => {
     </AddItemDialog>
   </v-container>
 </template>
-
-<!-- ejemplo vue for -- 
-<script setup>
-import { ref } from 'vue'
-
-const list = ref([1, 2, 3])
-</script>
-
-<template>
-  <button @click="list.push(list.length + 1)">Push Number</button>
-  <button @click="list.pop()">Pop Number</button>
-  
-  <ul v-if=" list.length">
-    <li v-for="item of list">{{ item }}</li>
-  </ul>
-  <p v-else-if="list.length">List is not empty, but hidden.</p>
-  <p v-else>List is empty.</p>
-</template>
--->
 
 <style>
 .heading {
