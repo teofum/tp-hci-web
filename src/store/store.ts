@@ -21,9 +21,12 @@ export const useStore = defineStore('main', () => {
   const products = ref([] as Product[]);
   const categories = ref([] as Category[]);
   const lists = ref([] as List[]);
-  const items = ref([] as Item[]); // context dependant
-  const sharedWith = ref([] as SharedUsers[]); // context dependant
-  const history = ref([] as Purchase[]); // context dependant
+  //const items = ref([] as Item[]); // context dependant
+  const items = ref({} as Record<number, Item[]>);
+  //const sharedWith = ref([] as SharedUsers[]); // context dependant
+  const sharedWith = ref({} as Record<number, SharedUsers[]>);
+  //const history = ref([] as Purchase[]); // context dependant
+  const history = ref({} as Record<number, Purchase[]>);
 
   async function init() {
     products.value = await productsApi.get();
@@ -127,7 +130,7 @@ export const useStore = defineStore('main', () => {
   /// share list ///////////////////////
 
   async function getSharedUsers(id: number) {
-    sharedWith.value = await listsAPI.sharedUsers(id);
+    sharedWith.value[id] = await listsAPI.sharedUsers(id);
   }
 
   async function shareList(id: number, email: string) {
@@ -143,11 +146,11 @@ export const useStore = defineStore('main', () => {
   /// list /////////////////////////////
 
   async function getListItems(
-    id: number,
+    list_id: number,
     sort_by: 'updatedAt' | 'createdAt' | 'lastPurchasedAt' | 'productName',
     sort_order: 'DESC' | 'ASC',
   ) {
-    items.value = await itemsAPI.get(id, sort_by, sort_order);
+    items.value[list_id] = await itemsAPI.get(list_id, sort_by, sort_order);
   }
 
   async function addListItem(
@@ -157,8 +160,8 @@ export const useStore = defineStore('main', () => {
     unit: string,
     emoji: string,
   ) {
-    items.value = [
-      ...items.value,
+    items.value[list_id] = [
+      ...items.value[list_id],
       await itemsAPI.create(list_id, productId, quantity, unit, emoji),
     ];
   }
@@ -180,20 +183,24 @@ export const useStore = defineStore('main', () => {
       emoji,
     );
     // todo esto revisar
-    items.value = items.value.map((l) => (l.id === list_id ? updatedItems : l));
+    items.value[list_id] = items.value[list_id].map((l) =>
+      l.id === list_id ? updatedItems : l,
+    );
   }
 
-  async function togglePurchaseListItem(id: number, itemId: number) {
-    const updatedItem = await itemsAPI.patch(id, itemId);
+  async function togglePurchaseListItem(list_id: number, itemId: number) {
+    const updatedItem = await itemsAPI.patch(list_id, itemId);
 
-    items.value = items.value.map((item) =>
+    items.value[list_id] = items.value[list_id].map((item) =>
       item.id === itemId ? { ...item, purchased: updatedItem.purchased } : item,
     );
   }
 
-  async function delelteListItem(id: number, itemId: number) {
-    await itemsAPI.delete(id, itemId);
-    items.value = items.value.filter((item) => item.id !== id);
+  async function delelteListItem(list_id: number, itemId: number) {
+    await itemsAPI.delete(list_id, itemId);
+    items.value[list_id] = items.value[list_id].filter(
+      (item) => item.id !== list_id,
+    );
   }
 
   /// purchased / history /////////
@@ -203,7 +210,7 @@ export const useStore = defineStore('main', () => {
     sort_by: 'createdAt' | 'list' | 'id',
     order: 'ASC' | 'DESC',
   ) {
-    history.value = await purchasesAPI.get(list_id, sort_by, order);
+    history.value[list_id] = await purchasesAPI.get(list_id, sort_by, order);
   }
 
   // esta medio sus
