@@ -261,6 +261,7 @@ function markCompleted() {
           :name="item.product.name"
           :emoji="item.product.emoji"
           :detail="`${item.quantity} ${item.unit}`"
+          :purchased="item.purchased"
         >
           <div class="d-flex justify-space-between">
             <v-checkbox-btn
