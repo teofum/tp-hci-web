@@ -251,13 +251,24 @@ function markCompleted() {
       </template>
     </ListWithGrouping>
 
-    <div
-      v-if="
-        Object.keys(itemsByCategory).length === 0 || filteredItems.length === 0
-      "
+    <v-card
+      variant="tonal"
+      class="placeholder"
+      v-if="filteredItems.length === 0"
     >
-      No hay items
-    </div>
+      <div class="title">No hay productos</div>
+
+      <AddItemDialog :list-id="listId">
+        <template v-slot:activator="{ props: activatorProps }">
+          <v-btn
+            v-bind="activatorProps"
+            text="Agregar producto"
+            prepend-icon="mdi-plus"
+            variant="flat"
+          />
+        </template>
+      </AddItemDialog>
+    </v-card>
 
     <AddItemDialog :list-id="listId">
       <template v-slot:activator="{ props: activatorProps }">
@@ -275,7 +286,7 @@ function markCompleted() {
   </v-container>
 </template>
 
-<style>
+<style scoped>
 .error {
   width: 100%;
   margin-top: 8rem;
@@ -301,19 +312,34 @@ function markCompleted() {
   font-weight: 700;
 }
 
+.warning {
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  padding: 4rem;
+
+  .title {
+    font-size: 2rem;
+    font-weight: 700;
+  }
+}
+</style>
+
+<style>
 .switch {
   .v-selection-control {
-    flex-direction: row-reverse;
+    flex-direction: row-reverse !important;
 
     .v-label {
       padding-inline-start: 0;
       padding-inline-end: 10px;
     }
   }
-}
-
-.warning {
-  font-size: 0.875rem;
-  font-weight: 600;
 }
 </style>

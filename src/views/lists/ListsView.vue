@@ -71,6 +71,21 @@ function redirectList(id: number) {
       </ul>
     </div>
 
+    <v-card variant="tonal" class="placeholder" v-if="lists.length === 0">
+      <div class="title">No hay listas</div>
+
+      <AddListDialog>
+        <template v-slot:activator="{ props: activatorProps }">
+          <v-btn
+            v-bind="activatorProps"
+            text="Agregar lista"
+            prepend-icon="mdi-plus"
+            variant="flat"
+          />
+        </template>
+      </AddListDialog>
+    </v-card>
+
     <AddListDialog>
       <template v-slot:activator="{ props: activatorProps }">
         <v-fab
@@ -91,5 +106,18 @@ function redirectList(id: number) {
 .heading {
   font-size: 3rem;
   font-weight: 700;
+}
+
+.placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  padding: 4rem;
+
+  .title {
+    font-size: 2rem;
+    font-weight: 700;
+  }
 }
 </style>
