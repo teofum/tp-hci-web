@@ -5,6 +5,7 @@ import ListItem from '@/components/ListItem.vue';
 import AddListDialog from '@/components/lists/AddListDialog.vue';
 import { useRouter } from 'vue-router';
 import ShareListDialog from '@/components/lists/ShareListDialog.vue';
+import ConfirmationDialog from '@/components/ConfirmationDialog.vue';
 
 const store = useStore();
 const { lists } = storeToRefs(store);
@@ -59,12 +60,27 @@ function redirectList(id: number) {
                   />
                 </template>
               </ShareListDialog>
-              <v-list-item
-                class="text-red"
-                prepend-icon="mdi-delete-outline"
-                title="Eliminar"
-                @click="store.deleteList(list.id)"
-              />
+              <ConfirmationDialog
+                title="Eliminar lista"
+                danger
+                @confirm="store.deleteList(list.id)"
+              >
+                <template v-slot:activator="{ props: activatorProps }">
+                  <v-list-item
+                    v-bind="activatorProps"
+                    class="text-red"
+                    prepend-icon="mdi-delete-outline"
+                    title="Eliminar"
+                  />
+                </template>
+
+                <template v-slot:default>
+                  <p>¿Eliminar {{ list.name }}?</p>
+                  <p class="mt-3 warning text-error">
+                    Esta operación no se puede deshacer
+                  </p>
+                </template>
+              </ConfirmationDialog>
             </v-list>
           </v-menu>
         </ListItem>

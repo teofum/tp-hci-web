@@ -5,6 +5,7 @@ import AddCategoryDialog from './AddCategoryDialog.vue';
 import ListItem from '@/components/ListItem.vue';
 import { useStore } from '@/store/store';
 import type { Category } from '@/schemas/product.schema';
+import ConfirmationDialog from '@/components/ConfirmationDialog.vue';
 
 const store = useStore();
 const { categories, products } = storeToRefs(store);
@@ -54,12 +55,30 @@ function productsInCategory(category: Category) {
                       />
                     </template>
                   </AddCategoryDialog>
-                  <v-list-item
-                    class="text-red"
-                    prepend-icon="mdi-delete-outline"
-                    title="Eliminar"
-                    @click="store.deleteCategory(category.id)"
-                  />
+                  <ConfirmationDialog
+                    title="Eliminar categoría"
+                    danger
+                    @confirm="store.deleteCategory(category.id)"
+                  >
+                    <template v-slot:activator="{ props: activatorProps }">
+                      <v-list-item
+                        v-bind="activatorProps"
+                        class="text-red"
+                        prepend-icon="mdi-delete-outline"
+                        title="Eliminar"
+                      />
+                    </template>
+
+                    <template v-slot:default>
+                      <p>
+                        ¿Eliminar {{ category.name }}? Todos los productos con
+                        esta categoría permanecerán, pero sin categoría.
+                      </p>
+                      <p class="mt-3 warning text-error">
+                        Esta operación no se puede deshacer
+                      </p>
+                    </template>
+                  </ConfirmationDialog>
                 </v-list>
               </v-menu>
             </ListItem>

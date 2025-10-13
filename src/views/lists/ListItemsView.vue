@@ -238,12 +238,27 @@ function markCompleted() {
                     />
                   </template>
                 </AddItemDialog>
-                <v-list-item
-                  class="text-red"
-                  prepend-icon="mdi-delete-outline"
-                  title="Eliminar"
-                  @click="store.deleteListItem(listId, item.id)"
-                />
+                <ConfirmationDialog
+                  title="Eliminar producto"
+                  danger
+                  @confirm="store.deleteListItem(listId, item.id)"
+                >
+                  <template v-slot:activator="{ props: activatorProps }">
+                    <v-list-item
+                      v-bind="activatorProps"
+                      class="text-red"
+                      prepend-icon="mdi-delete-outline"
+                      title="Eliminar"
+                    />
+                  </template>
+
+                  <template v-slot:default>
+                    <p>¿Eliminar {{ item.product.name }}?</p>
+                    <p class="mt-3 warning text-error">
+                      Esta operación no se puede deshacer
+                    </p>
+                  </template>
+                </ConfirmationDialog>
               </v-list>
             </v-menu>
           </div>
