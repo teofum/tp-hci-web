@@ -7,6 +7,7 @@ import AddCategoryDialog from './AddCategoryDialog.vue';
 import EmojiPickerButton from '@/components/EmojiPickerButton.vue';
 import { useStore } from '@/store/store';
 import type { Product } from '@/schemas/product.schema';
+import { rules } from '@/utils/rules';
 
 const store = useStore();
 const { categories } = storeToRefs(store);
@@ -60,6 +61,7 @@ async function commit() {
               label="Nombre"
               type="text"
               class="w-100"
+              :rules="[rules.required]"
             />
 
             <div class="d-flex flex-row align-center ga-4 w-100">

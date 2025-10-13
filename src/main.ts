@@ -27,7 +27,6 @@ const vuetify = createVuetify({
   },
   defaults: {
     VTextField: {
-      hideDetails: true,
       rounded: 'lg',
     },
     VBtn: {

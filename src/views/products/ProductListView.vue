@@ -54,6 +54,7 @@ const productsByCategory = computed(() => {
         class="w-100"
         clearable
         clear-icon="mdi-close-circle-outline"
+        hide-details
       />
       <v-switch
         v-model="groupByCategory"

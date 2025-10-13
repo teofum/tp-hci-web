@@ -6,6 +6,7 @@ import ActionWithToast from '@/components/ActionWithToast.vue';
 import { useStore } from '@/store/store';
 import type { Item } from '@/schemas/item.schema';
 import AddProductDialog from '../products/AddProductDialog.vue';
+import { rules } from '@/utils/rules';
 
 const store = useStore();
 const { products } = storeToRefs(store);
@@ -87,6 +88,7 @@ async function commit() {
                   })
                 "
                 class="select"
+                :rules="[rules.required]"
               />
               <AddProductDialog>
                 <template v-slot:activator="{ props: activatorProps }">

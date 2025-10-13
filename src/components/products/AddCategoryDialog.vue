@@ -5,6 +5,7 @@ import ActionWithToast from '@/components/ActionWithToast.vue';
 import EmojiPickerButton from '@/components/EmojiPickerButton.vue';
 import { useStore } from '@/store/store';
 import type { Category } from '@/schemas/product.schema';
+import { rules } from '@/utils/rules';
 
 const store = useStore();
 
@@ -51,6 +52,7 @@ async function commit() {
               label="Nombre"
               type="text"
               class="w-100"
+              :rules="[rules.required]"
             />
           </div>
         </v-card-item>

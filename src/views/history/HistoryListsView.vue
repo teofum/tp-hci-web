@@ -128,6 +128,7 @@ async function restorePurchasedList(id: number) {
         class="w-100"
         clearable
         clear-icon="mdi-close-circle-outline"
+        hide-details
       />
 
       <div class="d-flex ga-4">
