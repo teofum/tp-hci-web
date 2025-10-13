@@ -4,6 +4,7 @@ import { useRouter } from 'vue-router';
 import { storeToRefs } from 'pinia';
 
 import ListItem from '@/components/ListItem.vue';
+import ListWithGrouping from '@/components/ListWithGrouping.vue';
 import { useSetup } from '@/composables/useSetup';
 import { useStore } from '@/store/store';
 import type { Purchase } from '@/schemas/purchases.schema';
@@ -163,57 +164,13 @@ async function restorePurchasedList(id: number) {
       </div>
     </div>
 
-    <div v-if="groupByTimePeriod">
-      <div
-        v-for="[key, [periodName, purchases]] in Object.entries(
-          purchasesByTimePeriod,
-        )"
-        :key="key"
-      >
-        <h2 class="text-medium-emphasis mt-3 category-heading">
-          {{ periodName }}
-        </h2>
-
-        <ul>
-          <ListItem
-            v-for="purchase in purchases"
-            :key="purchase.id"
-            :name="purchase.list.name"
-            :emoji="purchase.list.emoji"
-            :detail="getDetailLine(purchase)"
-            @click="viewDetail(purchase.id)"
-          >
-            <v-menu>
-              <template v-slot:activator="{ props: activatorProps }">
-                <v-btn
-                  v-bind="activatorProps"
-                  variant="text"
-                  icon="mdi-dots-vertical"
-                />
-              </template>
-
-              <v-list>
-                <v-list-item
-                  :disabled="
-                    purchase.list.recurring ||
-                    !purchase.items.every((i) =>
-                      products.find((p) => p.id === i.product.id),
-                    )
-                  "
-                  prepend-icon="mdi-reload"
-                  title="Repetir lista"
-                  @click="restorePurchasedList(purchase.id)"
-                />
-              </v-list>
-            </v-menu>
-          </ListItem>
-        </ul>
-      </div>
-    </div>
-    <div v-else>
-      <ul>
+    <ListWithGrouping
+      :group="groupByTimePeriod"
+      :grouped-items="purchasesByTimePeriod"
+      :all-items="filteredPurchases"
+    >
+      <template v-slot="{ item: purchase }">
         <ListItem
-          v-for="purchase in filteredPurchases"
           :key="purchase.id"
           :name="purchase.list.name"
           :emoji="purchase.list.emoji"
@@ -231,6 +188,12 @@ async function restorePurchasedList(id: number) {
 
             <v-list>
               <v-list-item
+                :disabled="
+                  purchase.list.recurring ||
+                  !purchase.items.every((i) =>
+                    products.find((p) => p.id === i.product.id),
+                  )
+                "
                 prepend-icon="mdi-reload"
                 title="Repetir lista"
                 @click="restorePurchasedList(purchase.id)"
@@ -238,8 +201,8 @@ async function restorePurchasedList(id: number) {
             </v-list>
           </v-menu>
         </ListItem>
-      </ul>
-    </div>
+      </template>
+    </ListWithGrouping>
 
     <AddListDialog>
       <template v-slot:activator="{ props: activatorProps }">

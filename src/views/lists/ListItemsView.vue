@@ -10,6 +10,7 @@ import ListItem from '@/components/ListItem.vue';
 import ShareListDialog from '@/components/lists/ShareListDialog.vue';
 import AddListDialog from '@/components/lists/AddListDialog.vue';
 import ConfirmationDialog from '@/components/ConfirmationDialog.vue';
+import ListWithGrouping from '@/components/ListWithGrouping.vue';
 import { useSetup } from '@/composables/useSetup';
 import { APIError } from '@/api/error';
 
@@ -180,6 +181,7 @@ function markCompleted() {
         </template>
       </ShareListDialog>
     </div>
+
     <div class="d-flex flex-column ga-2 my-4">
       <v-text-field
         v-model="filter"
@@ -198,72 +200,21 @@ function markCompleted() {
         class="switch"
       />
     </div>
-    <div v-if="groupByCategory">
-      <div
-        v-for="[key, [categoryName, items]] in Object.entries(itemsByCategory)"
-        :key="key"
-      >
-        <h2 class="text-medium-emphasis mt-3 category-heading">
-          {{ categoryName }}
-        </h2>
 
-        <ul>
-          <ListItem
-            v-for="item in items"
-            :key="item.id"
-            :name="item.product.name"
-            :emoji="item.product.emoji"
-            :detail="`${item.quantity} ${item.unit}`"
-            :purchased="item.purchased"
-          >
-            <div class="d-flex justify-space-between align-center">
-              <v-checkbox-btn
-                :model-value="item.purchased"
-                @update:model-value="togglePurchased(item.id, !item.purchased)"
-              />
-              <v-menu>
-                <template v-slot:activator="{ props: activatorProps }">
-                  <v-btn
-                    v-bind="activatorProps"
-                    variant="text"
-                    icon="mdi-dots-vertical"
-                  />
-                </template>
-
-                <v-list>
-                  <AddItemDialog :list-id="listId" :item="item">
-                    <template v-slot:activator="{ props: activatorProps }">
-                      <v-list-item
-                        v-bind="activatorProps"
-                        prepend-icon="mdi-pencil-outline"
-                        title="Modificar"
-                      />
-                    </template>
-                  </AddItemDialog>
-                  <v-list-item
-                    class="text-red"
-                    prepend-icon="mdi-delete-outline"
-                    title="Eliminar"
-                    @click="store.deleteListItem(listId, item.id)"
-                  />
-                </v-list>
-              </v-menu>
-            </div>
-          </ListItem>
-        </ul>
-      </div>
-    </div>
-    <div v-else>
-      <ul>
+    <ListWithGrouping
+      :group="groupByCategory"
+      :grouped-items="itemsByCategory"
+      :all-items="filteredItems"
+    >
+      <template v-slot="{ item }">
         <ListItem
-          v-for="item in filteredItems"
           :key="item.id"
           :name="item.product.name"
           :emoji="item.product.emoji"
           :detail="`${item.quantity} ${item.unit}`"
           :purchased="item.purchased"
         >
-          <div class="d-flex justify-space-between">
+          <div class="d-flex justify-space-between align-center">
             <v-checkbox-btn
               :model-value="item.purchased"
               @update:model-value="togglePurchased(item.id, !item.purchased)"
@@ -297,8 +248,8 @@ function markCompleted() {
             </v-menu>
           </div>
         </ListItem>
-      </ul>
-    </div>
+      </template>
+    </ListWithGrouping>
 
     <div
       v-if="
