@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 
+import ActionWithToast from '@/components/ActionWithToast.vue';
 import EmojiPickerButton from '@/components/EmojiPickerButton.vue';
 import { useStore } from '@/store/store';
 import type { Category } from '@/schemas/product.schema';
@@ -18,9 +19,13 @@ const isEditing = category !== undefined;
 
 async function commit() {
   if (isEditing) {
-    store.modifyCategory(category.id, categoryName.value, categoryEmoji.value);
+    await store.modifyCategory(
+      category.id,
+      categoryName.value,
+      categoryEmoji.value,
+    );
   } else {
-    store.addCategory(categoryName.value, categoryEmoji.value);
+    await store.addCategory(categoryName.value, categoryEmoji.value);
   }
 }
 </script>
@@ -53,16 +58,24 @@ async function commit() {
         <v-card-actions>
           <v-spacer />
           <v-btn text="Cancelar" @click="isActive.value = false" />
-          <v-btn
-            variant="flat"
-            :text="isEditing ? 'Guardar cambios' : 'Agregar'"
-            @click="
+          <ActionWithToast
+            :action="
               async () => {
                 await commit();
                 isActive.value = false;
               }
             "
-          />
+          >
+            <template v-slot:trigger="{ props, clickHandler }">
+              <v-btn
+                variant="flat"
+                :text="isEditing ? 'Guardar cambios' : 'Agregar'"
+                :disabled="!categoryName"
+                v-bind="props"
+                @click="clickHandler"
+              />
+            </template>
+          </ActionWithToast>
         </v-card-actions>
       </v-card>
     </template>
