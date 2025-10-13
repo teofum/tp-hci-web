@@ -8,6 +8,7 @@ import { useStore } from '@/store/store';
 import type { List } from '@/schemas/list.schema';
 import type { User } from '@/schemas/user.schema';
 import { APIError } from '@/api/error';
+import { rules } from '@/utils/rules';
 
 const { list } = defineProps<{
   list: List;
@@ -108,6 +109,7 @@ function getErrorMessage(e: unknown) {
               label="Correo electrónico"
               type="email"
               class="w-100"
+              :rules="[rules.required, rules.email]"
             />
           </div>
         </v-card-item>
