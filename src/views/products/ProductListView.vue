@@ -6,6 +6,7 @@ import AddProductDialog from '@/components/products/AddProductDialog.vue';
 import ListItem from '@/components/ListItem.vue';
 import ManageCategories from '@/components/products/ManageCategories.vue';
 import ListWithGrouping from '@/components/ListWithGrouping.vue';
+import ConfirmationDialog from '@/components/ConfirmationDialog.vue';
 import { useStore } from '@/store/store';
 
 const store = useStore();
@@ -96,12 +97,27 @@ const productsByCategory = computed(() => {
                   />
                 </template>
               </AddProductDialog>
-              <v-list-item
-                class="text-red"
-                prepend-icon="mdi-delete-outline"
-                title="Eliminar"
-                @click="store.deleteProduct(product.id)"
-              />
+              <ConfirmationDialog
+                title="Eliminar producto"
+                danger
+                @confirm="store.deleteProduct(product.id)"
+              >
+                <template v-slot:activator="{ props: activatorProps }">
+                  <v-list-item
+                    v-bind="activatorProps"
+                    class="text-red"
+                    prepend-icon="mdi-delete-outline"
+                    title="Eliminar"
+                  />
+                </template>
+
+                <template v-slot:default>
+                  <p>¿Eliminar {{ product.name }}?</p>
+                  <p class="mt-3 warning text-error">
+                    Esta operación no se puede deshacer
+                  </p>
+                </template>
+              </ConfirmationDialog>
             </v-list>
           </v-menu>
         </ListItem>
