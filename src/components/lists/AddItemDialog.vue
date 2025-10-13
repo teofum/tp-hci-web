@@ -2,6 +2,7 @@
 import { ref } from 'vue';
 import { storeToRefs } from 'pinia';
 
+import ActionWithToast from '@/components/ActionWithToast.vue';
 import { useStore } from '@/store/store';
 import type { Item } from '@/schemas/item.schema';
 import AddProductDialog from '../products/AddProductDialog.vue';
@@ -20,12 +21,11 @@ const itemUnit = ref(item?.unit ?? '');
 
 const isEditing = item !== undefined;
 
-// TODO cambiar a items
 async function commit() {
-  if (itemProductId.value === null) return;
+  if (itemProductId.value === null) return; // Should never happen, this is just a type guard
 
   if (isEditing) {
-    store.updateListItem(
+    await store.updateListItem(
       listId,
       item.id,
       itemProductId.value,
@@ -33,7 +33,7 @@ async function commit() {
       itemUnit.value || 'unidades',
     );
   } else {
-    store.addListItem(
+    await store.addListItem(
       listId,
       itemProductId.value,
       Number(itemQuantity.value),
@@ -105,17 +105,28 @@ async function commit() {
         <v-card-actions>
           <v-spacer />
           <v-btn text="Cancelar" @click="isActive.value = false" />
-          <v-btn
-            variant="flat"
-            :text="isEditing ? 'Guardar cambios' : 'Agregar'"
-            :disabled="
-              !itemQuantity || !Number(itemQuantity) || itemProductId === null
+          <ActionWithToast
+            :action="
+              async () => {
+                await commit();
+                isActive.value = false;
+              }
             "
-            @click="
-              commit();
-              isActive.value = false;
-            "
-          />
+          >
+            <template v-slot:trigger="{ props, clickHandler }">
+              <v-btn
+                variant="flat"
+                :text="isEditing ? 'Guardar cambios' : 'Agregar'"
+                :disabled="
+                  !itemQuantity ||
+                  !Number(itemQuantity) ||
+                  itemProductId === null
+                "
+                v-bind="props"
+                @click="clickHandler"
+              />
+            </template>
+          </ActionWithToast>
         </v-card-actions>
       </v-card>
     </template>
