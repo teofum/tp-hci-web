@@ -263,7 +263,10 @@ function markCompleted() {
           :detail="`${item.quantity} ${item.unit}`"
         >
           <div class="d-flex justify-space-between">
-            <v-checkbox-btn></v-checkbox-btn>
+            <v-checkbox-btn
+              :model-value="item.purchased"
+              @update:model-value="togglePurchased(item.id, !item.purchased)"
+            />
             <v-menu>
               <template v-slot:activator="{ props: activatorProps }">
                 <v-btn
