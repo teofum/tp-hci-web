@@ -1,6 +1,6 @@
 import { APIError, AuthError } from './error';
 
-export const BASE_URL = 'http://localhost:8080/api/';
+export const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 const DEFAULT_HEADERS = { 'Content-Type': 'application/json' };
 
