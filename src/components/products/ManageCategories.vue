@@ -59,7 +59,21 @@ const { categories } = storeToRefs(store);
               </v-menu>
             </ListItem>
           </ul>
-          <div v-else>No hay categorías</div>
+
+          <v-card variant="tonal" class="placeholder" v-else>
+            <div class="title">No hay categorías</div>
+
+            <AddCategoryDialog>
+              <template v-slot:activator="{ props: activatorProps }">
+                <v-btn
+                  v-bind="activatorProps"
+                  text="Agregar categoría"
+                  prepend-icon="mdi-plus"
+                  variant="flat"
+                />
+              </template>
+            </AddCategoryDialog>
+          </v-card>
         </v-card-item>
 
         <v-card-actions>
@@ -85,5 +99,18 @@ const { categories } = storeToRefs(store);
 .scrolling {
   overflow: auto;
   max-height: 50vh;
+}
+
+.placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  padding: 4rem;
+
+  .title {
+    font-size: 2rem;
+    font-weight: 700;
+  }
 }
 </style>

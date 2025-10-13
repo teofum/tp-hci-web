@@ -33,8 +33,8 @@ const { loading, error } = useSetup(async () => {
         </template>
 
         <template v-slot:append>
-          <div class="d-flex flex-row ga-2 align-center pr-4">
-            <div>Hola, {{ user?.name }}!</div>
+          <div v-if="user" class="d-flex flex-row ga-2 align-center pr-4">
+            <div>Hola, {{ user.name }}!</div>
             <v-btn to="/profile" text="Perfil" />
           </div>
         </template>
@@ -44,7 +44,10 @@ const { loading, error } = useSetup(async () => {
         <div class="loading bg-surface" v-if="loading">
           <v-progress-circular indeterminate color="primary" />
         </div>
-        <div v-else-if="error">Error: {{ error }}</div>
+        <v-card variant="tonal" class="error" v-else-if="error">
+          <div class="heading">Algo salió mal</div>
+          <p class="description">Ocurrió un error inesperado.</p>
+        </v-card>
         <RouterView v-else />
       </v-main>
     </v-container>
@@ -52,12 +55,21 @@ const { loading, error } = useSetup(async () => {
 </template>
 
 <style scoped>
-.loading {
+.error {
   width: 100%;
-  height: 100%;
+  margin-top: 8rem;
+  padding: 3rem;
   display: grid;
   place-items: center;
 }
+
+.loading {
+  width: 100%;
+  padding-top: 8rem;
+  display: grid;
+  place-items: center;
+}
+
 .bar-icon-box {
   display: flex;
   justify-content: center;

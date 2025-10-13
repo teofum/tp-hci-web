@@ -108,14 +108,24 @@ const productsByCategory = computed(() => {
       </template>
     </ListWithGrouping>
 
-    <div
-      v-if="
-        Object.keys(productsByCategory).length === 0 ||
-        filteredProducts.length === 0
-      "
+    <v-card
+      variant="tonal"
+      class="placeholder"
+      v-if="filteredProducts.length === 0"
     >
-      No hay productos
-    </div>
+      <div class="title">No hay productos</div>
+
+      <AddProductDialog>
+        <template v-slot:activator="{ props: activatorProps }">
+          <v-btn
+            v-bind="activatorProps"
+            text="Agregar producto"
+            prepend-icon="mdi-plus"
+            variant="flat"
+          />
+        </template>
+      </AddProductDialog>
+    </v-card>
 
     <AddProductDialog>
       <template v-slot:activator="{ props: activatorProps }">
@@ -142,6 +152,19 @@ const productsByCategory = computed(() => {
 .category-heading {
   font-size: 1.5rem;
   font-weight: 700;
+}
+
+.placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  padding: 4rem;
+
+  .title {
+    font-size: 2rem;
+    font-weight: 700;
+  }
 }
 </style>
 

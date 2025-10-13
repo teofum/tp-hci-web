@@ -204,6 +204,32 @@ async function restorePurchasedList(id: number) {
       </template>
     </ListWithGrouping>
 
+    <v-card
+      variant="tonal"
+      class="placeholder"
+      v-if="filteredPurchases.length === 0"
+    >
+      <div class="title">No hay compras</div>
+
+      <v-btn
+        v-if="filter || filterBy !== 'all'"
+        @click="
+          filter = '';
+          filterBy = 'all';
+        "
+        text="Limpiar filtros"
+        append-icon="mdi-close"
+        variant="flat"
+      />
+      <v-btn
+        v-else
+        to="/lists"
+        text="Ir a listas"
+        append-icon="mdi-arrow-right"
+        variant="flat"
+      />
+    </v-card>
+
     <AddListDialog>
       <template v-slot:activator="{ props: activatorProps }">
         <v-fab
@@ -229,5 +255,18 @@ async function restorePurchasedList(id: number) {
 .category-heading {
   font-size: 1.5rem;
   font-weight: 700;
+}
+
+.placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  padding: 4rem;
+
+  .title {
+    font-size: 2rem;
+    font-weight: 700;
+  }
 }
 </style>
