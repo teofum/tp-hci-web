@@ -7,6 +7,7 @@ const props = defineProps<{
   emoji?: string;
   purchased?: boolean;
   progress?: number;
+  badge?: string;
 }>();
 
 const progressHeight = computed(() =>
@@ -22,6 +23,7 @@ const progressHeight = computed(() =>
         :style="{ height: `${progressHeight}%` }"
       />
       <div class="emoji">{{ emoji }}</div>
+      <div v-if="badge" class="badge bg-secondary text-white">+</div>
     </div>
 
     <div :class="`text-container${purchased ? ' purchased' : ''}`">
@@ -65,7 +67,6 @@ const progressHeight = computed(() =>
   border-radius: 12px;
 
   position: relative;
-  overflow: hidden;
 
   .progress {
     position: absolute;
@@ -77,10 +78,24 @@ const progressHeight = computed(() =>
     transition-property: height;
     transition-timing-function: ease-in-out;
     transition-duration: 200ms;
+    border-radius: 12px;
   }
 
   .emoji {
     position: relative;
+  }
+
+  .badge {
+    position: absolute;
+    top: -0.5rem;
+    right: -0.5rem;
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 50%;
+    z-index: 10;
+    padding: 0;
+    line-height: 1.5rem;
+    text-align: center;
   }
 }
 
