@@ -6,14 +6,19 @@ import AddListDialog from '@/components/lists/AddListDialog.vue';
 import { useRouter } from 'vue-router';
 import ShareListDialog from '@/components/lists/ShareListDialog.vue';
 import ConfirmationDialog from '@/components/ConfirmationDialog.vue';
+import type { List } from '@/schemas/list.schema';
 
 const store = useStore();
-const { lists } = storeToRefs(store);
+const { lists, user } = storeToRefs(store);
 
 const router = useRouter();
 
 function redirectList(id: number) {
   router.push({ name: 'list-detail', params: { id } });
+}
+
+function isShared(list: List) {
+  return list.owner.id !== user.value?.id;
 }
 </script>
 
@@ -30,6 +35,7 @@ function redirectList(id: number) {
           :name="list.name"
           :emoji="list.emoji"
           :detail="list.description"
+          :badge="isShared(list) ? 'mui-account-group-outline' : undefined"
           @click="redirectList(list.id)"
         >
           <v-menu>
