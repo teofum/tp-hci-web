@@ -4,9 +4,14 @@ import { storeToRefs } from 'pinia';
 import AddCategoryDialog from './AddCategoryDialog.vue';
 import ListItem from '@/components/ListItem.vue';
 import { useStore } from '@/store/store';
+import type { Category } from '@/schemas/product.schema';
 
 const store = useStore();
-const { categories } = storeToRefs(store);
+const { categories, products } = storeToRefs(store);
+
+function productsInCategory(category: Category) {
+  return products.value.filter((p) => p.category?.id === category.id).length;
+}
 </script>
 
 <template>
@@ -28,7 +33,7 @@ const { categories } = storeToRefs(store);
               :key="category.id"
               :name="category.name"
               :emoji="category.emoji"
-              :detail="`N items`"
+              :detail="`${productsInCategory(category)} productos`"
             >
               <v-menu>
                 <template v-slot:activator="{ props: activatorProps }">
