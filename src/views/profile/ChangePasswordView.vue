@@ -2,6 +2,7 @@
 import { ref } from 'vue';
 import { VTextField, VBtn, VAlert } from 'vuetify/components';
 import { auth } from '@/api/users';
+import { rules } from '@/utils/rules';
 
 const currentPassword = ref('');
 const newPassword = ref('');
@@ -40,21 +41,24 @@ const handleChangePassword = async () => {
     <form @submit.prevent="handleChangePassword">
       <VTextField
         v-model="currentPassword"
-        placeholder="Contraseña actual"
+        label="Contraseña actual"
         type="password"
         required
+        :rules="[rules.required]"
       />
       <VTextField
         v-model="newPassword"
-        placeholder="Nueva contraseña"
+        label="Nueva contraseña"
         type="password"
         required
+        :rules="[rules.required]"
       />
       <VTextField
         v-model="confirmNewPassword"
-        placeholder="Confirmar nueva contraseña"
+        label="Confirmar nueva contraseña"
         type="password"
         required
+        :rules="[rules.required, rules.equal(newPassword)]"
       />
 
       <VBtn type="submit" block :loading="loading"> Cambiar contraseña </VBtn>

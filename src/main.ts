@@ -28,6 +28,7 @@ const vuetify = createVuetify({
   defaults: {
     VTextField: {
       rounded: 'lg',
+      validateOn: 'blur',
     },
     VBtn: {
       color: 'primary',

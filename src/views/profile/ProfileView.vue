@@ -5,6 +5,7 @@ import { VTextField, VBtn, VAlert } from 'vuetify/components';
 import { auth } from '@/api/users';
 import { useStore } from '@/store/store';
 import { storeToRefs } from 'pinia';
+import { rules } from '@/utils/rules';
 
 const router = useRouter();
 
@@ -47,7 +48,7 @@ const handleLogout = async () => {
 
 <template>
   <div>
-    <h1>Perfil</h1>
+    <h1 class="heading">Perfil</h1>
 
     <form @submit.prevent="handleUpdate">
       <VAlert v-if="success" variant="tonal" type="success" class="mt-2">
@@ -57,16 +58,23 @@ const handleLogout = async () => {
         {{ error }}
       </VAlert>
 
-      <VTextField v-model="name" placeholder="Nombre" type="text" required />
       <VTextField
-        v-model="surname"
-        placeholder="Apellido"
+        v-model="name"
+        label="Nombre"
         type="text"
         required
+        :rules="[rules.required]"
+      />
+      <VTextField
+        v-model="surname"
+        label="Apellido"
+        type="text"
+        required
+        :rules="[rules.required]"
       />
       <VTextField
         v-model="email"
-        placeholder="Correo electrónico"
+        label="Correo electrónico"
         type="email"
         disabled
       />
@@ -88,3 +96,10 @@ const handleLogout = async () => {
     </VBtn>
   </div>
 </template>
+
+<style scoped>
+.heading {
+  font-size: 3rem;
+  font-weight: 700;
+}
+</style>

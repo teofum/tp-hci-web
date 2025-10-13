@@ -1,7 +1,9 @@
 import z from 'zod';
 
 export const rules = {
-  required: (value) => !!value || 'Campo obligatorio',
-  email: (value) =>
+  required: (value: string) => !!value || 'Campo obligatorio',
+  email: (value: string) =>
     z.email().safeParse(value).success || 'Correo electrónico inválido',
-} satisfies Record<string, (value: string) => true | string>;
+  equal: (referenceValue: string) => (value: string) =>
+    value === referenceValue || 'Los campos deben ser iguales',
+} as const;
