@@ -27,8 +27,8 @@ const vuetify = createVuetify({
   },
   defaults: {
     VTextField: {
-      hideDetails: true,
       rounded: 'lg',
+      validateOn: 'blur',
     },
     VBtn: {
       color: 'primary',
@@ -49,8 +49,17 @@ const vuetify = createVuetify({
     VSwitch: {
       hideDetails: true,
     },
+    VCheckBox: {
+      hideDetails: true,
+    },
     VList: {
       rounded: 'lg',
+    },
+    VTooltip: {
+      contentClass: 'bg-primary',
+    },
+    VChip: {
+      rounded: 'xl',
     },
   },
 });

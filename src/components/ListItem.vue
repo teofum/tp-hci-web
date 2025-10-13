@@ -1,18 +1,30 @@
 <script setup lang="ts">
-defineProps<{
+import { computed } from 'vue';
+
+const props = defineProps<{
   name: string;
   detail?: string;
   emoji?: string;
+  purchased?: boolean;
+  progress?: number;
 }>();
+
+const progressHeight = computed(() =>
+  props.purchased ? 100 : (props.progress ?? 0) * 100,
+);
 </script>
 
 <template>
-  <li class="container">
+  <li :class="`container ${$attrs.onClick ? 'clickable' : ''}`">
     <div class="emoji-container bg-surface-variant">
-      {{ emoji }}
+      <div
+        class="progress bg-success"
+        :style="{ height: `${progressHeight}%` }"
+      />
+      <div class="emoji">{{ emoji }}</div>
     </div>
 
-    <div class="text-container">
+    <div :class="`text-container${purchased ? ' purchased' : ''}`">
       <h3 class="name text-high-emphasis">{{ name }}</h3>
       <p class="detail text-medium-emphasis" v-if="detail">{{ detail }}</p>
     </div>
@@ -32,6 +44,15 @@ defineProps<{
   padding: 1rem;
 
   user-select: none;
+
+  &.clickable {
+    border-radius: 1.5rem;
+    transition: background-color 300ms ease;
+    cursor: pointer;
+    &:hover {
+      background-color: rgba(var(--v-theme-background));
+    }
+  }
 }
 
 .emoji-container {
@@ -42,12 +63,38 @@ defineProps<{
   height: 4rem;
   font-size: 2rem;
   border-radius: 12px;
+
+  position: relative;
+  overflow: hidden;
+
+  .progress {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-image: linear-gradient(hsl(0 0 100 / 0.4), hsl(0 0 100 / 0.4));
+
+    transition-property: height;
+    transition-timing-function: ease-in-out;
+    transition-duration: 200ms;
+  }
+
+  .emoji {
+    position: relative;
+  }
 }
 
 .text-container {
   display: flex;
   flex-direction: column;
   flex-grow: 1;
+
+  &.purchased {
+    * {
+      text-decoration: line-through;
+      opacity: 0.8;
+    }
+  }
 
   h3 {
     font-size: 1.25rem;

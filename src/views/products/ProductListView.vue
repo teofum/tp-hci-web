@@ -1,12 +1,12 @@
 <script setup lang="ts">
+import { computed, ref } from 'vue';
 import { storeToRefs } from 'pinia';
 
 import AddProductDialog from '@/components/products/AddProductDialog.vue';
 import ListItem from '@/components/ListItem.vue';
 import ManageCategories from '@/components/products/ManageCategories.vue';
+import ListWithGrouping from '@/components/ListWithGrouping.vue';
 import { useStore } from '@/store/store';
-import { computed } from 'vue';
-import { ref } from 'vue';
 
 const store = useStore();
 const { products } = storeToRefs(store);
@@ -54,6 +54,7 @@ const productsByCategory = computed(() => {
         class="w-100"
         clearable
         clear-icon="mdi-close-circle-outline"
+        hide-details
       />
       <v-switch
         v-model="groupByCategory"
@@ -64,60 +65,13 @@ const productsByCategory = computed(() => {
       />
     </div>
 
-    <div v-if="groupByCategory">
-      <div
-        v-for="[key, [categoryName, products]] in Object.entries(
-          productsByCategory,
-        )"
-        :key="key"
-      >
-        <h2 class="text-medium-emphasis mt-3 category-heading">
-          {{ categoryName }}
-        </h2>
-
-        <ul>
-          <ListItem
-            v-for="product in products"
-            :key="product.id"
-            :name="product.name"
-            :emoji="product.emoji"
-            :detail="product.category?.name ?? 'Sin categoría'"
-          >
-            <v-menu>
-              <template v-slot:activator="{ props: activatorProps }">
-                <v-btn
-                  v-bind="activatorProps"
-                  variant="text"
-                  icon="mdi-dots-vertical"
-                />
-              </template>
-
-              <v-list>
-                <AddProductDialog :product="product">
-                  <template v-slot:activator="{ props: activatorProps }">
-                    <v-list-item
-                      v-bind="activatorProps"
-                      prepend-icon="mdi-pencil-outline"
-                      title="Modificar"
-                    />
-                  </template>
-                </AddProductDialog>
-                <v-list-item
-                  class="text-red"
-                  prepend-icon="mdi-delete-outline"
-                  title="Eliminar"
-                  @click="store.deleteProduct(product.id)"
-                />
-              </v-list>
-            </v-menu>
-          </ListItem>
-        </ul>
-      </div>
-    </div>
-    <div v-else>
-      <ul>
+    <ListWithGrouping
+      :group="groupByCategory"
+      :grouped-items="productsByCategory"
+      :all-items="filteredProducts"
+    >
+      <template v-slot="{ item: product }">
         <ListItem
-          v-for="product in filteredProducts"
           :key="product.id"
           :name="product.name"
           :emoji="product.emoji"
@@ -151,8 +105,8 @@ const productsByCategory = computed(() => {
             </v-list>
           </v-menu>
         </ListItem>
-      </ul>
-    </div>
+      </template>
+    </ListWithGrouping>
 
     <div
       v-if="

@@ -1,16 +1,20 @@
 <script setup lang="ts">
-import { useRoute, useRouter } from 'vue-router';
 import { computed } from 'vue';
+import { useRoute } from 'vue-router';
+import { storeToRefs } from 'pinia';
 import { VBtn } from 'vuetify/components';
-import { useStore } from './store/store';
-import { onMounted } from 'vue';
+
+import { useSetup } from '@/composables/useSetup';
+import { useStore } from '@/store/store';
 
 const route = useRoute();
-const router = useRouter();
 const isAuthRoute = computed(() => route.path.startsWith('/auth'));
 
 const store = useStore();
-onMounted(() => store.init());
+const { user } = storeToRefs(store);
+const { loading, error } = useSetup(async () => {
+  if (!isAuthRoute.value) await store.init();
+});
 </script>
 
 <template>
@@ -18,28 +22,51 @@ onMounted(() => store.init());
     <v-container>
       <v-app-bar v-if="!isAuthRoute" style="border-bottom: 1px solid #00000061">
         <template v-slot:prepend>
-          <img
-            alt="Vue logo"
-            class="logo"
-            src="@/assets/logo.svg"
-            width="40"
-            height="40"
-          />
+          <div class="d-flex flex-row align-center pl-4">
+            <div class="bar-icon-box bg-secondary mr-2">
+              <v-icon icon="mdi-shopping-outline" size="24" color="white" />
+            </div>
+            <v-btn to="/lists" text="Listas" />
+            <v-btn to="/history" text="Historial" />
+            <v-btn to="/products" text="Productos" />
+          </div>
         </template>
 
-        <v-app-bar-title>Shopping list app</v-app-bar-title>
-
         <template v-slot:append>
-          <VBtn @click="router.push('/profile')"> Mi Perfil </VBtn>
+          <div class="d-flex flex-row ga-2 align-center pr-4">
+            <div>Hola, {{ user?.name }}!</div>
+            <v-btn to="/profile" text="Perfil" />
+          </div>
         </template>
       </v-app-bar>
 
       <v-main>
-        <RouterView />
+        <div class="loading bg-surface" v-if="loading">
+          <v-progress-circular indeterminate color="primary" />
+        </div>
+        <div v-else-if="error">Error: {{ error }}</div>
+        <RouterView v-else />
       </v-main>
     </v-container>
   </v-app>
 </template>
+
+<style scoped>
+.loading {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+}
+.bar-icon-box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 12px;
+}
+</style>
 
 <style lang="scss">
 @import url('https://fonts.googleapis.com/css2?family=Spline+Sans:wght@300..700&display=swap');

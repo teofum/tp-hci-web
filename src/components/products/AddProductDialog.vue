@@ -2,10 +2,12 @@
 import { ref } from 'vue';
 import { storeToRefs } from 'pinia';
 
+import ActionWithToast from '@/components/ActionWithToast.vue';
 import AddCategoryDialog from './AddCategoryDialog.vue';
 import EmojiPickerButton from '@/components/EmojiPickerButton.vue';
 import { useStore } from '@/store/store';
 import type { Product } from '@/schemas/product.schema';
+import { rules } from '@/utils/rules';
 
 const store = useStore();
 const { categories } = storeToRefs(store);
@@ -22,14 +24,14 @@ const isEditing = product !== undefined;
 
 async function commit() {
   if (isEditing) {
-    store.modifyProduct(
+    await store.modifyProduct(
       product.id,
       productName.value,
       productEmoji.value,
       productCategory.value ?? null,
     );
   } else {
-    store.addProduct(
+    await store.addProduct(
       productName.value,
       productEmoji.value,
       productCategory.value ?? null,
@@ -59,6 +61,7 @@ async function commit() {
               label="Nombre"
               type="text"
               class="w-100"
+              :rules="[rules.required]"
             />
 
             <div class="d-flex flex-row align-center ga-4 w-100">
@@ -74,7 +77,16 @@ async function commit() {
                 "
                 class="select"
               />
-              <AddCategoryDialog />
+              <AddCategoryDialog>
+                <template v-slot:activator="{ props: activatorProps }">
+                  <v-btn
+                    v-bind="activatorProps"
+                    text="Nueva categoría"
+                    prepend-icon="mdi-plus"
+                    variant="flat"
+                  />
+                </template>
+              </AddCategoryDialog>
             </div>
           </div>
         </v-card-item>
@@ -82,15 +94,24 @@ async function commit() {
         <v-card-actions>
           <v-spacer />
           <v-btn text="Cancelar" @click="isActive.value = false" />
-          <v-btn
-            variant="flat"
-            :text="isEditing ? 'Guardar cambios' : 'Agregar'"
-            :disabled="!productName"
-            @click="
-              commit();
-              isActive.value = false;
+          <ActionWithToast
+            :action="
+              async () => {
+                await commit();
+                isActive.value = false;
+              }
             "
-          />
+          >
+            <template v-slot:trigger="{ props, clickHandler }">
+              <v-btn
+                variant="flat"
+                :text="isEditing ? 'Guardar cambios' : 'Agregar'"
+                :disabled="!productName"
+                v-bind="props"
+                @click="clickHandler"
+              />
+            </template>
+          </ActionWithToast>
         </v-card-actions>
       </v-card>
     </template>

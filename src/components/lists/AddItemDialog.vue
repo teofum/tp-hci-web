@@ -1,0 +1,149 @@
+<script setup lang="ts">
+import { ref } from 'vue';
+import { storeToRefs } from 'pinia';
+
+import ActionWithToast from '@/components/ActionWithToast.vue';
+import { useStore } from '@/store/store';
+import type { Item } from '@/schemas/item.schema';
+import AddProductDialog from '../products/AddProductDialog.vue';
+import { rules } from '@/utils/rules';
+
+const store = useStore();
+const { products } = storeToRefs(store);
+
+const { item, listId } = defineProps<{
+  listId: number;
+  item?: Item;
+}>();
+
+const itemProductId = ref(item?.product.id ?? null);
+const itemQuantity = ref(item?.quantity.toString() ?? '1');
+const itemUnit = ref(item?.unit ?? '');
+
+const isEditing = item !== undefined;
+
+async function commit() {
+  if (itemProductId.value === null) return; // Should never happen, this is just a type guard
+
+  if (isEditing) {
+    await store.updateListItem(
+      listId,
+      item.id,
+      itemProductId.value,
+      Number(itemQuantity.value),
+      itemUnit.value || 'unidades',
+    );
+  } else {
+    await store.addListItem(
+      listId,
+      itemProductId.value,
+      Number(itemQuantity.value),
+      itemUnit.value || 'unidades',
+    );
+  }
+}
+</script>
+
+<template>
+  <v-dialog max-width="600">
+    <template v-slot:activator="{ props: activatorProps }">
+      <slot name="activator" :props="activatorProps" />
+    </template>
+
+    <template v-slot:default="{ isActive }">
+      <v-card
+        variant="outlined"
+        class="bg-surface"
+        :title="`${isEditing ? 'Modificar' : 'Agregar'} item`"
+      >
+        <v-card-item>
+          <div class="d-flex flex-column align-center py-2 ga-4">
+            <div class="quantity-unit-field-container">
+              <v-text-field
+                v-model="itemQuantity"
+                label="Cantidad"
+                type="number"
+                min="1"
+              />
+
+              <v-text-field
+                v-model="itemUnit"
+                label="Unidad (opcional)"
+                type="text"
+              />
+            </div>
+
+            <div
+              v-if="!isEditing"
+              class="d-flex flex-row align-center ga-4 w-100"
+            >
+              <v-select
+                v-model="itemProductId"
+                label="Producto"
+                :items="products"
+                :item-props="
+                  (product) => ({
+                    value: product.id,
+                    title: `${product.emoji} ${product.name}`,
+                  })
+                "
+                class="select"
+                :rules="[rules.required]"
+              />
+              <AddProductDialog>
+                <template v-slot:activator="{ props: activatorProps }">
+                  <v-btn
+                    v-bind="activatorProps"
+                    text="Nuevo producto"
+                    prepend-icon="mdi-plus"
+                    variant="flat"
+                  />
+                </template>
+              </AddProductDialog>
+            </div>
+          </div>
+        </v-card-item>
+
+        <v-card-actions>
+          <v-spacer />
+          <v-btn text="Cancelar" @click="isActive.value = false" />
+          <ActionWithToast
+            :action="
+              async () => {
+                await commit();
+                isActive.value = false;
+              }
+            "
+          >
+            <template v-slot:trigger="{ props, clickHandler }">
+              <v-btn
+                variant="flat"
+                :text="isEditing ? 'Guardar cambios' : 'Agregar'"
+                :disabled="
+                  !itemQuantity ||
+                  !Number(itemQuantity) ||
+                  itemProductId === null
+                "
+                v-bind="props"
+                @click="clickHandler"
+              />
+            </template>
+          </ActionWithToast>
+        </v-card-actions>
+      </v-card>
+    </template>
+  </v-dialog>
+</template>
+
+<style scoped>
+.select {
+  flex-grow: 1;
+}
+
+.quantity-unit-field-container {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 0.5rem;
+}
+</style>

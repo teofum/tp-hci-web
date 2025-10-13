@@ -1,5 +1,4 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import HomeView from '../views/HomeView.vue';
 import AuthLayout from '../layouts/AuthLayout.vue';
 import ProfileLayout from '../layouts/ProfileLayout.vue';
 
@@ -8,8 +7,7 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      name: 'home',
-      component: HomeView,
+      redirect: '/lists',
     },
     {
       path: '/profile',
@@ -36,14 +34,6 @@ const router = createRouter({
           component: () => import('../views/products/ProductListView.vue'),
         },
       ],
-    },
-    {
-      path: '/about',
-      name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import('../views/AboutView.vue'),
     },
     {
       path: '/auth',
@@ -75,6 +65,28 @@ const router = createRouter({
           component: () => import('../views/auth/ResetPasswordView.vue'),
         },
       ],
+    },
+    {
+      path: '/list/:id',
+      name: 'list-detail',
+      component: () => import('../views/lists/ListItemsView.vue'),
+      props: true,
+    },
+    {
+      path: '/lists',
+      name: 'lists',
+      component: () => import('../views/lists/ListsView.vue'),
+    },
+    {
+      path: '/history',
+      name: 'history',
+      component: () => import('../views/history/HistoryListsView.vue'),
+    },
+    {
+      path: '/history/:id',
+      name: 'history-detail',
+      component: () => import('../views/history/HistoryItemView.vue'),
+      props: true,
     },
   ],
 });

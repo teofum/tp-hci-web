@@ -1,3 +1,5 @@
+import { APIError, AuthError } from './error';
+
 export const BASE_URL = 'http://localhost:8080/api/';
 
 const DEFAULT_HEADERS = { 'Content-Type': 'application/json' };
@@ -22,6 +24,10 @@ export class API {
     return new API(url, 'DELETE');
   }
 
+  public static patch(url: string) {
+    return new API(url, 'PATCH');
+  }
+
   private constructor(url: string, method: RequestInit['method']) {
     this.url = new URL(url, BASE_URL);
     this.init = { method, headers: DEFAULT_HEADERS };
@@ -44,7 +50,7 @@ export class API {
   public withAuth() {
     const token = localStorage.getItem('token');
 
-    if (!token) throw new Error('Invalid authorization');
+    if (!token) throw new AuthError();
 
     this.init.headers = {
       ...this.init.headers,
@@ -57,7 +63,7 @@ export class API {
   public async send() {
     const res = await fetch(this.url, this.init);
 
-    if (!res.ok) throw new Error(res.statusText);
+    if (!res.ok) throw new APIError(res.status, res.statusText);
 
     return (await res.json()) as unknown;
   }

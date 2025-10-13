@@ -1,6 +1,7 @@
 import { categorySchema } from '@/schemas/product.schema';
 import { API } from './api';
 import { fetchAll } from './fetchAll';
+import { paginatedResponseSchema } from '@/schemas/api.schema';
 
 export const categories = {
   async get() {
@@ -9,7 +10,7 @@ export const categories = {
         .withAuth()
         .withParams({ page: page.toString(), per_page: pageSize.toString() })
         .send();
-      return categorySchema.array().parse(res);
+      return paginatedResponseSchema(categorySchema).parse(res).data;
     });
   },
 

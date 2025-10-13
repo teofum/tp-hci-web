@@ -2,6 +2,7 @@ import { productSchema } from '@/schemas/product.schema';
 import { API } from './api';
 import { fetchAll } from './fetchAll';
 import z from 'zod';
+import { paginatedResponseSchema } from '@/schemas/api.schema';
 
 export const products = {
   async get() {
@@ -10,7 +11,7 @@ export const products = {
         .withAuth()
         .withParams({ page: page.toString(), per_page: pageSize.toString() })
         .send();
-      return productSchema.array().parse(res);
+      return paginatedResponseSchema(productSchema).parse(res).data;
     });
   },
 
