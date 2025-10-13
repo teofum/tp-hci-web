@@ -1,10 +1,13 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { useStore } from '@/store/store';
+import { storeToRefs } from 'pinia';
 import z from 'zod';
+
+import ActionWithToast from '../ActionWithToast.vue';
+import { useStore } from '@/store/store';
 import type { List } from '@/schemas/list.schema';
 import type { User } from '@/schemas/user.schema';
-import { storeToRefs } from 'pinia';
+import { APIError } from '@/api/error';
 
 const { list } = defineProps<{
   list: List;
@@ -15,33 +18,31 @@ const { user: currentUser } = storeToRefs(store);
 
 const shareEmail = ref('');
 
-const sharePending = ref(false);
-const unsharePending = ref(false);
-
 async function share() {
-  sharePending.value = true;
-  try {
-    await store.shareList(list.id, shareEmail.value);
-  } catch (e) {
-    console.error(e);
-  } finally {
-    sharePending.value = false;
-  }
+  await store.shareList(list.id, shareEmail.value);
 }
 
 async function unshare(userId: number) {
-  unsharePending.value = true;
-  try {
-    await store.unshareList(list.id, userId);
-  } catch (e) {
-    console.error(e);
-  } finally {
-    unsharePending.value = false;
-  }
+  await store.unshareList(list.id, userId);
 }
 
 function initials(user: User) {
   return `${user.name[0].toUpperCase()}${user.surname[0].toUpperCase()}`;
+}
+
+function getErrorMessage(e: unknown) {
+  if (e instanceof APIError) {
+    switch (e.statusCode) {
+      case 404:
+        return 'Error: el usuario no existe';
+      case 409:
+        return 'Error: la lista ya está compartida con este usuario';
+      default:
+        return 'Ocurrió un error inesperado';
+    }
+  } else {
+    return 'Ocurrió un error inesperado';
+  }
 }
 </script>
 
@@ -80,16 +81,22 @@ function initials(user: User) {
                 {{ initials(user) }}
               </div>
               <div class="name">{{ user.name }} {{ user.surname }}</div>
-              <v-btn
+              <ActionWithToast
                 v-if="user.id !== currentUser?.id"
-                class="unshare bg-surface"
-                icon="mdi-close"
-                color="error"
-                variant="tonal"
-                size="x-small"
-                :loading="unsharePending"
-                @click="unshare(user.id)"
-              />
+                :action="async () => await unshare(user.id)"
+              >
+                <template v-slot:trigger="{ props, clickHandler }">
+                  <v-btn
+                    class="unshare bg-surface"
+                    icon="mdi-close"
+                    color="error"
+                    variant="tonal"
+                    size="x-small"
+                    v-bind="props"
+                    @click="clickHandler"
+                  />
+                </template>
+              </ActionWithToast>
             </li>
           </ul>
         </v-card-item>
@@ -112,18 +119,17 @@ function initials(user: User) {
             text="Cancelar"
             @click="isActive.value = false"
           />
-          <v-btn
-            variant="flat"
-            text="Compartir"
-            :disabled="!shareEmail || !z.email().safeParse(shareEmail).success"
-            :loading="sharePending"
-            @click="
-              async () => {
-                await share();
-                isActive.value = false;
-              }
-            "
-          />
+          <ActionWithToast :action="share" :error-message="getErrorMessage">
+            <template v-slot:trigger="{ props, clickHandler }">
+              <v-btn
+                variant="flat"
+                text="Compartir"
+                :disabled="!z.email().safeParse(shareEmail).success"
+                v-bind="props"
+                @click="clickHandler"
+              />
+            </template>
+          </ActionWithToast>
         </v-card-actions>
       </v-card>
     </template>
